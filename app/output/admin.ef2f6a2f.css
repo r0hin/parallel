@@ -1,0 +1,45 @@
+body {
+  padding: 120px 20% 120px 20%;
+}
+
+.groupReportItem, .trackReportItem {
+  background-color: var(--bg2);
+  padding: 0px 8px 0px 8px; margin-top: 24px;
+  border-radius: 12px;
+}
+
+.groupReportItem pre, .trackReportItem pre {
+  width: calc(100% - 8px);
+  white-space: pre-wrap;
+  word-break: break-all;
+} 
+
+.groupReportItem .preview, .trackReportItem .preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview b {
+  user-select: text;
+}
+
+.disabled {
+  background-color: grey !important;
+  pointer-events: none !important;
+}
+
+.elevated {
+  color: var(--secondary);
+  user-select: text;
+}
+
+.prettyprint  {
+  user-select: text;
+}
+
+img.emoji {
+  height: 28px;
+  pointer-events: none;
+  vertical-align: middle;
+}

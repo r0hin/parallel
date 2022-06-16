@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root { 
+    --primary: #F25E92;
+    --secondary: #3267FF;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: black; background-color: #f3f7fa;
+    overflow-x: hidden;
+    width: 100%; height: 100%;
+    margin: 0; padding: 0;
+  } 
+
+  a {
+    cursor: pointer;
+  }
+
+  button, a {
+    transition: all 0.3s;
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  #statsContainer {
+    position: relative;
+  }
+
+  .containerTop img {
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .containerTop img:hover {
+    opacity: 0.5;
+  }
+
+  .containerTop img:active {
+    transform: scale(0.9);
+  }
+
+  #stats { 
+    top: -42px;
+    z-index: 2;
+    border-radius: 12px;
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    box-shadow: 0px 0px 18px 0px rgba(0,0,0,0.25);
+    width: 280px; height: 100px;
+    left: 50%; transform: translate(-50%, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #stats b {
+    font-size: 48px;
+    /* Monospaced Font */
+    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace !important;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 0;
+    padding: 0;
+  }
+
+  #stats p {
+    font-size: 18px;
+    font-weight: normal;
+    color: black  ;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .nav-link {
+    margin: 0px 24px 0px 24px;
+    color: var(--secondary);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    bottom: -4px;
+    width: 0px;
+    height: 1px;
+    background-color: black;
+    transition: width 0.5s ease-out;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .container {
+    padding-left: max(10%, 80px);
+    padding-right: max(10%, 80px);
+  }
+
+  .containerTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5rem;
+  }
+
+  .containerThree {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(-2px);
+    padding-top: 48px !important;
+    padding-bottom: 48px;
+  }
+
+  .containerThree .containerItem {
+    background-color: #0f1012;
+    border-radius: 18px;
+    padding: 18px;
+    width: 100%;
+    margin-bottom: 24px;
+    height: 140px;
+  }
+
+  .containerThree .containerItem:first-child {
+    margin-right: 24px;
+  }
+
+  .containerThree .containerItem:last-child {
+    margin-left: 24px;
+  }
+
+  .containerTop div:first-child {
+    width: 130px;
+    text-align: center;
+  }
+
+  .containerTop div:last-child {
+    width: 130px;
+    text-align: right;
+  }
+
+  .containerTop img {
+    height: 48px;
+  }
+
+  .planet {
+    min-width: 50%;
+    padding: 24px;
+  }
+
+  .imageContainer {
+    position: relative;
+  }
+
+  .imageContainer img {
+    width: 100%;
+  }
+
+  .subtitle {
+    margin-top: 4px;
+    color: #CFD7DF;
+  }
+
+  .prominentSubtitle {
+    margin-top: 4px;
+    color: #e3e9f0;
+    font-size: 20px;
+  }
+
+  svg {
+    transform: translateY(5px)
+  }
+
+  .containerOne {
+    padding-top: max(10%, 48px);
+    padding-bottom: max(10%, 48px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Switch to flex column on small screens */
+  @media screen and (max-width: 600px) {
+    .containerOne, .containerThree {
+      flex-direction: column;
+    }
+
+    .musicItemPopout {
+      transform: scale(0.3) !important;
+    }
+
+    .nav-link-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      padding-left: 48px;
+      padding-right: 48px;
+    }
+
+    .containerFlex {
+      flex-direction: column !important;
+    }
+
+    .containerFlex .primary {
+      margin-bottom: 24px !important;
+    }
+
+    .footer-container {
+      flex-direction: column !important;
+    }
+
+    .containerFlex button, .containerFour button {
+      margin-left: 0px !important;
+      margin-top: 24px !important;
+    }
+  }
+
+  .containerDark {
+    text-align: center;
+    background-color: #171a1f;
+    color: white;
+    padding-top: 24px;
+  }
+
+  .containerDark .primary {
+    margin-top: 48px;
+    font-weight: 700;
+    font-size: 36px;
+  }
+
+  .primary {
+    font-weight: 700;
+    font-size: 56px;
+    margin-bottom: 0px;
+    background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent; 
+  }
+
+  .iconBig {
+    font-weight: 700;
+    font-size: 32px;
+    margin-bottom: 0px;
+    background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent; 
+  }
+
+  h1.primary {
+    margin-bottom: 24px;
+  }
+
+  .secondary {
+    margin-top: 2px;
+    font-size: 24px;
+    font-weight: 500;
+    color: black;
+  }
+
+  .button {
+    padding: 12px 24px 12px 24px;
+    text-transform: uppercase;
+    font-size: 0.855rem; font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    opacity: 1;
+    transition: all 0.3s;
+    border-radius: 9px;
+    cursor: pointer;
+    border: 0px;
+    outline: none;
+  }
+
+  .navButton {
+    border-radius: 12px;
+    color: var(--primary) 
+  }
+
+  .button:hover {
+    opacity: 0.6;
+    transition: all 0.2s;
+  }
+
+  .button i {
+    transform: translate(0, 1px);
+    margin-right: 12px;
+  }
+
+  .buttonPrimary {
+    background-color: #F25E92;
+    margin-bottom: 16px;
+    text-decoration: none;
+    color: white;
+  }
+
+  #joinButton {
+    margin-top: 24px;
+  }
+
+  .buttonSecondary {
+    background-color: #3267FF;
+    color: white;
+  }
+
+  .musicItemPopout {
+    transform: scale(0.8);
+    position: absolute;
+    background-color: #0f1012;
+    border-radius: 12px;
+    max-width: 300px; height: 96px;
+    left: 75%; bottom: 118px;
+    margin-bottom: 0px;
+    opacity: 0;
+    display: flex;
+    justify-content: flex-start;
+    text-align: left;
+    padding-right: 12px;
+    align-items: center;
+    box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.25);
+  }
+
+  .musicItemPopout p {
+    margin: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 16px;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+
+  .musicItemPopout span {
+    margin: 2px;
+  }
+
+  .musicItemPopout img {
+    border-radius: 12px 0px 0px 12px;
+    width: 96px; height: 96px;
+    margin-right: 12px;
+  }
+
+  .musicItemPopout p:first-child {
+    color: var(--primary);
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    font-weight: 700;
+    font-size: 18px;
+    padding-right: 12px;
+  }
+
+  .musicItemPopout span {
+    color: lightslategray;
+  }
+
+  .musicItemPopoutShown {
+    opacity: 1;
+    transition: all 0.5s;
+  }
+
+  .musicItemPopoutAnimated {
+    top: 24px !important;
+    transition: all 5.999s ease-out;
+    transform: scale(0.6);      
+  }
+
+  .musicItemPopoutAnimatedFade {
+    opacity: 0;
+    transition: all 0.5s;
+  }
+
+  .containerThree .primary {
+    margin-top: 0px;
+  }
+
+  .containerTitleHeader {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .containerThree .prominentSubtitle {
+    text-align: left;
+    margin-top: 12px;
+  }
+
+  .containerFour {
+    background-color: #0f1012;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .containerFour .buttonPrimary {
+    margin-bottom: 0px;
+  }
+
+  .containerFour p {
+    font-size: 24px;
+    margin: 0px;
+    font-weight: 600;
+  }
+
+  .containerSvg {
+    transform: translateY(-10px);
+    padding: 0px !important;
+  }
+
+  .containerFlex h1 {
+    color: var(--primary);
+  }
+
+  .containerFlex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .footer-container {
+    padding: 12px max(10%, 80px);
+    padding-bottom: 36px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .containerFlex * {
+    margin: 0px !important;
+  }
+
+  .containerFlex button, .containerFour button {
+    margin-left: 28px;
+    min-width: 160px;
+  }
+
+  .footer-container .footer-header {
+    color: #212225;
+  }
+
+  .footer-container a {
+    color: #0f1012;
+    text-decoration: none;
+  }
+
+  .footer-container a:hover {
+    text-decoration: underline;
+    color: var(--primary);
+  }
+
+  .copyright {
+    color: gray;
+  }
+
+  #footer center {
+    background-color: white;
+  }
+
+  .magenta {
+    color: var(--primary);
+  }
+
+  /* On large screens */
+  @media screen and (min-width: 1400px) {
+    .container {
+      padding-left: 20%;
+      padding-right: 20%;
+    }
+
+    .musicItemPopout {
+      transform: scale(0.8) !important;
+    }
+
+    .containerFour {
+      padding-left: 20% !important;
+      padding-right: 20% !important;
+    }
+  }
+
+  </style>
+  <title>Not Found | Parallel</title>
+</head>
+<body style="background-color: white; color: black;">
+  <center>
+
+    <br><br>
+    <img style="border-radius: 6px;" src="data:image/jpeg;base64,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" alt="">
+    <br><br>
+
+    <h1 style="margin-bottom: 0px" class="primary">Not Found!</h1>
+    <p style="margin-top: 4px;" id="message"></p>
+    <button onclick="goParallel()" class="button buttonPrimary" id="joinButton">Return to Parallel</button>
+
+  </center>
+
+  <script>
+    document.getElementById('message').innerHTML = `Unfortunately, we could not find any resource for "${window.location.href.split('/').pop()}".`;
+    function goParallel() {
+      if (window.location.href.includes('.ca')) {
+        window.location.replace("https://parallelsocial.ca");
+      }
+      else {
+        window.location.replace("https://parallelsocial.net");
+      }
+    }
+  </script>
+</body>
+</html>

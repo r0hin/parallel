@@ -1,0 +1,84 @@
+
+const footer = `
+  <div>
+    <b>Parallel</b><br>
+    <a class="footerLink" href="index.html">Home</a>
+    <a class="footerLink" href="infinite.html">infinite</a>
+    <a class="footerLink" href="support.html">Support</a>
+  </div>
+  <div>
+    <b>Company</b><br>
+    <a class="footerLink" href="mission.html">Mission</a>
+    <a class="footerLink" target="_blank" href="https://parallelsocial.net/policies.pdf">Terms of Service</a>
+    <a class="footerLink" target="_blank" href="https://parallelsocial.net/policies.pdf">Privacy Policy</a>
+    <a class="footerLink" target="_blank" href="https://parallelsocial.net/policies.pdf">Payment Policy</a>
+    <a class="footerLink" href="mailto:support@parallelsocial.net">Contact Us</a>
+  </div>
+  <div>
+    <b>Social</b><br>
+    <a class="footerLink" target="_blank" href="https://twitter.com/get_on_parallel">Twitter</a>
+    <a class="footerLink" target="_blank" href="https://instagram.com/parallelsocial">Instagram</a>
+    <a class="footerLink" target="_blank" href="https://parallelsocial.medium.com/">Blog</a>
+  </div>
+`
+document.getElementById('footer').innerHTML = footer;
+
+
+const elements = document.getElementsByClassName('nativeDownloadButton')
+
+for (let i = 0; i < elements.length; i++) {
+  const element = elements[i]
+  if (navigator.platform.toLowerCase().includes('mac')) {
+    element.innerHTML = `<i class="bx bxl-apple"></i> Download`;
+    element.onclick = () => {
+      window.open('https://github.com/r0hin/parallel-live/releases/download/v2/Parallel-MacOS.dmg');
+    }
+  }
+  else if (navigator.platform.toLowerCase().includes('win')) {
+    element.innerHTML = `<i class="bx bxl-windows"></i> Download`;
+    element.onclick = () => {
+      window.open('https://github.com/r0hin/parallel-live/releases/download/v2/Parallel-Windows.exe')
+    }
+  }
+  else if (navigator.platform.toLowerCase().includes('linux')) {
+    element.innerHTML = `<i class="bx bxl-linux"></i> Download`;
+    element.onclick = () => {
+      window.open('https://github.com/r0hin/parallel-live/releases/download/v2/Parallel-Linux.zip');
+    }
+  }
+  else {
+    element.innerHTML = `<i class="bx bxl-github"></i> Download`;
+    element.onclick = () => {
+      window.open('https://github.com/r0hin/parallel-live/releases');
+    }
+  }
+}
+
+const elementsPolicies = document.getElementsByClassName('policiesLink')
+
+for (let i = 0; i < elementsPolicies.length; i++) {
+  const element = elementsPolicies[i]
+  if (window.location.href.includes('.ca')) {
+    element.setAttribute('href', 'https://parallelsocial.ca/policies.pdf');
+  }
+  else {
+    element.setAttribute('href', 'https://parallelsocial.net/policies.pdf');
+  }
+}
+
+function openWebVersion() {
+  if (window.location.href.includes('.ca')) {
+    window.location.replace('https://parallelsocial.ca/login');
+   }
+  else {
+    window.location.replace('https://parallelsocial.net/login');
+  }
+}
+
+try {
+  require('electron');
+  window.isElectron = true;
+}
+catch (error) {
+  window.isElectron = false;
+}

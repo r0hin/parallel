@@ -8,10 +8,10 @@
     "url": "https://github.com/r0hin/parallel2.git"
   },
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-builder build",
-    "pub": "electron-builder -p always"
+    "start": "yarn parcel ./src/login.html ./src/app.html ./src/admin.html",
+    "electron": "electron .",
+    "build": "node scripts/start.js && electron-builder build",
+    "pub": "node scripts/start.js && electron-builder -p always"
   },
   "build": {
     "appId": "in.r0h.parallel",
@@ -34,6 +34,13 @@
     "electron-builder": "^23.0.3"
   },
   "dependencies": {
-    "electron-updater": "^5.0.1"
+    "@electron/remote": "^2.0.8",
+    "croppr": "^2.3.1",
+    "electron-updater": "^5.0.1",
+    "emoji-picker-element": "^1.11.3",
+    "firebase": "^9.8.3",
+    "js-confetti": "^0.10.2",
+    "parcel-bundler": "^1.12.5",
+    "timeago.js": "^4.0.2"
   }
 }
