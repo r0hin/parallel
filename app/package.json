@@ -1,0 +1,39 @@
+{
+  "name": "parallel",
+  "version": "1.0.1",
+  "description": "",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/r0hin/parallel2.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder build",
+    "publish": "electron-builder -p always"
+  },
+  "build": {
+    "appId": "in.r0h.parallel",
+    "win": {
+      "publish": [
+        "github"
+      ]
+    },
+    "mac": {
+      "publish": [
+        "github"
+      ]
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^19.0.4",
+    "electron-builder": "^23.0.3"
+  },
+  "dependencies": {
+    "electron-updater": "^5.0.1"
+  }
+}

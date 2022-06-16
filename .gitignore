@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+## DS Store file used by macOS Finder
+.DS_Store
+
+## Pass
+pass.txt
