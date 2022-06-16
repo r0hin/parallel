@@ -17,12 +17,12 @@ app.whenReady().then(() => {
 })
 
 app.on('ready', () => {
-  autoUpdater.addListener('update-downloaded', (info) => {
+  autoUpdater.addListener('update-downloaded', (updateInfo) => {
 
     dialog.showMessageBox({
       type: 'info',
       title: 'Application Update',
-      message: 'A new version has been downloaded. Restart the application to apply the updates. Changelog: \n' + autoUpdater.fullChangelog,
+      message: 'A new version has been downloaded. Restart the application to apply the updates. Changelog: \n' + updateInfo.releaseNotes,
       buttons: ['Restart']
     });  
     autoUpdater.quitAndInstall();

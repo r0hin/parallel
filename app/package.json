@@ -11,7 +11,7 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "electron-builder build",
-    "publish": "electron-builder -p always"
+    "pub": "electron-builder -p always"
   },
   "build": {
     "appId": "in.r0h.parallel",
