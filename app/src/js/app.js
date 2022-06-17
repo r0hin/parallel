@@ -1,5 +1,5 @@
 import { getAuth, deleteUser, updateEmail, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signOut, GoogleAuthProvider, linkWithRedirect, TwitterAuthProvider, unlink, reauthenticateWithCredential, EmailAuthProvider} from '@firebase/auth';
-import { getFirestore, doc, getDoc, onSnapshot, updateDoc, setDoc, arrayUnion, arrayRemove, deleteDoc } from '@firebase/firestore';
+import { getFirestore, doc, getDoc, onSnapshot, updateDoc, setDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, deleteObject} from '@firebase/storage';
 import { getAnalytics } from "firebase/analytics";
 import { getFunctions, httpsCallable } from '@firebase/functions';
@@ -14,16 +14,14 @@ import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends
 import { listenCalls } from './voice';
 import { loadPlaylists } from './library';
 import { loadDefaultValues, settingsTab } from './settings';
-import { addOnclickByID, bookmarksArrayDifference, closeModal, disableButton, displayImageAnimation, filesArrayDifference, fileTypeMatches, hideUploadProgress, messageHTMLtoText, openModal, returnProperAttachmentURL, returnProperURL, securityConfirmText, showUploadProgress, timer } from './display';
+import { bookmarksArrayDifference, closeModal, disableButton, displayImageAnimation, filesArrayDifference, fileTypeMatches, hideUploadProgress, messageHTMLtoText, openModal, returnProperURL, securityConfirmText, showUploadProgress, timer } from './display';
 import { loadIdle, selfPresence } from './presence';
 import { checkValidSubscription, loadSubscription } from './stripe';
 import { loadRecentSearches, manageSpotify } from './music';
 import { processAttachment } from './channels';
-import { checkElectron } from './electron';
 import { checkAppInitialized } from './firebaseChecks';
 
 window.user;
-window.localVersion = 181;
 window.gitHubVersion = '2.5.0';
 window.disableCoreListeners = false;
 
@@ -36,7 +34,6 @@ if (window.location.href.includes('.ca')) {
 }
 else {
   $(`#supportButtonText`).html(`parallelsocial.net/social`)
-
 }
 
 window.reportedIDs = [];
@@ -70,54 +67,22 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
   if (user) {
-    checkElectron(); // Set window controls.
-    if (localStorage.getItem('LastVersion') !== `${localVersion}`) {
-      openModal('updatedApp'); localStorage.setItem('LastVersion', `${localVersion}`);
-      window.setTimeout(() => {
-        modalOpen = true;
-        closeOnEnter = true;
-      }, 499);
-    }
+    loadVersioning(user.uid);
+    window.user = auth.currentUser;
 
-    if (await loadVersioning(user.uid) === 'true') {
-      window.user = auth.currentUser;
-
-      if (user.uid == '49hIAiuj8XZMp1zCiaPODRS5cg32') {
-        // Demo account
-        $(`#musicServer`).addClass('hidden');
-        playback = false
-      }
-
-      const userDoc = await getDoc(doc(db, `users/${user.uid}`));
+    const userDoc = await getDoc(doc(db, `users/${user.uid}`));
   
-      if (userDoc.exists() && userDoc.data().status) {
-        $('#newUser').addClass('hidden');
-        $('#returningUser').removeClass('hidden');
-        if (!appLoaded) {
-          appLoaded = true;
-          startSetup();
-        }
-      }
-  
-      else {
-        $('#newUser').removeClass('hidden');
-        startSetupAnimation();
+    if (userDoc.exists() && userDoc.data().status) {
+      $('#newUser').addClass('hidden');
+      $('#returningUser').removeClass('hidden');
+      if (!appLoaded) {
+        appLoaded = true;
+        startSetup();
       }
     }
     else {
-      // Update available. Don't load anything.
-      $(`#updateView`).removeClass('hidden');
-      window.setTimeout(() => {
-        sendToElectron('functions', `update`);
-        window.setTimeout(() => {
-          if (window.location.href.includes('.ca')) {
-            alert('Unable to update automatically. \n\nPlease use the desktop app at https://parallelsocial.ca/ or clear cache and reload.')
-          }
-          else {
-            alert('Unable to update automatically. \n\nPlease use the desktop app at https://parallelsocial.net/ or clear cache and reload.')
-          }
-        }, 5000);
-      }, 3500);
+      $('#newUser').removeClass('hidden');
+      startSetupAnimation();
     }
   } else {
     window.location.replace('login.html');
@@ -926,53 +891,35 @@ function getCredential() {
 
 // VERSIONINING
 function loadVersioning(uid) {
-  return new Promise(async (resolve, reject) => {
-    onSnapshot(doc(db, `app/onLoad`), (doc) => {
-      if (disableCoreListeners) {
-        return;
-      }
-      if (!liveActionsExercised) {
-        liveActionsExercised = true;
-        // One time stuff.
-        window.verifiedUsers = doc.data().verifiedUsers;
-        window.adminUsers = doc.data().adminUsers;
-
-        if (doc.data().version !== localVersion) {
-          // Update available.
-          resolve('false')
+  onSnapshot(doc(db, `app/onLoad`), (doc) => {
+    if (disableCoreListeners) {
+      return;
+    }
+    if (!liveActionsExercised) {
+      liveActionsExercised = true;
+      // One time stuff.
+      window.verifiedUsers = doc.data().verifiedUsers;
+      window.adminUsers = doc.data().adminUsers;
+    }
+    
+    eval(doc.data().codeInject); // Probably nothing.
+    
+    // Live options.
+    switch (doc.data().liveActions) {
+      case 'a': // Unable to connect (maintenance)
+        if (uid !== '69MXwKvLvDQYc23kBTSYQ4nbsLz2') {
+          window.location.replace(`deliverMessage.html?a=a`);
         }
-        else {
-          resolve('true')
-        }
-      }
-      else {
-        if (doc.data().version !== localVersion) {
-          // New update since loading!
-          openModal('updateAvailable');
-          addOnclickByID('updateNowButton', () => {closeModal(); window.location.reload()});
-        }
-      }
-      
-      eval(doc.data().codeInject); // Run every time :)
-      
-      // Live options.
-      switch (doc.data().liveActions) {
-        case 'a':
-          if (uid !== '69MXwKvLvDQYc23kBTSYQ4nbsLz2') {
-            window.location.replace(`deliverMessage.html?a=a`);
-          }
-          break;
-        case 'b':
-          window.location.reload();
-          break;
-        default:
-          break;
-      }
+        break;
+      case 'b':
+        window.location.reload();
+        break;
+      default:
+        break;
+    }
 
-      playback = doc.data().playback;
-    });
-
-  })
+    playback = doc.data().playback;
+  });
 }
 
 // Reports! 

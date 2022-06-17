@@ -238,12 +238,23 @@
     </center>
   </div>
 
-  <div id="modalContent_updateAvailable" class="hidden">
-    <h3>Update Available 🚀</h3>
-    <p>Heads up! A new update was just released! Would you like to update now?</p>
+  <div id="modalContent_updateAvailableUrgent" class="hidden">
+    <h3>Update Downloaded 🚀</h3>
+    <p>Parallel will automatically quit and install the update in 30 seconds. Changelog:</p>
+    <div id="whatsChanged1"></div>
     <center>
-      <button class="btn b-3 closeModalButtonOnclick">Later</button>
-      <button id="updateNowButton" class="btn b-1">Update Now</button>
+      <button class="btn b-3 closeModalButtonOnclick">Close</button>
+      <button id="updateNowButton" class="btn b-1">Restart Now</button>
+    </center>
+  </div>
+
+  <div id="modalContent_updateAvailable" class="hidden">
+    <h3>Update Downloaded 🚀</h3>
+    <p>Parallel will automatically quit and install the update in 30 seconds. Changelog:</p>
+    <div id="whatsChanged2"></div>
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Close</button>
+      <button id="updateNowButtonNonUrgent" class="btn b-1">Restart Now</button>
     </center>
   </div>
 
@@ -1112,7 +1123,7 @@
                     <center>
                       <a id="weblink2" href="https://parallelsocial.net/policies.pdf" target="_blank" class="grey">Terms</a>
                       <a id="deleteAccountButton" href="#" class="grey">Delete Account</a>
-                      <div id="adminPanel" class="hidden"><a href="https://parallelsocial.ca/admin">Admin Panel</a></div>
+                      <div id="adminPanel" class="hidden"><a href="admin.html">Admin Panel</a></div>
                     </center>
                     <br>
                     <center>
@@ -1981,6 +1992,7 @@
   <!-- Firebase --> <script type="module" src="./js/firebaseChecks.js"></script>
 
   <!-- Components --> <script type="module" src="./js/componentse.js"></script>
+  <!-- Electron --> <script type="module" src="./js/electronApp.js"></script>
   <!-- Electron --> <script type="module" src="./js/electron.js"></script>
   <!-- Channels --> <script type="module" src="./js/channels.js"></script>
   <!-- Settings --> <script type="module" src="./js/settings.js"></script>

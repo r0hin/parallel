@@ -1,8 +1,8 @@
 {
   "name": "parallel",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "scripts/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/r0hin/parallel2.git"
@@ -15,6 +15,8 @@
   },
   "build": {
     "appId": "in.r0h.parallel",
+    "productName": "Parallel 2",
+    "copyright": "Copyright © 2022 Parallel, Inc",
     "win": {
       "publish": [
         "github"
@@ -36,7 +38,9 @@
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "croppr": "^2.3.1",
+    "electron-default-menu": "^1.0.2",
     "electron-updater": "^5.0.1",
+    "electron-window-state": "^5.0.3",
     "emoji-picker-element": "^1.11.3",
     "firebase": "^9.8.3",
     "js-confetti": "^0.10.2",

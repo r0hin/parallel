@@ -3277,6 +3277,11 @@ electron-builder@^23.0.3:
     update-notifier "^5.1.0"
     yargs "^17.0.1"
 
+electron-default-menu@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/electron-default-menu/-/electron-default-menu-1.0.2.tgz#a652144703ddaf6fa8043a62f91855e422e1005e"
+  integrity sha512-YAL/UNR3kPG58wOOlmDpTG3i6+bzwhHx6NllIOaLuVrU7uYifeYGGdk5IH2Hap4wVEx2YTA8cqQ2PGSplYwDWQ==
+
 electron-osx-sign@^0.6.0:
   version "0.6.0"
   resolved "https://registry.npmjs.org/electron-osx-sign/-/electron-osx-sign-0.6.0.tgz"
@@ -3320,6 +3325,14 @@ electron-updater@^5.0.1:
     lodash.escaperegexp "^4.1.2"
     lodash.isequal "^4.5.0"
     semver "^7.3.5"
+
+electron-window-state@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-5.0.3.tgz#4f36d09e3f953d87aff103bf010f460056050aa8"
+  integrity sha512-1mNTwCfkolXl3kMf50yW3vE2lZj0y92P/HYWFBrb+v2S/pCka5mdwN3cagKm458A7NjndSwijynXgcLWRodsVg==
+  dependencies:
+    jsonfile "^4.0.0"
+    mkdirp "^0.5.1"
 
 electron@^19.0.4:
   version "19.0.4"

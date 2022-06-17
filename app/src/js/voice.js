@@ -1,10 +1,9 @@
 import { getFirestore, onSnapshot, doc, setDoc, serverTimestamp } from '@firebase/firestore';
 import { getDatabase, off, onDisconnect, onValue, query, ref, remove, set, update } from '@firebase/database';
 import { closeModal, commonArrayDifference, createEmptyAudioTrack, createEmptyVideoTrack, disableButton, disableDMCallUI, displayImageAnimation, dmKEYify, enableButton, hideServerCallUI, isObjEmpty, openModal, returnProperURL, setNoTrackUI, showDMCall, showServerCallUI } from './display';
-import { addVCMusicListeners, leaveListeningParty } from './vcMusic';
+import { leaveListeningParty } from './vcMusic';
 import { retrieveSetting, returnActiveDeviceID, returnActiveDeviceIDOutput } from './settings';
 import { endCallDM } from './friends';
-import { returnIsElectron } from './electron';
 import { playDeafen, playMute, playRingtone } from './sounds';
 import { checkAppInitialized } from './firebaseChecks';
 
@@ -1855,77 +1854,60 @@ window.testHandleScreenShare = () => {
 
 function handleScreenShare() {
   return new Promise(async (resolve, reject) => {
-    if (!returnIsElectron()) {
-      try {
-        videoMediaStream = await navigator.mediaDevices.getDisplayMedia({
-          cursor: 'always',
-          video: true,
-          audio: true
-        }); 
-        resolve(true);
-      } catch (error) {
-        resolve(false);
-        return false;
-      }
+    const { desktopCapturer, systemPreferences } = require('electron'); // Electron is defined because returnIsElection() is true.
+
+    if (systemPreferences && systemPreferences.getMediaAccessStatus() && ["denied", "restricted"].includes(systemPreferences.getMediaAccessStatus()));
+
+    showScreenShareWindow();
+    const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
+
+    $(`#screenScreens`).empty();
+    $(`#screenWindows`).empty();
+
+
+    $(`#screenSharingWallpaper`).get(0).onclick = () => {
+      resolve(false);
+      hideScreenShareWindow();
     }
-    else {
-      // More complicated. Show custom screen sharing window.
-      const { desktopCapturer, systemPreferences } = electronLink; // Electron is defined because returnIsElection() is true.
 
-      if (systemPreferences && systemPreferences.getMediaAccessStatus() && ["denied", "restricted"].includes(systemPreferences.getMediaAccessStatus()));
+    $(`#screenSharingClose`).get(0).onclick = () => {
+      resolve(false);
+      hideScreenShareWindow();
+    }
 
-      showScreenShareWindow();
-      const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
-
-      $(`#screenScreens`).empty();
-      $(`#screenWindows`).empty();
-
-
-      $(`#screenSharingWallpaper`).get(0).onclick = () => {
-        resolve(false);
+    for (let i = 0; i < sources.length; i++) {
+      const source = sources[i];
+      
+      const a = document.createElement('div');
+      a.setAttribute('class', 'screenSource');
+      a.innerHTML = `
+        <img src="${source.thumbnail.toDataURL()}"></img>
+        <div class="screenSourceTitle">${source.name}</div>
+      `;
+      a.onclick = async () => {
         hideScreenShareWindow();
-      }
-
-      $(`#screenSharingClose`).get(0).onclick = () => {
-        resolve(false);
-        hideScreenShareWindow();
-      }
-
-      for (let i = 0; i < sources.length; i++) {
-        const source = sources[i];
-        
-        const a = document.createElement('div');
-        a.setAttribute('class', 'screenSource');
-        a.innerHTML = `
-          <img src="${source.thumbnail.toDataURL()}"></img>
-          <div class="screenSourceTitle">${source.name}</div>
-        `;
-        a.onclick = async () => {
-          hideScreenShareWindow();
-          try {
-            videoMediaStream = await navigator.mediaDevices.getUserMedia({
-              audio: retrieveSetting('streamAudio', true),
-              video: {
-                mandatory: {
-                  chromeMediaSource: 'desktop',
-                  chromeMediaSourceId: source.id,
-                }
+        try {
+          videoMediaStream = await navigator.mediaDevices.getUserMedia({
+            audio: retrieveSetting('streamAudio', true),
+            video: {
+              mandatory: {
+                chromeMediaSource: 'desktop',
+                chromeMediaSourceId: source.id,
               }
-            }); 
-          } catch (error) {
-            console.log(error);
-            resolve(false);
-            return;
-          }
-          resolve(true);
+            }
+          }); 
+        } catch (error) {
+          console.log(error);
+          resolve(false);
+          return;
         }
-        if (source.name.includes('Screen')) {
-          $(`#screenScreens`).append(a);
-        }
-        else {
-          $(`#screenWindows`).append(a);
-        }
-
+        resolve(true);
+      }
+      if (source.name.includes('Screen')) {
+        $(`#screenScreens`).append(a);
+      }
+      else {
+        $(`#screenWindows`).append(a);
       }
     }
   });

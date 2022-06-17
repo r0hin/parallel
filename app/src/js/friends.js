@@ -1549,7 +1549,6 @@ async function createDMListener() {
       return;
     }
 
-
     // Find the most latest message on the snapshot and display it as a notification!
     let latest = new Date(0);
     let latestKey = null;
@@ -1563,12 +1562,21 @@ async function createDMListener() {
       }
     }
 
-    if (latest.getTime() > onLoadTime && latestVal.username !== cacheUser.username && currentChannel !== latestKey) {  
-      displaySystemNotification(latestVal.username, securityConfirmText(latestVal.latestContent), () => {
-        if (currentChannel !== latestKey) {
-          switchAndOpenFriendsDM(latestKey, latestVal.username);
-        }
-      }, latestKey, latestVal.username);
+    if (latest.getTime() > onLoadTime && latestVal.username !== cacheUser.username) {
+      if (currentChannel == latestKey && !document.hasFocus()) {
+        displaySystemNotification(latestVal.username, securityConfirmText(latestVal.latestContent), () => {
+          if (currentChannel !== latestKey) {
+            switchAndOpenFriendsDM(latestKey, latestVal.username);
+          }
+        }, latestKey, latestVal.username);
+      }
+      else if (currentChannel !== latestKey) {
+        displaySystemNotification(latestVal.username, securityConfirmText(latestVal.latestContent), () => {
+          if (currentChannel !== latestKey) {
+            switchAndOpenFriendsDM(latestKey, latestVal.username);
+          }
+        }, latestKey, latestVal.username);
+      }
     }
 
 
@@ -1650,27 +1658,18 @@ export async function markDMUnread(userID) {
 }
 
 async function addDMIndicator(uID) {
-  if (returnIsElectron()) {
-    if (document.hasFocus()) {
-      if (currentServer === 'friends' && currentChannel === uID) {
-        // All boxes checked for electron
-        markDMRead(uID);
-        return;
-      }
-    }
-    else {
-      if (currentServer === 'friends' && currentChannel === uID) {
-        // Can't detect window focus outside of desktop app. All other boxes checked though.
-        markAsReadAfterFocus.type = 'dm';
-        markAsReadAfterFocus.id = uID;
-      }
+  if (document.hasFocus()) {
+    if (currentServer === 'friends' && currentChannel === uID) {
+      // All boxes checked for electron
+      markDMRead(uID);
+      return;
     }
   }
   else {
     if (currentServer === 'friends' && currentChannel === uID) {
-      // All boxes checked for browser
-      markDMRead(uID);
-      return;
+      // Can't detect window focus outside of desktop app. All other boxes checked though.
+      markAsReadAfterFocus.type = 'dm';
+      markAsReadAfterFocus.id = uID;
     }
   }
 

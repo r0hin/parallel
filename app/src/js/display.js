@@ -8,7 +8,6 @@ import { clearMusicStatus } from './presence';
 import { endAllCalls, leaveVideoDM, shareScreenDM, shareVideoDM } from './voice';
 
 import { Picker } from 'emoji-picker-element';
-import { returnIsElectron } from './electron';
 import { playNotification } from './sounds';
 import { goToCheckout, manageSubscription } from './stripe';
 
@@ -1246,7 +1245,6 @@ export function displayImageAnimation(imageID) {
 export function displaySystemNotification(TITLE, BODY, HANDLER, UID, username) {
   playNotification();
 
-  // If window focused
   if (document.hasFocus()) {
     showInAppNotification(TITLE, BODY, UID, HANDLER); // In-app notification
   }
@@ -1264,7 +1262,7 @@ export function displaySystemNotification(TITLE, BODY, HANDLER, UID, username) {
       return;
     }
 
-    if (returnIsElectron() && retrieveSetting('desktopNotifications', true)) {
+    if (retrieveSetting('desktopNotifications', true)) {
       sendToElectron('notification', {
         title: TITLE,
         body: BODY,
@@ -1274,26 +1272,8 @@ export function displaySystemNotification(TITLE, BODY, HANDLER, UID, username) {
         username: username,
       });
     }
-    else if (retrieveSetting('desktopNotifications', true)) {
-      const notification = new Notification(TITLE, { body: BODY, hasReply: true });
-      notification.onclick = HANDLER;
-      console.log('Sending notification of title, ', TITLE);
-    }
   }
 }
-try {
-  require('electron').ipcRenderer.on('notificationClicked', (event, message) => {
-    if (message.uid && message.username) {
-      switchAndOpenFriendsDM(message.uid, message.username);
-    }
-  });
-  require('electron').ipcRenderer.on('notificationReplied', (event, message) => {
-    if (message.uid && message.reply && message.username) {
-      switchAndOpenFriendsDM(message.uid, message.username);
-      sendDMMessage(message.uid, message.reply);
-    }
-  })  
-} catch (error) {}
 
 // $('#incomingCallImage').get(0).setAttribute('crossOrigin', '');
 // $('#incomingCallImage').get(0).addEventListener('load', () => processCallColors());
@@ -1778,7 +1758,7 @@ addOnclickByID('settingsTabButton_advanced', () => {settingsTab('advanced')});
 addOnclickByID('settingsTabButton_sounds', () => {settingsTab('sounds')});
 addOnclickByID('settingsTabButton_playback', () => {expandTab('playback')});
 addOnclickByID('settingsTabButton_guide', () => {expandTab('guide')});
-addOnclickByID('settingsTabButton_updates', () => {openModal('updatedApp')});
+addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel2/releases')});
 addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.net/support')});
 if (window.location.href.includes('.ca')) { addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.ca/support')}); }
 

@@ -11,7 +11,6 @@ import { endAllCalls, manageVoiceChatDisplay } from './voice';
 import { addChannelListeners, closeCurrentChannel, markChannelAsRead, markChannelAsUnread, openGuildChannel, reevaluatePermissionsChannel, updateLoungeTypes } from './channels';
 import { showTippyListenerPresence, updatePresenceForUser } from './presence';
 import { addDMListeners, friendsTab, markDMRead } from './friends';
-import { returnIsElectron } from './electron';
 import { getCroppedPhoto } from './app';
 import { exitEditorModePlaylist } from './library';
 import { checkAppInitialized } from './firebaseChecks';
@@ -1622,27 +1621,18 @@ export async function checkIndicator(guildUID, guildID, channelID) {
 export async function addIndicator(guildUID, guildID, channelID) {
   addPendingIndicator[`${guildUID}${guildID}${channelID}`] = true; // Must go first. Probably bad code.
 
-  if (returnIsElectron()) {
-    if (document.hasFocus()) {
-      // All boxes checked for electron
-      if (channelTabLibrary[`${guildUID}${guildID}${channelID}`] == 'Chat' && currentServer == guildID && currentChannel == channelID && guildUID == currentServerUser) {
-        await markChannelAsRead(guildUID, guildID, channelID);
-        return; // No need to add indicator
-      }
-    }
-    else {
-      // Can't detect window focus outside of desktop app. All other boxes checked though.
-      if (channelTabLibrary[`${guildUID}${guildID}${channelID}`] == 'Chat' && currentServer == guildID && currentChannel == channelID && guildUID == currentServerUser) {
-        markAsReadAfterFocus.type = 'channel';
-        markAsReadAfterFocus.id = `${guildUID}.${guildID}.${channelID}`;
-      }
+  if (document.hasFocus()) {
+    // All boxes checked for electron
+    if (channelTabLibrary[`${guildUID}${guildID}${channelID}`] == 'Chat' && currentServer == guildID && currentChannel == channelID && guildUID == currentServerUser) {
+      await markChannelAsRead(guildUID, guildID, channelID);
+      return; // No need to add indicator
     }
   }
   else {
-    // All boxes checked for browser
+    // Can't detect window focus outside of desktop app. All other boxes checked though.
     if (channelTabLibrary[`${guildUID}${guildID}${channelID}`] == 'Chat' && currentServer == guildID && currentChannel == channelID && guildUID == currentServerUser) {
-      await markChannelAsRead(guildUID, guildID, channelID);
-      return;
+      markAsReadAfterFocus.type = 'channel';
+      markAsReadAfterFocus.id = `${guildUID}.${guildID}.${channelID}`;
     }
   }
   
