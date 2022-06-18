@@ -6,7 +6,7 @@ import { getCroppedPhoto } from './app';
 import { createAlbum, createArtist, createTrack } from './componentse';
 
 import { commonArrayDifference, securityConfirmTextIDs, playlistArrayDifference, openModal, closeModal, timer, showUploadProgress, hideUploadProgress, displayImageAnimation, securityConfirmText, messageHTMLtoText, displayInputEffect, windowSelected } from './display'
-import { manageDeeplink } from './electron';
+import { manageDeepLink } from './electronApp';
 import { checkAppInitialized } from './firebaseChecks';
 import { clearMusicViewsPlaylist, musicTab, openOtherPlaylist } from './music';
 import { checkValidSubscription } from './stripe';
@@ -499,10 +499,7 @@ async function updatePlaylistsOrder() {
 
 export async function loadPlaylists() {
   if (!cacheUser.playlists) { 
-    const deepLink = new URL(window.location.href).searchParams.get('deeplink');
-    if (deepLink) {
-      manageDeeplink(deepLink.replaceAll('pcdiff', '.'));
-    }
+    manageDeepLink()
     return; 
   }
   let playlistForward = [];
@@ -522,10 +519,7 @@ export async function loadPlaylists() {
       buildPlaylist(cacheUser.playlists[i]);
     }
 
-    const deepLink = new URL(window.location.href).searchParams.get('deeplink');
-    if (deepLink) {
-      manageDeeplink(deepLink.replaceAll('pcdiff', '.'));
-    }
+    manageDeepLink();
   }
   else {
     for (let i = 0; i < playlistForward.length; i++) {

@@ -1,5 +1,7 @@
-const { app, dialog } = require('electron');
-const path = require('path')
+const { app } = require('electron');
+const path = require('path');
+
+const link = require('./link');
 
 // Deep link handler
 exports.setLinkHandler = () => {
@@ -34,6 +36,23 @@ exports.singleInstanceMode = (win) => {
 }
 
 exports.handleLink = (win, url) => {
+  const arguments = url.replace('parallel://', '').split('.');
 
-  dialog.showErrorBox('Link', url);
+  switch (arguments[0]) {
+    case 'playlist':
+      link.sendDeepLink(win, {
+        type: 'playlist',
+        uid: arguments[1],
+        id: arguments[2],
+      });
+      break;
+    case 'album':
+      link.sendDeepLink(win, {
+        type: 'album',
+        id: arguments[1],
+      });
+      break;
+    default:
+      break;
+  }
 }

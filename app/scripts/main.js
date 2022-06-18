@@ -11,6 +11,8 @@ autoUpdater.autoDownload = true;
 // Deep link handler
 deeplinks.setLinkHandler();
 
+let URLARGUMENTS = "";
+
 const createWindow = () => {
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
@@ -87,9 +89,21 @@ const createWindow = () => {
   link.listenFunctions(win);
   deeplinks.singleInstanceMode(win);
 
-  // win.loadFile('output/app.html')
-  win.loadURL('http://localhost:1234/login.html')
+  app.on('open-url', function (event, url) {
+    event.preventDefault();
+    deeplinks.handleLink(win, url);
+  });
+
+  // win.loadFile(`output/app.html${URLARGUMENTS}`)
+  win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
 }
+
+app.on('open-url', function (event, url) {
+  // If no windows open
+  if (BrowserWindow.getAllWindows().length === 0) {
+    URLARGUMENTS = `?deepLink=${url}`;
+  }
+});
 
 app.on('ready', () => {
   createWindow();
@@ -100,9 +114,4 @@ app.on('ready', () => {
 
 app.on('window-all-closed', () => {
   app.quit();
-});
-
-app.on('open-url', function (event, url) {
-  event.preventDefault();
-  deeplinks.handleLink(url);
 });

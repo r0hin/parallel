@@ -55,6 +55,9 @@ exports.listenFunctions = (win) => {
 }
 
 exports.sendUpdateEvent = (win, data) => {
-  console.log('sending update event.')
   win.webContents.send('update', data);
+}
+
+exports.sendDeepLink = (win, data) => {
+  win.webContents.send('deeplink', data);
 }

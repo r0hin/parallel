@@ -66,28 +66,44 @@ electron.ipcRenderer.on('update', (event, arg) => {
   }
 });
 
-window.sendToElectron = (dataType, dataContent) => {
-  if (isElectron) {
-    electron.ipcRenderer.send(dataType, dataContent);
-  }
-}
 
-export function manageDeeplink(text) {
-  window.parts = text.split('.');
-  console.log(text)
-
-  switch (parts[0]) {
+electron.ipcRenderer.on('deeplink', (event, arg) => {
+  switch (arg.type) {
     case 'playlist':
       openSpecialServer('music');
-      openOtherPlaylist(parts[1], parts[2], null, null, null);
+      openOtherPlaylist(arg.uid, arg.id, null, null, null);
       break;
     case 'album':
       openSpecialServer('music');
-      openAlbum(parts[1]);
+      openAlbum(arg.id);
       break;
     default:
       break;
   }
+});
 
-  window.history.replaceState(null, null, window.location.pathname);
+export function manageDeepLink() {
+  const url = new URL(window.location.href);
+  const searchParams = new URLSearchParams(url.search);
+  const link = searchParams.get('deepLink').replace("parallel://", "").split('.');
+
+  switch (link[0]) {
+    case 'playlist':
+      openSpecialServer('music');
+      openOtherPlaylist(link[1], link[2], null, null, null);
+      break;
+    case 'album':
+      openSpecialServer('music');
+      openAlbum(link[1]);
+    default:
+      break;
+  }
+  
+}
+
+
+window.sendToElectron = (dataType, dataContent) => {
+  if (isElectron) {
+    electron.ipcRenderer.send(dataType, dataContent);
+  }
 }
