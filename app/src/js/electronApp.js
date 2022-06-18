@@ -85,7 +85,9 @@ electron.ipcRenderer.on('deeplink', (event, arg) => {
 export function manageDeepLink() {
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
-  const link = searchParams.get('deepLink').replace("parallel://", "").split('.');
+  const linkRaw = searchParams.get('deepLink');
+  if (!linkRaw) return;
+  const link = linkRaw.replace("parallel://", "").split('.');
 
   switch (link[0]) {
     case 'playlist':

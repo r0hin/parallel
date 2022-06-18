@@ -4,10 +4,6 @@ import { checkAppInitialized } from './firebaseChecks';
 checkAppInitialized();
 const auth = getAuth();
 
-if (window.location.href.includes('.ca')) {
-  $(`#weblink1`).attr('href', 'https://parallelsocial.ca/policies.pdf');
-}
-
 window.emailSent = false;
 
 window.showIn = () => {

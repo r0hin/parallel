@@ -2,9 +2,9 @@
 const footer = `
   <div>
     <b>Parallel</b><br>
-    <a class="footerLink" href="index.html">Home</a>
-    <a class="footerLink" href="infinite.html">infinite</a>
-    <a class="footerLink" href="support.html">Support</a>
+    <a class="footerLink" href="https://parallelsocial.net">Home</a>
+    <a class="footerLink" href="https://parallelsocial.net/infinite">infinite</a>
+    <a class="footerLink" href="https://parallelsocial.net/support">Support</a>
   </div>
   <div>
     <b>Company</b><br>
@@ -24,7 +24,7 @@ const footer = `
 document.getElementById('footer').innerHTML = footer;
 
 
-const elements = document.getElementsByClassName('nativeDownloadButton')
+const elements = document.getElementsByClassName('nativeDownloadButton');
 
 for (let i = 0; i < elements.length; i++) {
   const element = elements[i]
@@ -52,33 +52,4 @@ for (let i = 0; i < elements.length; i++) {
       window.open('https://github.com/r0hin/parallel-live/releases');
     }
   }
-}
-
-const elementsPolicies = document.getElementsByClassName('policiesLink')
-
-for (let i = 0; i < elementsPolicies.length; i++) {
-  const element = elementsPolicies[i]
-  if (window.location.href.includes('.ca')) {
-    element.setAttribute('href', 'https://parallelsocial.ca/policies.pdf');
-  }
-  else {
-    element.setAttribute('href', 'https://parallelsocial.net/policies.pdf');
-  }
-}
-
-function openWebVersion() {
-  if (window.location.href.includes('.ca')) {
-    window.location.replace('https://parallelsocial.ca/login');
-   }
-  else {
-    window.location.replace('https://parallelsocial.net/login');
-  }
-}
-
-try {
-  require('electron');
-  window.isElectron = true;
-}
-catch (error) {
-  window.isElectron = false;
 }

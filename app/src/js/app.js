@@ -26,13 +26,7 @@ window.disableCoreListeners = false;
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
 $(`#settingsTabButton_updates`).html(`<b>What's New</b><p>v${gitHubVersion}</p>`);
 $(`#whatsChangedVersion`).html(gitHubVersion);
-
-if (window.location.href.includes('.ca')) {
-  $(`#supportButtonText`).html('parallelsocial.ca/support')
-}
-else {
-  $(`#supportButtonText`).html(`parallelsocial.net/social`)
-}
+$(`#supportButtonText`).html(`parallelsocial.net/social`)
 
 window.reportedIDs = [];
 window.cachedUploadedFiles = [];

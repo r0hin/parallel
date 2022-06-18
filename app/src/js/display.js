@@ -1760,11 +1760,9 @@ addOnclickByID('settingsTabButton_playback', () => {expandTab('playback')});
 addOnclickByID('settingsTabButton_guide', () => {expandTab('guide')});
 addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel2/releases')});
 addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.net/support')});
-if (window.location.href.includes('.ca')) { addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.ca/support')}); }
 
 // todo: acceptable use policy
 addOnclickByID('linkToAcceptableUse', () => {window.open('https://parallelsocial.net/support')});
-if (window.location.href.includes('.ca')) { addOnclickByID('linkToAcceptableUse', () => {window.open('https://parallelsocial.ca/support')}); }
 
 addOnclickByID('settingsTabButton_playbackSettings', () => {settingsTab('playbackSettings')});
 addOnclickByID('settingsTabButton_playbackOutput', () => {settingsTab('playbackOutput')})

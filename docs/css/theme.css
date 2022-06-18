@@ -1,0 +1,62 @@
+/* Consistent Stuff */
+
+:root {
+  --primary: #F25E92;
+  --secondary: #3267FF;
+
+  /* Plyr */
+  --plyr-color-main: #F25E92 !important;
+}
+
+.primary {
+  color: var(--primary)
+}
+
+.winDragTrue {
+  -webkit-app-region: drag;
+}
+
+.winDragFalse {
+  -webkit-app-region: no-drag;
+}
+
+.themeButtons {
+  text-align: center;
+}
+
+.themeButtons .themeButton {
+  display: inline-block;
+  margin: 24px;
+  margin-bottom: 0px;
+}
+
+.themeButtons .themeButton img {
+  width: 240px;
+  border: 3px solid var(--afg2);
+  box-shadow: 0px 1px 24px -3px rgba(0,0,0,0.12);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.themeButtons .themeButtonActive {
+  pointer-events: none;
+}
+
+.themeButtons .themeButtonActive img{
+  border: 3px solid var(--primary);
+}
+
+.themeButtons .themeButton img:hover {
+  cursor: var(--defaultByPointer);
+  border: 3px solid var(--secondary);
+  opacity: 0.75;
+}
+
+.themeButtons .themeButton img:active {
+  transform: scale(0.9);
+}
+
+.themeButtons .themeButton p:hover {
+  cursor: var(--defaultByPointer);
+  color: var(--secondary);
+}

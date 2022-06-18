@@ -526,12 +526,7 @@
   <script>
     document.getElementById('message').innerHTML = `Unfortunately, we could not find any resource for "${window.location.href.split('/').pop()}".`;
     function goParallel() {
-      if (window.location.href.includes('.ca')) {
-        window.location.replace("https://parallelsocial.ca");
-      }
-      else {
-        window.location.replace("https://parallelsocial.net");
-      }
+      window.location.replace("https://parallelsocial.net");
     }
   </script>
 </body>
