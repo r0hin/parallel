@@ -18,7 +18,6 @@ electron.ipcRenderer.on('focus', (event, message) => {
 });
 
 
-
 electron.webFrame.setZoomFactor(parseInt(localStorage.getItem('setting_zoom')) || 1) ;
 
 switch (window.require('os').platform()) {
@@ -99,4 +98,3 @@ export function resetZoom() {
     notifyTiny('Zoom reset.', true);
   }
 }
-

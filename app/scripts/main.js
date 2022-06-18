@@ -4,8 +4,12 @@ const defaultMenu = require('electron-default-menu');
 const windowStateKeeper = require('electron-window-state');
 
 const link = require('./link');
+const deeplinks = require('./deeplink');
 
 autoUpdater.autoDownload = true;
+
+// Deep link handler
+deeplinks.setLinkHandler();
 
 const createWindow = () => {
   let mainWindowState = windowStateKeeper({
@@ -81,6 +85,7 @@ const createWindow = () => {
 
   link.listenNotifications(win);
   link.listenFunctions(win);
+  deeplinks.singleInstanceMode(win);
 
   // win.loadFile('output/app.html')
   win.loadURL('http://localhost:1234/login.html')
@@ -95,4 +100,9 @@ app.on('ready', () => {
 
 app.on('window-all-closed', () => {
   app.quit();
+});
+
+app.on('open-url', function (event, url) {
+  event.preventDefault();
+  deeplinks.handleLink(url);
 });

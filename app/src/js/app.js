@@ -7,8 +7,6 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 import * as timeago from 'timeago.js';
 import Croppr from 'croppr';
 
-import '../css/home.css';
-
 import { openSpecialServer, loadMuted, loadServers, unreadIndicators, loadOutgoingServerRequests, updateServersOrder, leaveServer } from './servers';
 import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends';
 import { listenCalls } from './voice';

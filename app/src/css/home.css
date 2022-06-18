@@ -54,7 +54,7 @@ label {
 
 input {
   padding: var(--defaultInputPadding);
-  border: 1px solid var(--afg2);
+  border: 1px solid var(--bg4);
   border-radius: 8px;
   font-size: 16px;
   background-color: var(--bg2);
@@ -65,7 +65,7 @@ input {
 
 input:focus {
   outline: none;
-  border-top: 1px solid #D8D8D8;
+  border-top: 1px solid var(--bg4);
   transition: all 0.5s;
 }
 
@@ -789,7 +789,7 @@ svg.defs {
 
 .friendsTab {
   overflow: auto;
-  height: calc(100% - 132px);
+  height: calc(100% - 142px);
   transition: all 1s;
   position: relative;
 }

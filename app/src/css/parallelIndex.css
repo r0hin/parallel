@@ -31,6 +31,24 @@ h1,h2,h3 {
   font-weight: 800;
 }
 
+h1 {
+  font-size: 2.8em;
+  background: #fff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-box-decoration-break: clone;
+  background-image: linear-gradient(129deg,#F25E92,#3267FF, #F25E92);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
 h2 {
   font-size: 1.8em;
 }
@@ -185,6 +203,7 @@ a {
   color: grey !important;
   font-size: 80%;
   display: block;
+  margin-top: 28px;
 }
 
 /* width */
@@ -357,15 +376,20 @@ a {
 }
 
 #card {
-  height: 450px;
-  width: 310px;
+  height: 480px;
+  width: 350px;
+  padding-top: 44px;
+  padding-left: 16px;
+  padding-right: 16px;
   transition: all 0.5s;
   border-radius: 36px;
   overflow: hidden !important;
 }
 
 .card_expanded {
-  height: 520px !important;
+  height: 550px !important;
+  padding-left: 36px !important;
+  padding-right: 36px !important;
   transition: all 0.5s;
   border-radius: 12px !important;
 }
@@ -405,7 +429,7 @@ label {
 
 input {
   padding: 16px;
-  border: 1px solid #D8D8D8;
+  border: 1px solid var(--bg3);
   border-radius: 8px;
   font-size: 16px;
   background-color: var(--bg2);
