@@ -272,7 +272,7 @@ a {
 }
 
 .row .box::before {
-  background-image: url(/home/highlight.png);
+  background-image: url(/assets/highlight.png);
   background-size: 100% 100%;
   content: "";
   position: absolute;

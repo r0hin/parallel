@@ -1758,7 +1758,7 @@ addOnclickByID('settingsTabButton_advanced', () => {settingsTab('advanced')});
 addOnclickByID('settingsTabButton_sounds', () => {settingsTab('sounds')});
 addOnclickByID('settingsTabButton_playback', () => {expandTab('playback')});
 addOnclickByID('settingsTabButton_guide', () => {expandTab('guide')});
-addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel2/releases')});
+addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel/releases')});
 addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.net/support')});
 
 // todo: acceptable use policy
