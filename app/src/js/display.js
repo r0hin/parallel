@@ -1,4 +1,4 @@
-import { changePassword, changeProfilePhoto, completeProfile, deleteAccount, ghChangelog, hideBookmarks, openEmailInput, removeBio, removeLyrics, removeTrackFromProfile, sendVerify, showBookmarks, signOutParallel, updateBiography, updateLyrics, requestNewTrack, startTutorial } from './app';
+import { changePassword, changeProfilePhoto, completeProfile, deleteAccount, ghChangelog, hideBookmarks, openEmailInput, removeBio, removeLyrics, removeTrackFromProfile, sendVerify, showBookmarks, signOutParallel, updateBiography, updateLyrics, requestNewTrack, startTutorial, prepareDestroyAllFiles } from './app';
 import { cancelFriendsSearch, friendEventListeners, friendsTab, toggleFriendsSort } from './friends';
 import { createPlaylist } from './library';
 import { backwardSong, clearHistory, clearQueue, forwardSong, loginSpotify, musicTab, openNewPlaylistDialog, openNewPlaylistFolderDialog, reloadSocialTab, searchMusicButton, spotifyPlaylistLookup, switchToHistory } from './music';
@@ -10,6 +10,7 @@ import { endAllCalls, leaveVideoDM, shareScreenDM, shareVideoDM } from './voice'
 import { Picker } from 'emoji-picker-element';
 import { playNotification } from './sounds';
 import { goToCheckout, manageSubscription } from './stripe';
+import { updateApp } from './electronApp';
 
 window.noTrackTimeout = null;
 window.modalOpen = false;
@@ -1758,8 +1759,11 @@ addOnclickByID('settingsTabButton_advanced', () => {settingsTab('advanced')});
 addOnclickByID('settingsTabButton_sounds', () => {settingsTab('sounds')});
 addOnclickByID('settingsTabButton_playback', () => {expandTab('playback')});
 addOnclickByID('settingsTabButton_guide', () => {expandTab('guide')});
-addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel/releases')});
+addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel/releases/latest')});
 addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.net/support')});
+addOnclickByID('settingsTabButton_questions', () => {window.open('https://github.com/r0hin/parallel/discussions')});
+addOnclickByID('settingsTabButton_features', () => {window.open('https://github.com/r0hin/parallel/issues')});
+addOnclickByID('settingsTabButton_bugs', () => {window.open('https://github.com/r0hin/parallel/issues')});
 
 // todo: acceptable use policy
 addOnclickByID('linkToAcceptableUse', () => {window.open('https://parallelsocial.net/support')});
@@ -1832,7 +1836,8 @@ addOnclickByID('questionMarkButton', () => { requestNewTrack() })
 addOnclickByID('createGroupButton', () => { createGroup() });
 addOnclickByID('openJoinGroupButton', () => { joinGroup() });
 addOnclickByID('createGroupFolderButton', () => { createGroupFolder() });
-
+addOnclickByID('updateServer', () => updateApp()) ;
+addOnclickByID('clearAllUploadsButton', () => prepareDestroyAllFiles() );
 
 // Emojis
 twemoji.parse($(`#musicTab_getStarted`).get(0));

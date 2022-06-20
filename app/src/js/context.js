@@ -426,6 +426,9 @@ function setContextTrackItems(item, element) {
   const playlistUID = element.getAttribute('playlistUID');
   const playlistRandomID = element.getAttribute('playlistRandomID');
 
+  const guildUID = element.getAttribute('guildUID');
+  const guildID = element.getAttribute('guildID');
+
   const specialContext = element.getAttribute('specialContext');
   const fromQueue = element.getAttribute('fromQueue');
   const fromLP = element.getAttribute('fromLP');

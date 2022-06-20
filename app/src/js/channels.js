@@ -268,7 +268,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
 
         <button id="searchResultsCloseButton${scopedActiveChannel}" onclick="closeChannelSearchResults('${scopedActiveChannel}')" class="btn b-1 closeChannelSearchButton animated faster hidden"><i class="bx bx-x"></i></button>
         <div id="searchResults${scopedActiveChannel}" class="channelMusicSearchResults animated faster hidden"> </div>
-        <div class="searchResultsChannelForm">
+        <div class="searchResultsChannelForm" id="${scopedActiveChannel}searchResultsChannelForm">
           <div class="form formLabelFix"><div>
             <label for="${scopedActiveChannel}SongSearchInput">Add to queue:</label>
             <input autocomplete="off" text="text" id="${scopedActiveChannel}SongSearchInput"> </input>
@@ -721,11 +721,13 @@ export function reevaluatePermissionsChannel(guildUID, guildID, channelID) {
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
   $(`#${scopedActiveChannel}TabViewSettingsAdmin`).addClass('hidden');
   $(`#${scopedActiveChannel}musicAdminBar`).addClass('hidden');
+  $(`#${scopedActiveChannel}searchResultsChannelForm`).removeClass('searchResultsChannelFormAdmin');
 
   if (serverData[guildUID + guildID].owner == user.uid || serverData[guildUID + guildID].staff.includes(`${user.uid}`)) {
     // Staff member
     $(`#${scopedActiveChannel}TabViewSettingsAdmin`).removeClass('hidden');
     $(`#${scopedActiveChannel}musicAdminBar`).removeClass('hidden');
+    $(`#${scopedActiveChannel}searchResultsChannelForm`).addClass('searchResultsChannelFormAdmin');
   }
 
   if (serverData[guildUID + guildID].owner == user.uid) {

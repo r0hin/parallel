@@ -45,6 +45,11 @@ exports.listenFunctions = (win) => {
         break;
       case "checkUpdate":
         console.log('Starting check updates.')
+
+        autoUpdater.on('update-available', () => {
+          win.webContents.send('updateAvailable', true);
+        });
+
         autoUpdater.checkForUpdates();
         setInterval(() => {
           autoUpdater.checkForUpdates();

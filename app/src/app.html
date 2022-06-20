@@ -252,7 +252,7 @@
   <div id="modalContent_updateAvailableUrgent" class="hidden">
     <h3>Update Downloaded 🚀</h3>
     <p>Parallel will automatically quit and install the update in 30 seconds. Changelog:</p>
-    <div id="whatsChanged1"></div>
+    <div id="whatsChanged1" class="changelogBoxDialog"></div>
     <center>
       <button class="btn b-3 closeModalButtonOnclick">Close</button>
       <button id="updateNowButton" class="btn b-1">Restart Now</button>
@@ -262,7 +262,7 @@
   <div id="modalContent_updateAvailable" class="hidden">
     <h3>Update Downloaded 🚀</h3>
     <p>Parallel will automatically quit and install the update in 30 seconds. Changelog:</p>
-    <div id="whatsChanged2"></div>
+    <div id="whatsChanged2" class="changelogBoxDialog"></div>
     <center>
       <button class="btn b-3 closeModalButtonOnclick">Close</button>
       <button id="updateNowButtonNonUrgent" class="btn b-1">Restart Now</button>
@@ -655,6 +655,16 @@
     </center>
   </div>
 
+  <div id="modalContent_deleteAll" class="hidden">
+    <h3>Delete Attachments</h3>
+    <p>Are you sure you would like to remove all your attachments?</p>
+    <br>   
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1 dangerButton" id="clearAttachmentsAllConfirmButton">Confirm</button>
+    </center>
+  </div>
+
   <div id="modalContent_kickMember" class="hidden">
     <h3>Kick Member</h3>
     <p>Are you sure you would like to kick this member?</p>
@@ -779,13 +789,6 @@
   <div class="hidden animated fadeIn" id="offlineView">
     <div>
       <h2>Offline</h2> <p>You are offline. Please reconnect to continue using Parallel.</p>
-    </div>
-  </div>
-
-  <!-- Update App -->
-  <div class="hidden animated fadeIn faster" id="updateView">
-    <div>
-      <h2><i class="bx bx-cloud-download"></i> Updating</h2> <p>Please wait while we update Parallel.</p>
     </div>
   </div>
 
@@ -1044,6 +1047,9 @@
           <a id="createGroupFolderButton" class="btn">New Folder</a>
         </div>
       </div>
+      <div class="server serverActive serverGone hidden" id="updateServer">
+        <i class='bx bx-rocket'></i>
+      </div>
       <div id="serverList">
         <div id="serverListFolders" class="hidden animated fadeIn"></div>  
         <div id="serverListNonFolders"></div>
@@ -1059,33 +1065,38 @@
     <div id="specialFullViewContent">
       <div id="accountServerView" class="hidden animated fadeIn view faster">
         <div id="accountSidebar" class="sidebarLeft animated fadeIn">
-          <div>
-            <p class="sidebarHeader">Categories</p>
-            <button id="settingsTabButton_general" class="sidebarButton accountSidebarButton"><i class="bx bx-cog"></i> <div class="sidebarText">General</div></button>
-            <div id="tapGroup_general" class="tabGroup">
-              <button id="settingsTabButton_account" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup accountSidebarButtonInGroupActive"><div class="sidebarText">Account</div></button>
-              <button id="settingsTabButton_profile" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup "><div class="sidebarText">Profile</div></button>
-              <button id="settingsTabButton_appearance" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Appearance</div></button>
-              <button id="settingsTabButton_notifications" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Notifications</div></button>
-              <button id="settingsTabButton_storage" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Storage</div></button>  
-            </div>
-            <button id="settingsTabButton_playback" class="sidebarButton accountSidebarButton"><i class="bx bx-play-circle"></i> <div class="sidebarText">Audio</div></button>
-            <div id="tapGroup_playback" class="tabGroup">
-              <button id="settingsTabButton_playbackSettings" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">General</div></button>
-              <button id="settingsTabButton_playbackOutput" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Devices</div></button>
-              <button id="settingsTabButton_sounds" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Sounds</div></button>
+          <div id="accountSidebarContent">
+            <div>
+              <p class="sidebarHeader">Categories</p>
+              <button id="settingsTabButton_general" class="sidebarButton accountSidebarButton"><i class="bx bx-cog"></i> <div class="sidebarText">General</div></button>
+              <div id="tapGroup_general" class="tabGroup">
+                <button id="settingsTabButton_account" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup accountSidebarButtonInGroupActive"><div class="sidebarText">Account</div></button>
+                <button id="settingsTabButton_profile" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup "><div class="sidebarText">Profile</div></button>
+                <button id="settingsTabButton_appearance" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Appearance</div></button>
+                <button id="settingsTabButton_notifications" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Notifications</div></button>
+                <button id="settingsTabButton_storage" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Storage</div></button>  
               </div>
-            <button id="settingsTabButton_guide" class="sidebarButton accountSidebarButton"><i class="bx bxs-book-alt"></i> <div class="sidebarText">More</div></button>
-            <div id="tapGroup_guide" class="tabGroup">
-              <button id="settingsTabButton_getStarted" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Start</div></button>
-              <button id="settingsTabButton_feedback" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Feedback</div></button>
-              <button id="settingsTabButton_transfer" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Transfer</div></button>
-              <button id="settingsTabButton_advanced" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Advanced</div></button>
+              <button id="settingsTabButton_playback" class="sidebarButton accountSidebarButton"><i class="bx bx-play-circle"></i> <div class="sidebarText">Audio</div></button>
+              <div id="tapGroup_playback" class="tabGroup">
+                <button id="settingsTabButton_playbackSettings" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">General</div></button>
+                <button id="settingsTabButton_playbackOutput" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Devices</div></button>
+                <button id="settingsTabButton_sounds" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Sounds</div></button>
+                </div>
+              <button id="settingsTabButton_guide" class="sidebarButton accountSidebarButton"><i class="bx bxs-book-alt"></i> <div class="sidebarText">More</div></button>
+              <div id="tapGroup_guide" class="tabGroup">
+                <button id="settingsTabButton_getStarted" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Start</div></button>
+                <button id="settingsTabButton_feedback" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Feedback</div></button>
+                <button id="settingsTabButton_transfer" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Transfer</div></button>
+                <button id="settingsTabButton_advanced" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Advanced</div></button>
+              </div>
             </div>
-          </div>
-          <div class="bottomButtonsAccount">
-            <button id="settingsTabButton_updates" class="btn"></button>
-            <button id="settingsTabButton_support" class="btn"><b>Get Support</b><p id="supportButtonText"></p></button>
+            <div class="bottomButtonsAccount">
+              <button id="settingsTabButton_features" class="btn"><b>Request Features</b><p>GitHub Issues</p></button>
+              <button id="settingsTabButton_bugs" class="btn"><b>Report Bugs</b><p>GitHub Issues</p></button>
+              <button id="settingsTabButton_questions" class="btn"><b>Ask Questions</b><p>GitHub Discussions</p></button>
+              <button id="settingsTabButton_updates" class="btn"></button>
+              <button id="settingsTabButton_support" class="btn"><b>Get Support</b><p id="supportButtonText"></p></button>
+            </div>
           </div>
         </div>
         <div id="accountContent" class="accountContent">
@@ -1131,12 +1142,6 @@
                     <h2>More Options</h2> <br>
                     <button id="openModalCreditsButton" class="btn b-3 listButton"><i class="bx bx-heart"></i> Credits</button>
                     <button id="openModalContactButton" class="btn b-3 listButton"><i class="bx bx-briefcase"></i> Contact</button>
-                    <center>
-                      <a id="weblink2" href="https://parallelsocial.net/policies.pdf" target="_blank" class="grey">Terms</a>
-                      <a id="deleteAccountButton" href="#" class="grey">Delete Account</a>
-                      <div id="adminPanel" class="hidden"><a href="admin.html">Admin Panel</a></div>
-                    </center>
-                    <br>
                     <center>
                       <a class="iconLink" href="https://www.twitter.com/get_on_parallel/" target="_blank"><i class="bx bxl-twitter"></i></a>
                       <a class="iconLink" href="https://www.instagram.com/parallelsocial/" target="_blank"><i class="bx bxl-instagram"></i></a>
@@ -1317,7 +1322,10 @@
             </div>
             <div class="accountTab hidden" id="musicTab_advanced">
               <h1 class="settingsHeader">Advanced</h1>
-              <p>No advanced settings.</p>
+              <br>
+              <a id="deleteAccountButton" href="#" class="grey">Delete Account</a>
+              <div id="adminPanel" class="hidden"><a href="admin.html">Admin Panel</a></div>
+              <a id="weblink2" href="https://parallelsocial.net/policies.pdf" target="_blank" class="grey">Terms</a>
             </div>
 
             <div class="accountTab hidden" id="musicTab_storage">
@@ -1347,6 +1355,10 @@
                   <p id="noFilesText">No files uploaded.</p>
                   <br>
                   <div id="manageFilesContainer"></div>
+                  <center>
+                    <br>
+                    <button id="clearAllUploadsButton" class="btn b-2 animated hidden"> <i class="bx bx-bomb"></i> Clear All</button>
+                  </center>
                 </div>
               </div>
     

@@ -323,31 +323,6 @@ svg.defs {
   backdrop-filter: blur(8px);
 }
 
-#updateView {
-  width: 100%; height: 100%;
-  position: absolute; top: 0px;
-  left: 0px; z-index: 50; 
-  backdrop-filter: blur(8px);
-}
-
-#updateView div {
-  left: 50%; top: 50%;
-  position: absolute;
-  text-align: center;
-  transform: translate(-50%, -50%);
-}
-
-#updateView div h2 i {
-  display: block;
-  margin-bottom: 32px;
-  font-size: 64px;
-  
-  background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent; 
-}
-
 #offlineView div {
   left: 50%; top: 50%;
   position: absolute;
@@ -2161,7 +2136,7 @@ img.bonusContentAttachmentImage:hover {
   border-radius: 12px;
 }
 
-#accountSidebar {
+#accountSidebarContent {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2171,7 +2146,7 @@ img.bonusContentAttachmentImage:hover {
   padding-bottom: 12px;
 }
 
-#musicSidebarContent{
+#musicSidebarContent, #accountSidebarContent {
   margin-top: 17px;
   margin-bottom: 17px;
   height: calc(100% - 34px);
@@ -2735,7 +2710,13 @@ a.grey:hover {
 }
 
 .searchResultsChannelForm {
-  padding-right: 4px;
+  padding-right: 0px;
+  transition: all 0.5s;
+}
+
+.searchResultsChannelFormAdmin {
+  padding-right: 120px;
+  transition: all 0.5s;
 }
 
 .channelQueueContainer {
@@ -2787,8 +2768,8 @@ a.grey:hover {
   position: absolute;
   z-index: 3;
   background-color: var(--bg2);
-  left: 0px; bottom: 80px;
-  width: calc(100% - 32px); height: calc(100% - 214px);
+  left: 0px; bottom: 88px;
+  width: calc(100% - 32px); height: calc(100% - 220px);
   overflow-y: auto;
   padding: 12px 16px 12px 16px;
 }
@@ -2852,6 +2833,15 @@ div.pill.danger {
 
 .connectedActive i {
   color: red;
+}
+
+#updateServer {
+  color: white;
+  background-color: var(--secondary);
+}
+
+#updateServer:hover {
+  opacity: 0.5;
 }
 
 .server {
@@ -5478,8 +5468,8 @@ img.emoji {
 
 .musicAdminBar {
   position: absolute;
-  bottom: 96px; right: 18px;
-  height: 48px; padding: 4px 8px 4px 8px;
+  bottom: 22px; right: 18px;
+  height: 48px; padding: 2px 4px 2px 4px;
   border-radius: 12px;
   background-color: var(--bg1);
   box-shadow: 0px 1px 14px -3px rgba(0,0,0,0.12);
@@ -5790,7 +5780,7 @@ img.emoji {
   color: var(--fg3);
 }
 
-#settingsTabButton_updates, #settingsTabButton_support {
+#settingsTabButton_updates, #settingsTabButton_support, #settingsTabButton_questions, #settingsTabButton_features, #settingsTabButton_bugs {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -5801,12 +5791,13 @@ img.emoji {
   text-align: left;
 }
 
-#settingsTabButton_updates:hover, #settingsTabButton_support:hover {
+#settingsTabButton_updates:hover, #settingsTabButton_support:hover, #settingsTabButton_questions:hover, #settingsTabButton_features:hover, #settingsTabButton_bugs:hover {
   background-color: var(--bg3);
 }
 
-#settingsTabButton_updates p, #settingsTabButton_support p{
+#settingsTabButton_updates p, #settingsTabButton_support p, #settingsTabButton_questions p, #settingsTabButton_features p, #settingsTabButton_bugs p {
   color: var(--fg3);  
+  font-weight: 500;
   margin: 6px 0px 0px 0px;
 }
 
@@ -6236,4 +6227,9 @@ img.emoji {
 
 .playlistSearchNoResults  {
   color: var(--fg3);
+}
+
+#whatsChanged2 {
+  max-height: calc(100vh - 240px);
+  overflow-y: auto;
 }

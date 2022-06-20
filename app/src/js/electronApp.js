@@ -47,16 +47,15 @@ export function startElectronProcesses() {
   });
 
   electron.ipcRenderer.on('update', (event, arg) => {
-    console.log('Receieved update eevent')
-    console.log(arg)
+    $(`#updateServer`).removeClass('serverGone');
     // If within first three minutes of app launch, don't allow skip update
     if (new Date().getTime() - startTime < (180 * 1000)) {
       openModal('updateAvailableUrgent');
       $(`#updateNowButton`).get(0).onclick = () => {
-        electron.ipcRenderer.send('functions', 'update');
+        updateApp();
       }
       window.setTimeout(() => {
-        electron.ipcRenderer.send('functions', 'update');
+        updateApp();
       }, 1000 * 30);
   
       $(`#whatsChanged1`).html(arg.releaseNotes);
@@ -65,10 +64,14 @@ export function startElectronProcesses() {
       openModal('updateAvailable');
       $(`#whatsChanged2`).html(arg.releaseNotes);
       $(`#updateNowButtonNonUrgent`).get(0).onclick = () => {
-        electron.ipcRenderer.send('functions', 'update');
+        updateApp();
       }
     }
   });
+
+  electron.ipcRenderer.on('updateAvailable', (event, arg) => {
+    snac("Downloading Update", "A new update was recently released. We are automatically downloading this update for you.");
+  })
   
   electron.ipcRenderer.on('serverPort', (event, arg) => {
     serverPort = arg;
@@ -89,6 +92,18 @@ export function startElectronProcesses() {
         break;
     }
   });
+}
+
+export function updateApp() {
+  $(`#updateServer`).addClass('serverGone');
+  jsConfetti.addConfetti({
+    confettiColors: [
+      '#F25E92', '#3267FF'
+    ],
+  });
+  window.setTimeout(() => {
+    electron.ipcRenderer.send('functions', 'update');
+  }, 3000);
 }
 
 

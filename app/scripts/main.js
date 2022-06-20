@@ -105,8 +105,8 @@ const createWindow = () => {
     deeplinks.handleLink(win, url);
   });
 
-  // win.loadFile(`output/app.html${URLARGUMENTS}`)
-  win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
+  win.loadFile(`output/app.html${URLARGUMENTS}`)
+  // win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
 }
 
 app.on('open-url', function (event, url) {

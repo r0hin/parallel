@@ -27,7 +27,7 @@ window.disableCoreListeners = false;
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
 $(`#settingsTabButton_updates`).html(`<b>What's New</b><p>v${gitHubVersion}</p>`);
 $(`#whatsChangedVersion`).html(gitHubVersion);
-$(`#supportButtonText`).html(`parallelsocial.net/social`)
+$(`#supportButtonText`).html(`parallelsocial.net/support`)
 
 window.reportedIDs = [];
 window.cachedUploadedFiles = [];
@@ -45,6 +45,7 @@ window.cacheBadgeViewed = [];
 window.cropping = false;
 window.passwording = false;
 window.windowResizeTimeout = null;
+window.storageClearAllTimeout = null;
 
 checkAppInitialized();
 const auth = getAuth();
@@ -386,7 +387,6 @@ export function storageListener() {
     for (let i = 0; i < forwardStorageDifference.length; i++) {
       const file = forwardStorageDifference[i];
       const fileID = file.filePath.replaceAll('/', '').replaceAll('.', '');
-     
       const titleDate = new Date(parseInt(file.filePath.split('/')[3].split('.')[0]));
 
       const a = document.createElement('div');
@@ -430,6 +430,22 @@ export function storageListener() {
         $(`#${fileID}`).remove();
       }, 999)
     }
+
+    if (cachedUploadedFiles.length) {
+      $(`#clearAllUploadsButton`).removeClass('fadeOut');
+      $(`#clearAllUploadsButton`).addClass('fadeIn');
+      $(`#clearAllUploadsButton`).removeClass('hidden');
+      window.clearTimeout(storageClearAllTimeout);
+    }
+    else {
+      $(`#clearAllUploadsButton`).removeClass('fadeIn');
+      $(`#clearAllUploadsButton`).addClass('fadeOut');
+      window.clearTimeout(storageClearAllTimeout);
+      storageClearAllTimeout = window.setTimeout(() => {
+        $(`#clearAllUploadsButton`).addClass('hidden');
+      })
+    }
+
   });
 }
 
@@ -451,7 +467,9 @@ $(`#storageSortButton`).get(0).onclick = () => {
 }
 
 window.removeFileByPath = async (filePath, buttonElement) => {
-  disableButton($(`#${buttonElement}`));
+  if (buttonElement) {
+    disableButton($(`#${buttonElement}`));
+  }
   await deleteObject(ref(storage, filePath));
 
   // If it's an attachment, delete the preview as well.
@@ -459,6 +477,20 @@ window.removeFileByPath = async (filePath, buttonElement) => {
     if (filePath.toLowerCase().endsWith('.png') || filePath.toLowerCase().endsWith('.jpg') || filePath.toLowerCase().endsWith('.jpeg')) {
       const attachmentPatch = filePath.replaceAll(`attachments/`, 'attachmentsPreview/').replace(/\.[^/.]+$/, '') + '-resized.png'
       await deleteObject(ref(storage, attachmentPatch));
+    }
+  }
+}
+
+export function prepareDestroyAllFiles() {
+  openModal('deleteAll');
+
+  $(`#clearAttachmentsAllConfirmButton`).get(0).onclick = async () => {
+    closeModal();
+    $(`.deleteButtonFile`).addClass('disabled');
+    for (let i = 0; i < cachedUploadedFiles.length; i++) {
+      const file = cachedUploadedFiles[i];
+      removeFileByPath(file.filePath, false);
+      
     }
   }
 }

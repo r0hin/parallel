@@ -255,7 +255,7 @@ export async function addVCMusicListeners(guildUID, guildID, channelID) {
       a.setAttribute('class', 'requestedByImg');
       $(`#channelMusicQueueContent${scopedActiveChannel}`).get(0).appendChild(a);
       
-      createTrack(queueData.trackData, `queueItem${queueID}`, i, null, ["fromLP", queueID], null, "console.log('no action')");
+      createTrack(queueData.trackData, `queueItem${queueID}`, i, null, ["fromLP", queueID, "guildUID", guildUID, "guildID", guildID], null, "console.log('no action')");
       
       tippy($(`#${queueID}queueItemPfp`).get(0), {
         content: `Requested by ${queueData.author.split('.')[1].capitalize()}`,
