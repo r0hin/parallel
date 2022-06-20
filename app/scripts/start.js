@@ -6,9 +6,8 @@ const options = {
     sourceMaps: false,
     autoInstall: false,
     hmr: false,
-    target: 'electron'
+    target: 'browser',
 };
-
 
 (async () => {
     const bundler = new Bundler([
@@ -20,7 +19,7 @@ const options = {
     bundler.bundle();
 
     bundler.on('bundled', (bundle) => {
-      console.log(`Bundle is ready: ${bundle.name}`);
+      console.log(`Bundle is ready.`);
 
       // Quit script
       process.exit();

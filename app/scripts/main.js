@@ -6,6 +6,7 @@ const windowStateKeeper = require('electron-window-state');
 const link = require('./link');
 const deeplinks = require('./deeplink');
 const discord = require('./discord');
+const host = require('./host');
 
 autoUpdater.autoDownload = true;
 
@@ -34,6 +35,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      nativeWindowOpen: true,
     },
     titleBarStyle: 'hiddenInset',
     frame: false,
@@ -105,8 +107,12 @@ const createWindow = () => {
     deeplinks.handleLink(win, url);
   });
 
-  win.loadFile(`output/app.html${URLARGUMENTS}`)
+  // In development:
   // win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
+
+  // In production:
+  host.startServer(win, URLARGUMENTS);
+  // win.loadFile(`output/app.html${URLARGUMENTS}`)
 }
 
 app.on('open-url', function (event, url) {
