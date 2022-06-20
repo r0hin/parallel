@@ -264,7 +264,7 @@ function checkEmptySaved() {
   }
 }
 
-export function createPlaylist(addTrackIDToPlaylist, playlistNameInput, skipNotify, addAlbumIDToPlaylist) {
+export function createPlaylist(addTrackIDToPlaylist, playlistNameInput, skipNotify, addAlbumIDToPlaylist, playlistDescription) {
   return new Promise(async (resolve, reject) => {
     // Check if limit on playlists.
     if (checkValidSubscription(cacheUser.subscription)) {
@@ -311,6 +311,7 @@ export function createPlaylist(addTrackIDToPlaylist, playlistNameInput, skipNoti
       creator: `${user.uid}.${cacheUser.username}`,
       dateCreated: serverTimestamp(),
       dateModified: serverTimestamp(),
+      description: playlistDescription || "",
       tracks: [],
       imageURL: '',
     })

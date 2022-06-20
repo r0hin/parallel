@@ -13,7 +13,7 @@ onAuthStateChanged(auth, async (user) => {
     window.user = auth.currentUser;
   }
   else {
-    // window.location.replace('index.html')
+    // window.location.replace('https://parallelsocial.net')
   }
 });
 

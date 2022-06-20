@@ -12,75 +12,85 @@ window.markAsReadAfterFocus = {
   id: '',
 }
 
-electron.ipcRenderer.on('focus', (event, message) => {
-  if (message) {
-    if (markAsReadAfterFocus.type !== '' && markAsReadAfterFocus.id !== '') {
-      if (markAsReadAfterFocus.type == 'dm') {
-        markDMRead(markAsReadAfterFocus.id);
+window.serverPort = null; // Important for music playback.
+
+export function startElectronProcesses() {
+  electron.ipcRenderer.send('functions', 'checkUpdate'); // Starts the hourly update checker.
+  electron.ipcRenderer.send('music', 'startServer'); // Starts the internal server in Electron.
+
+  electron.ipcRenderer.on('focus', (event, message) => {
+    if (message) {
+      if (markAsReadAfterFocus.type !== '' && markAsReadAfterFocus.id !== '') {
+        if (markAsReadAfterFocus.type == 'dm') {
+          markDMRead(markAsReadAfterFocus.id);
+        }
+        else {
+          markChannelAsRead(markAsReadAfterFocus.id.split('.')[0], markAsReadAfterFocus.id.split('.')[1], markAsReadAfterFocus.id.split('.')[2]);
+        }
+        markAsReadAfterFocus.type = '';
+        markAsReadAfterFocus.id = '';
       }
-      else {
-        markChannelAsRead(markAsReadAfterFocus.id.split('.')[0], markAsReadAfterFocus.id.split('.')[1], markAsReadAfterFocus.id.split('.')[2]);
+    }
+  });
+  
+  electron.ipcRenderer.on('notificationClicked', (event, arg) => {
+    if (arg.uid && arg.username) {
+      switchAndOpenFriendsDM(arg.uid, arg.username);
+    }
+  });
+  
+  electron.ipcRenderer.on('notificationReplied', (event, arg) => {
+    if (arg.uid && arg.reply && arg.username) {
+      switchAndOpenFriendsDM(arg.uid, arg.username);
+      sendDMMessage(arg.uid, arg.reply);
+    }  
+  });
+
+  electron.ipcRenderer.on('update', (event, arg) => {
+    console.log('Receieved update eevent')
+    console.log(arg)
+    // If within first three minutes of app launch, don't allow skip update
+    if (new Date().getTime() - startTime < (180 * 1000)) {
+      openModal('updateAvailableUrgent');
+      $(`#updateNowButton`).get(0).onclick = () => {
+        electron.ipcRenderer.send('functions', 'update');
       }
-      markAsReadAfterFocus.type = '';
-      markAsReadAfterFocus.id = '';
+      window.setTimeout(() => {
+        electron.ipcRenderer.send('functions', 'update');
+      }, 1000 * 30);
+  
+      $(`#whatsChanged1`).html(arg.releaseNotes);
     }
-  }
-});
-
-electron.ipcRenderer.on('notificationClicked', (event, arg) => {
-  if (arg.uid && arg.username) {
-    switchAndOpenFriendsDM(arg.uid, arg.username);
-  }
-});
-
-electron.ipcRenderer.on('notificationReplied', (event, arg) => {
-  if (arg.uid && arg.reply && arg.username) {
-    switchAndOpenFriendsDM(arg.uid, arg.username);
-    sendDMMessage(arg.uid, arg.reply);
-  }  
-});
-
-electron.ipcRenderer.send('functions', 'checkUpdate'); // Starts the hourly update checker.
-
-electron.ipcRenderer.on('update', (event, arg) => {
-  console.log('Receieved update eevent')
-  console.log(arg)
-  // If within first three minutes of app launch, don't allow skip update
-  if (new Date().getTime() - startTime < (180 * 1000)) {
-    openModal('updateAvailableUrgent');
-    $(`#updateNowButton`).get(0).onclick = () => {
-      electron.ipcRenderer.send('functions', 'update');
+    else {
+      openModal('updateAvailable');
+      $(`#whatsChanged2`).html(arg.releaseNotes);
+      $(`#updateNowButtonNonUrgent`).get(0).onclick = () => {
+        electron.ipcRenderer.send('functions', 'update');
+      }
     }
-    window.setTimeout(() => {
-      electron.ipcRenderer.send('functions', 'update');
-    }, 1000 * 30);
-
-    $(`#whatsChanged1`).html(arg.releaseNotes);
-  }
-  else {
-    openModal('updateAvailable');
-    $(`#whatsChanged2`).html(arg.releaseNotes);
-    $(`#updateNowButtonNonUrgent`).get(0).onclick = () => {
-      electron.ipcRenderer.send('functions', 'update');
+  });
+  
+  electron.ipcRenderer.on('serverPort', (event, arg) => {
+    serverPort = arg;
+    // `http://localhost:${serverPort}`  
+  });
+  
+  electron.ipcRenderer.on('deeplink', (event, arg) => {
+    switch (arg.type) {
+      case 'playlist':
+        openSpecialServer('music');
+        openOtherPlaylist(arg.uid, arg.id, null, null, null);
+        break;
+      case 'album':
+        openSpecialServer('music');
+        openAlbum(arg.id);
+        break;
+      default:
+        break;
     }
-  }
-});
+  });
+}
 
-
-electron.ipcRenderer.on('deeplink', (event, arg) => {
-  switch (arg.type) {
-    case 'playlist':
-      openSpecialServer('music');
-      openOtherPlaylist(arg.uid, arg.id, null, null, null);
-      break;
-    case 'album':
-      openSpecialServer('music');
-      openAlbum(arg.id);
-      break;
-    default:
-      break;
-  }
-});
 
 export function manageDeepLink() {
   const url = new URL(window.location.href);
@@ -100,9 +110,11 @@ export function manageDeepLink() {
     default:
       break;
   }
-  
 }
 
+export function sendMusicStatus(status, detail) {
+  electron.ipcRenderer.send('music', status, detail);
+}
 
 window.sendToElectron = (dataType, dataContent) => {
   if (isElectron) {

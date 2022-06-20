@@ -1,5 +1,7 @@
 const { ipcMain, Notification } = require('electron');
 const { autoUpdater } = require("electron-updater");
+const music = require('./music');
+const discord = require('./discord');
 
 // Focus outgoing event
 exports.sendFocusEvent = (win, boolean) => {
@@ -52,6 +54,31 @@ exports.listenFunctions = (win) => {
     }
 
   });
+}
+
+exports.listenMusic = (win) => {
+  ipcMain.on('music', (event, args, args2) => {
+    switch (args) {
+      case 'startServer':
+        music.startServer(win);
+        break;
+      case 'playing':
+        discord.setStatus(`▶️: ${args2}`);
+        break;
+      case 'paused':
+        discord.setStatus(`⏸️: ${args2}`);
+        break;
+      case 'stopped':
+        discord.clearStatus();
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+exports.sendServerPort = (win, data) => {
+  win.webContents.send('serverPort', data);
 }
 
 exports.sendUpdateEvent = (win, data) => {

@@ -1,12 +1,15 @@
-const { app, BrowserWindow, Menu, shell, nativeTheme } = require('electron');
+const { app, BrowserWindow, Menu, shell, nativeTheme} = require('electron');
 const { autoUpdater } = require("electron-updater");
 const defaultMenu = require('electron-default-menu');
 const windowStateKeeper = require('electron-window-state');
 
 const link = require('./link');
 const deeplinks = require('./deeplink');
+const discord = require('./discord');
 
 autoUpdater.autoDownload = true;
+
+process.setMaxListeners(15);
 
 // Deep link handler
 deeplinks.setLinkHandler();
@@ -60,7 +63,13 @@ const createWindow = () => {
     link.sendFocusEvent(win, false);
   });
 
+
   require("@electron/remote/main").enable(win.webContents);
+
+  win.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    shell.openExternal(url);
+  });
 
   win.webContents.on('render-process-gone', function (event, detailed) {
     if (detailed.reason == "crashed"){
@@ -87,7 +96,9 @@ const createWindow = () => {
 
   link.listenNotifications(win);
   link.listenFunctions(win);
+  link.listenMusic(win);
   deeplinks.singleInstanceMode(win);
+  discord.startDiscord();
 
   app.on('open-url', function (event, url) {
     event.preventDefault();

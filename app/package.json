@@ -37,14 +37,19 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
+    "cors": "^2.8.5",
     "croppr": "^2.3.1",
+    "discord-rpc": "^4.0.1",
     "electron-default-menu": "^1.0.2",
     "electron-updater": "^5.0.1",
     "electron-window-state": "^5.0.3",
     "emoji-picker-element": "^1.11.3",
+    "express": "^4.18.1",
     "firebase": "^9.8.3",
     "js-confetti": "^0.10.2",
     "parcel-bundler": "^1.12.5",
-    "timeago.js": "^4.0.2"
+    "request": "^2.88.2",
+    "timeago.js": "^4.0.2",
+    "ytcog": "^2.3.2"
   }
 }

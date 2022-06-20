@@ -9,6 +9,7 @@ checkAppInitialized;
 const rtdb = getDatabase();
 
 import { displayImageAnimation, friendsArrayDifference } from "./display";
+import { sendMusicStatus } from "./electronApp";
 import { checkAppInitialized } from "./firebaseChecks";
 import { buildMusicSocialCard } from "./music";
 import { retrieveSetting } from "./settings";
@@ -147,26 +148,35 @@ export function showTippyListenerPresence(uID, toolElement) {
 }
 
 
-export async function setMusicStatus() {
-  // Communicate with NodeJS to share to discord
+export async function setMusicStatus(track, status) {
   if (retrieveSetting('discordSongs', true)) {
-    sendToElectron('music', `${musicPlaying.attributes.name} by ${musicPlaying.relationships.artists.data[0].attributes.name}`);
+    if (track) {
+      if (status) {
+        sendMusicStatus('playing', `${track.attributes.name} by ${track.attributes.artistName}`);
+      }
+      else {
+        sendMusicStatus('paused', `${track.attributes.name} by ${track.attributes.artistName}`);
+      }
+    }
+    else {
+      sendMusicStatus('stopped', null);
+    }
   }
-  
   if (retrieveSetting('shareSongs', true)) {
-    // Update personal presence with the track details::
-    await set(ref(rtdb, `users/${user.uid}/currentlyListening`), {
-      id: musicPlaying.id,
-      title: musicPlaying.attributes.name,
-      artist: musicPlaying.relationships.artists.data[0].attributes.name,
-      album: musicPlaying.attributes.artwork.url.replace('{w}', '500').replace('{h}', '500'),
-      albumID: musicPlaying.relationships.albums.data[0].id || "",
-    });
+    if (track) {
+      // Update personal presence with the track details::
+      await set(ref(rtdb, `users/${user.uid}/currentlyListening`), {
+        id: track.id,
+        title: track.attributes.name,
+        artist: track.relationships.artists.data[0].attributes.name,
+        album: track.attributes.artwork.url.replace('{w}', '500').replace('{h}', '500'),
+        albumID: track.relationships.albums.data[0].id || "",
+      });
+    }
   }
 }
 
 export async function clearMusicStatus() {
-  sendToElectron('music', `Home`)
   await remove(ref(rtdb, `users/${user.uid}/currentlyListening`));
 }
 

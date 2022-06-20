@@ -213,7 +213,7 @@ a:active, a:active i, a:active * {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: var(--bg4);
   width: 0.8em;
   border-radius: 12px;
   transition: all 0.5s;

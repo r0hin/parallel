@@ -18,6 +18,7 @@ import { checkValidSubscription, loadSubscription } from './stripe';
 import { loadRecentSearches, manageSpotify } from './music';
 import { processAttachment } from './channels';
 import { checkAppInitialized } from './firebaseChecks';
+import { startElectronProcesses } from './electronApp';
 
 window.user;
 window.gitHubVersion = '2.5.0';
@@ -299,6 +300,8 @@ async function startSetup() {
     adminUser = false;
     $(`#adminPanel`).addClass('hidden');
   }
+
+  startElectronProcesses();
 }
 
 function loadDetails() {

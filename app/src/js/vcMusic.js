@@ -3,6 +3,7 @@ import { createTrack } from './componentse';
 import { commonArrayDifference, disableButton, displayImageAnimation, enableButton, returnProperURL } from './display';
 import { checkAppInitialized } from './firebaseChecks';
 import { getPlaybackURL, sendTrackToPlayerRevamp } from './playback';
+import { setMusicStatus } from './presence';
 
 window.defaultCacheChannelVCMusic = {
   connected: {},
@@ -104,6 +105,7 @@ export async function joinMusicParty(guildUID, guildID, channelID) {
   
   window.setTimeout(() => {
     // snac('Listening Party', `You are now connected to a listening party.`);
+    libraryPlayer.pause();
     notifyTiny('Listening Party: Connected', false);
     $(`#${guildUID}${guildID}${channelID}TabItemMusic`).removeClass('invisibleOpacityAnimated')
     enableButton($(`#${scopedActiveChannel}musicPartyButton`), '<i class="bx bx-x"></i>');
@@ -138,6 +140,13 @@ export async function leaveListeningParty(guildUID, guildID, channelID) {
 
   if (channelTabLibrary[scopedActiveChannel] == 'Music') {
     modifyChannelTab(guildUID, guildID, channelID, 'Chat');
+  }
+
+  if (musicPlaying) {
+    setMusicStatus(musicPlaying, true);
+  }
+  else {
+    setMusicStatus(false);
   }
 }
 
@@ -389,12 +398,11 @@ async function goChannelNextTrack(guildUID, guildID, channelID) {
   
   let nextQueueData = cacheChannelVCMusic[scopedActiveChannel].queue[nextQueueID];
 
-  const [trackURL, trackURL2] = await getPlaybackURL(nextQueueData.trackData, false);
+  const trackURL = await getPlaybackURL(nextQueueData.trackData, false);
 
   nextQueueData.startedAt = new Date().getTime();
   nextQueueData.randomInt = new Date().getTime();
   nextQueueData.trackURL = trackURL;
-  nextQueueData.trackURL2 = trackURL2;
 
   await remove(ref(rtdb, `${activeVCMusicListener}/queue/${nextQueueID}`));
   await set(ref(rtdb, `${activeVCMusicListener}/nowPlaying`), nextQueueData);
@@ -409,8 +417,10 @@ function sendToServerPlayer(nowPlaying, guildUID, guildID, channelID, timeOffset
   if (!activeListeningParty || activeListeningParty !== `${guildUID}/${guildID}/${channelID}`) { return };
   if (currentChannelMusicCode == nowPlaying) { return };
 
+  console.log(timeOffset)
   console.log(nowPlaying)
-  sendTrackToPlayerRevamp(nowPlaying, `#channelMusicAudio${scopedActiveChannel}`, timeOffset, nowPlaying.trackURL, nowPlaying.trackURL2);
+  sendTrackToPlayerRevamp(nowPlaying, `#channelMusicAudio${scopedActiveChannel}`, timeOffset, nowPlaying.trackURL);
+  setMusicStatus(nowPlaying, true);
 }
 
 function serverPlayerDidEnd(guildUID, guildID, channelID) {
@@ -418,6 +428,13 @@ function serverPlayerDidEnd(guildUID, guildID, channelID) {
 
   $(`#channelMusicAudio${scopedActiveChannel}`).get(0).src = '';
   updateVCState(guildUID, guildID, channelID, cacheChannelVCMusic[scopedActiveChannel], 'forwardSong');
+
+  if (musicPlaying) {
+    setMusicStatus(musicPlaying, true);
+  }
+  else {
+    setMusicStatus(false);
+  }
 }
 
 window.updateVolumeFromSlider = (scopedActiveChannel) => {

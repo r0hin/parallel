@@ -9,8 +9,6 @@ import { checkAppInitialized } from './firebaseChecks';
 window.currentSubscription = null;
 
 window.jsConfetti = new JSConfetti()
-// const stripe = new Stripe(`pk_live_51HiZ1SBa3MWDKrNRDi6Gl1mfeAhFmUGtP7EmEjWFB32FIF6d44fR0a2IPw7OBaJle88TSq5OS6qRxvhIh2wVMd9X00Fpw3SMEG`);
-// const stripe = new Stripe(`pk_test_51HiZ1SBa3MWDKrNRytrkn8KhWYxL1bZHqe6QMLojrnW3RO8swyyi1pefyz9FPWH1wYdhsHraVJ2ltIYdHItccyAu009epSj6MP`);
 
 checkAppInitialized();
 const functions = getFunctions();
@@ -77,7 +75,7 @@ export async function goToCheckout(priceID) {
   const result = await startPayment({
     priceID: priceID,
     successURL: `${window.location.href}?a=stripeSuccess`,
-    cancelURL: `${window.location.href}?a=stripeCancel`,
+    cancelURL: `${window.location.href}?a=stripeCancel`,  
   });
 
   window.location.replace(result.data.data)

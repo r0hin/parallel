@@ -40,10 +40,6 @@ switch (window.require('os').platform()) {
     $(`#windowsControls`).removeClass('hidden');
     startWindowControlsListeners();
     break;
-  case 'linux':
-    $(`#windowsControls`).removeClass('hidden');
-    startWindowControlsListeners();
-    break;
 }
 
 function startWindowControlsListeners() {

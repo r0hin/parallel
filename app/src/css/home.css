@@ -4167,9 +4167,14 @@ div.pill.danger {
   margin-bottom: 12px;
 }
 
+#spotifySignedInDetails {
+  margin-bottom: 18px;
+  color: var(--fg3);
+}
+
 #spotifySignedInDetails img {
   width: 24px; height: 24px;
-  border-radius: 10px;
+  border-radius: 24px;
   vertical-align: middle;
 }
 

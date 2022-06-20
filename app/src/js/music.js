@@ -43,6 +43,7 @@ window.spotifyToken = null;
 const placeholderAlbumImage = 'https://firebasestorage.googleapis.com/v0/b/parallel-by-wop.appspot.com/o/app%2FdefaultAlbum.png?alt=media';
 
 libraryPlayer.on('playing', event => {
+  setMusicStatus(musicPlaying, true);
   $('#playerPauseButton').html(`<i class="bx bx-pause"></i>`)
   $('#playerPauseButton').get(0).onclick = () => {pauseMusicButton()}
   $('#playerPauseButtonMini').html(`<i class="bx bx-pause"></i>`)
@@ -50,6 +51,7 @@ libraryPlayer.on('playing', event => {
 })
 
 libraryPlayer.on('pause', event => {
+  setMusicStatus(musicPlaying, false);
   $('#playerPauseButton').html(`<i class="bx bx-play"></i>`)
   $('#playerPauseButton').get(0).onclick = () => {playMusicButton()}
   $('#playerPauseButtonMini').html(`<i class="bx bx-play"></i>`)
@@ -58,7 +60,7 @@ libraryPlayer.on('pause', event => {
 
 libraryPlayer.on('volumechange', event => {
   const inputVolume = event;
-})
+});
 
 navigator.mediaSession.setActionHandler('play', function() { libraryPlayer.play() });
 navigator.mediaSession.setActionHandler('pause', function() { libraryPlayer.pause() });
@@ -1813,7 +1815,7 @@ export async function initalizePlayback(trackID) {
     setTrackUI(musicPlaying);
   }, 1499);
 
-  setMusicStatus();
+  setMusicStatus(musicPlaying, true);
 }
 
 export function pauseMusicButton() {
@@ -1888,6 +1890,7 @@ export function forwardSong() {
     libraryPlayer.pause();
     hidePlaybackView();
     updateQueue('nowPlaying');
+    setMusicStatus(false);
   }
 }
 
@@ -2199,15 +2202,16 @@ function prepareTransferPlaylist(playlistID, token, playlistName) {
     const aPlaylist = await aPlaylistFetch.json();
 
     // Create Parallel playlist
-    const parallelPlaylistID = await createPlaylist(null, `${securityConfirmTextIDs(playlistName, true)}`);
+    const parallelPlaylistID = await createPlaylist(null, `${securityConfirmTextIDs(playlistName, true)}`, true, false, "Imported from Spotify.");
 
     if (!parallelPlaylistID) {
       snac('Could not create playlist.', '', 'error')
       return;
     }
 
-    const tracksToAdd = [];
+    let tracksToAdd = [];
     let cumulativeLength = 0;
+    let erroredTracks = [];
 
     for (let i = 0; i < aPlaylist.items.length; i++) {
       const spotifyTrack = aPlaylist.items[i];
@@ -2223,7 +2227,7 @@ function prepareTransferPlaylist(playlistID, token, playlistName) {
           cumulativeLength += trackData.results.songs.data[0].durationInMillis;
         }
       } catch (error) {
-        console.log(`❌: ${tracks[i].artist.name} - ${tracks[i].title}`);
+        erroredTracks.push(`${spotifyTrack.track.artists[0].name} - ${spotifyTrack.track.name}`);
       }
 
       notifyTiny(`${i + 1} / ${aPlaylist.items.length} done.`);
@@ -2236,6 +2240,13 @@ function prepareTransferPlaylist(playlistID, token, playlistName) {
 
     snac('Playlist Transferred.', 'Your playlist has been successfully transferred to Parallel. Happy listening!', 'success');
 
+    if (erroredTracks.length) {
+      openModal('errorTransfer');
+      $(`#trackListError`).html(``)
+      for (let i = 0; i < erroredTracks.length; i++) {
+        $(`#trackListError`).append(`<li>${erroredTracks[i]}</li>`);
+      }
+    }
   }
 }
 

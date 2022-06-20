@@ -8,7 +8,7 @@ const footer = `
   </div>
   <div>
     <b>Company</b><br>
-    <a class="footerLink" href="mission.html">Mission</a>
+    <a class="footerLink" href="https://parallelsocial.net/mission">Mission</a>
     <a class="footerLink" target="_blank" href="https://parallelsocial.net/policies.pdf">Terms of Service</a>
     <a class="footerLink" target="_blank" href="https://parallelsocial.net/policies.pdf">Privacy Policy</a>
     <a class="footerLink" target="_blank" href="https://parallelsocial.net/policies.pdf">Payment Policy</a>
@@ -38,12 +38,6 @@ for (let i = 0; i < elements.length; i++) {
     element.innerHTML = `<i class="bx bxl-windows"></i> Download`;
     element.onclick = () => {
       window.open('https://github.com/r0hin/parallel-live/releases/download/v2/Parallel-Windows.exe')
-    }
-  }
-  else if (navigator.platform.toLowerCase().includes('linux')) {
-    element.innerHTML = `<i class="bx bxl-linux"></i> Download`;
-    element.onclick = () => {
-      window.open('https://github.com/r0hin/parallel-live/releases/download/v2/Parallel-Linux.zip');
     }
   }
   else {
