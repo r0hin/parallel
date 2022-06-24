@@ -57,7 +57,7 @@ window.prepareFriendRequest = async () => {
   const name = $('#newFriendName').val().toLowerCase();
 
   if (name === cacheUser.username) {
-    snac('Error', 'You cannot send a friend request to yourself.', 'danger');
+    snac('Friend Request Error', 'You cannot send a friend request to yourself.', 'danger');
     enableButton($(`#previewRequestButtonFriends`), 'Preview Request');
     return;
   }
@@ -102,21 +102,21 @@ window.confirmFriendRequest = async (userID) => {
   const userDoc = await getDoc(doc(db, `users/${uID}`));
 
   if (userDoc.data().incomingFriendRequests.some(e => e.u == user.uid)) {
-    snac('Outgoing Request', 'You already have an outgoing friend request to this person.', 'danger');
+    snac('Friend Request Error', 'You already have an outgoing friend request to this person.', 'danger');
     $('#previewRequestButtonFriends').attr('onclick', 'prepareFriendRequest()');
     enableButton($(`#previewRequestButtonFriends`), 'Preview Request');
     return; 
   }
   
   if (cacheUser.friends.some(e => e.u === uID)) {
-    snac('Already Friends', 'You are already friends with this person.', 'danger');
+    snac('Friend Request Error', 'You are already friends with this person.', 'danger');
     $('#previewRequestButtonFriends').attr('onclick', 'prepareFriendRequest()');
     enableButton($(`#previewRequestButtonFriends`), 'Preview Request');
     return;
   }
 
   if (cacheUser.blockedUsers && cacheUser.blockedUsers.some(e => e.u === uID)) {
-    snac('User Blocked', 'You have blocked this user. Unblock them to send a friend request.', 'danger');
+    snac('Friend Request Error', 'You have blocked this user. Unblock them to send a friend request.', 'danger');
     $('#previewRequestButtonFriends').attr('onclick', 'prepareFriendRequest()');
     enableButton($(`#previewRequestButtonFriends`), 'Preview Request');
     return;
@@ -135,13 +135,13 @@ window.confirmFriendRequest = async (userID) => {
   const result = await addFriendRequest({target: uID});
 
   if (result.data.data === false) {
-    snac('Error', 'Contact support or try again.', 'danger');
+    snac('Friend Request Error', 'Contact support or try again.', 'danger');
     $('#previewRequestButtonFriends').attr('onclick', 'prepareFriendRequest()');
     enableButton($(`#previewRequestButtonFriends`), 'Preview Request');
     return;
   }
   
-  snac('Friend Request Sent', '', 'success');
+  snac('Friend Request Sent', 'A friend request was successfully sent to this user.', 'success');
 }
 
 export function friendsTab(tab, el) {
@@ -358,11 +358,11 @@ export async function acceptRequest(targetUID, targetName) {
   const result = await acceptRequest({target: targetUID});
 
   if (result.data.data === false) {
-    snac('Error', `Contact support or try again.`, 'danger');
+    snac('Friend Request Error', `Contact support or try again.`, 'danger');
   }
 
   else {
-    snac('Request Accepted', `You accepted the request from ${targetName}.`, 'success');
+    snac('Friend Request Accepted', `The friend request from ${targetName} was accepted successfully.`, 'success');
   }
 }
 
@@ -386,11 +386,11 @@ async function rejectRequest(targetUID, targetName) {
   const result = await rejectRequest({target: targetUID});
 
   if (result.data.data === false) {
-    snac('Error', `Contact support or try again.`, 'danger');
+    snac('Friend Request Error', `Contact support or try again.`, 'danger');
   }
 
   else {
-    snac('Request Rejected', `You rejected the request from ${targetName}.`, 'success');
+    snac('Friend Request Rejected', `The friend request from ${targetName} was rejected successfully.`, 'success');
   }
 }
 
@@ -492,10 +492,10 @@ window.cancelRequest = (targetUID, targetNameInput) => {
     const result = await cancelRequestFunc({target: targetUID});
   
     if (result.data.data === false) {
-      snac('Error', `Contact support or try again.`, 'danger');
+      snac('Friend Request Error', `Contact support or try again.`, 'danger');
     }
     else {
-      snac('Request Cancelled', `You cancelled the request to ${targetName}.`, 'success');
+      snac('Friend Request Cancelled', `The friend request to ${targetName} was cancelled successfully.`, 'success');
     }
   });
 }
@@ -569,7 +569,7 @@ export async function openFriendsDM(uID, inputUsername) {
   }
 
   if (!username) {
-    snac('Error', 'Contact support or try again.', 'danger');
+    snac('Friends Error', 'Contact support or try again.', 'danger');
   }
 
   if (activeDM == uID) {
@@ -888,14 +888,14 @@ export async function pinDMMessage(uID, messageID, messageSender, username) {
     c: messageHTMLtoText(null, $(`#DMMessageContentOfID${messageID}`).get(0))
   });
 
-  snac('Pinned', '', 'success');
+  snac('Message Pinned', 'A message was successfully pinned in this DM.', 'success');
 }
 
 export async function unpinDMMessage(uID, messageID, skipNotify) {
   await remove(ref(rtdb, `direct/${dmKEYify(uID, user.uid)}/pinned/${messageID}`));
 
   if (!skipNotify) {
-    snac('Unpinned', '', 'success');
+    snac('Message Unpinned', 'A message was successfully unpinned in this DM.', 'success');
   }
 }
 
@@ -1074,15 +1074,7 @@ export async function setReadReciepts(setting) {
   await updateDoc(doc(db, `DMUnread/${user.uid}`), {
     hideRead: setting
   });
-
-  if (setting) {
-    snac('Read Receipts Off', '', 'success');
-  }
-  else {
-    snac('Read Receipts On', '', 'success');
-  }
 }
-
 
 function displayDMDeleteMessage(key) {
   // Delete the message firstly
@@ -1277,7 +1269,7 @@ window.previewJoinWithInvite = (invitation) => {
   $(`#inviteCodeField`).val(invitation);
   $(`#inviteCodeField`).addClass('active');
   $(`#inviteCodeField`).get(0).focus();
-  snac('Invitation Code Pasted', '', 'success');
+  notifyTiny("Invitation code pasted.")
 }
 
 function buildDMMessage(messageItem, uID, messageID, targetDirectoryInput) {
@@ -1732,13 +1724,13 @@ window.removeFriend = (uID, notify) => {
     const result = await removeFriend({target: uID});
   
     if (result.data.data === false) {
-      snac('Error', 'Contact support or try again.', 'danger');
+      snac('Friend Remove Error', 'Contact support or try again.', 'danger');
       resolve(false);
       return;
     }
   
     if (notify) {
-      snac(`Friend Removed`, '', 'success');
+      snac(`Friend Removed`, 'This user was removed from your friends list successfully.', 'success');
     }
 
     resolve(true);

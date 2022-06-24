@@ -10,7 +10,7 @@
   <!-- IntroJS --> <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
   <!-- Croppr --> <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jamesssooi/Croppr.js/dist/croppr.min.css">
   <!-- Tippy Shift --> <link rel="stylesheet" href="https://unpkg.com/tippy.js@6.3.1/animations/shift-toward.css" />
-  <!-- Plyr --> <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
+  <!-- Plyr --> <link rel="stylesheet" href="https://cdn.plyr.io/3.7.2/plyr.css" />
 
   <meta name="description" content="Parallel Web - Listen to music, connect with friends, and more.">
   <meta name="theme-color" content="#F25E92">
@@ -144,6 +144,20 @@
       <button class="btn b-3 roundedButton ModalCancel closeModalButtonOnclick"> <i class="bx bx-message-square-x"></i> </button>
       <div id="modalContent"></div>
     </div>
+  </div>
+
+  <div id="modalContent_musicInfo" class="hidden">
+    <h3>Music Streaming</h3>
+    
+    <p>All audio data streaming functionality and networking occurs locally and is never stored under possession of Parallel, Inc. All audio streaming data is publicly accessible on the internet.</p>
+
+    <p>Further, we encourage all users to respect their local copyright laws and access content in the public domain.</p>
+
+    <p>No specific music streaming data is currently stored.</p>
+
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Close</button>
+    </center>
   </div>
 
   <div id="modalContent_errorTransfer" class="hidden">
@@ -1067,27 +1081,30 @@
         <div id="accountSidebar" class="sidebarLeft animated fadeIn">
           <div id="accountSidebarContent">
             <div>
+              <div class="accountHeader">
+                <h2>Settings</h2>
+              </div>
               <p class="sidebarHeader">Categories</p>
               <button id="settingsTabButton_general" class="sidebarButton accountSidebarButton"><i class="bx bx-cog"></i> <div class="sidebarText">General</div></button>
               <div id="tapGroup_general" class="tabGroup">
-                <button id="settingsTabButton_account" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup accountSidebarButtonInGroupActive"><div class="sidebarText">Account</div></button>
-                <button id="settingsTabButton_profile" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup "><div class="sidebarText">Profile</div></button>
-                <button id="settingsTabButton_appearance" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Appearance</div></button>
-                <button id="settingsTabButton_notifications" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Notifications</div></button>
-                <button id="settingsTabButton_storage" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Storage</div></button>  
+                <button id="settingsTabButton_account" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup accountSidebarButtonInGroupActive"><i class="bx bx-user-pin"></i><div class="sidebarText">Account</div></button>
+                <button id="settingsTabButton_profile" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup "><i class="bx bxs-user-badge"></i><div class="sidebarText">Profile</div></button>
+                <button id="settingsTabButton_appearance" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-sun"></i><div class="sidebarText">Appearance</div></button>
+                <button id="settingsTabButton_notifications" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-bell"></i><div class="sidebarText">Notifications</div></button>
+                <button id="settingsTabButton_storage" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-hdd"></i><div class="sidebarText">Storage</div></button>  
               </div>
               <button id="settingsTabButton_playback" class="sidebarButton accountSidebarButton"><i class="bx bx-play-circle"></i> <div class="sidebarText">Audio</div></button>
               <div id="tapGroup_playback" class="tabGroup">
-                <button id="settingsTabButton_playbackSettings" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">General</div></button>
-                <button id="settingsTabButton_playbackOutput" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Devices</div></button>
-                <button id="settingsTabButton_sounds" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Sounds</div></button>
+                <button id="settingsTabButton_playbackSettings" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-headphone"></i><div class="sidebarText">General</div></button>
+                <button id="settingsTabButton_playbackOutput" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-speaker"></i><div class="sidebarText">Devices</div></button>
+                <button id="settingsTabButton_sounds" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-music"></i><div class="sidebarText">Sounds</div></button>
                 </div>
               <button id="settingsTabButton_guide" class="sidebarButton accountSidebarButton"><i class="bx bxs-book-alt"></i> <div class="sidebarText">More</div></button>
               <div id="tapGroup_guide" class="tabGroup">
-                <button id="settingsTabButton_getStarted" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Start</div></button>
-                <button id="settingsTabButton_feedback" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Feedback</div></button>
-                <button id="settingsTabButton_transfer" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Transfer</div></button>
-                <button id="settingsTabButton_advanced" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><div class="sidebarText">Advanced</div></button>
+                <button id="settingsTabButton_getStarted" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-rocket"></i><div class="sidebarText">Start</div></button>
+                <button id="settingsTabButton_feedback" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-heart"></i><div class="sidebarText">Feedback</div></button>
+                <button id="settingsTabButton_transfer" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bxs-right-top-arrow-circle"></i><div class="sidebarText">Transfer</div></button>
+                <button id="settingsTabButton_advanced" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-cog"></i><div class="sidebarText">Advanced</div></button>
               </div>
             </div>
             <div class="bottomButtonsAccount">
@@ -1802,7 +1819,12 @@
   
         <div id="musicSidebar" class="sidebarLeft hidden animated fadeIn">
           <div id="musicSidebarContent">
-            <p class="sidebarHeader">Music</p>
+            <div class="musicHeader">
+              <h2>Music</h2>
+              <div class="musicActions">
+                <button id="musicInfoButton" class="btn b-0"><i class="bx bx-question-mark"></i></button>
+              </div>
+            </div>
             <button id="musicTabButton_explore" class="sidebarButton musicSidebarButton"><i class="bx bxs-hot"></i> <div class="sidebarText">Explore</div></button>
             <button id="musicTabButton_friends" class="sidebarButton musicSidebarButton"><i class="bx bx-heart"></i> <div class="sidebarText">Friends</div></button>
             <button id="musicTabButton_queue" class="sidebarButton musicSidebarButton musicSidebarButtonGone hidden"><i class="bx bx-collection"></i> <div class="sidebarText">Queue</div></button>
@@ -2007,7 +2029,7 @@
   <!-- PeerJS --> <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
   <!-- IntroJS --> <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
   <!-- Pooper --> <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <!-- Plyr --> <script src="https://cdn.plyr.io/3.6.8/plyr.js"></script>
+  <!-- Plyr --> <script src="https://cdn.plyr.io/3.7.2/plyr.js"></script>
   <!-- Tippy --> <script src="https://unpkg.com/tippy.js@6"></script>
   <!-- Cosha --> <script src="https://unpkg.com/cosha"></script>
 

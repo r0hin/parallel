@@ -609,7 +609,7 @@ export function windowSelected() {
 
 window.copyToClipboard = (textToCopy) => {
   navigator.clipboard.writeText(textToCopy).then(() => {
-    snac('Copied', 'Text copied to clipboard');
+    snac('Text Copied', 'Text copied to clipboard');
   })
   .catch(err => {
     window.prompt("Copy to clipboard:", textToCopy);
@@ -1838,6 +1838,7 @@ addOnclickByID('openJoinGroupButton', () => { joinGroup() });
 addOnclickByID('createGroupFolderButton', () => { createGroupFolder() });
 addOnclickByID('updateServer', () => updateApp()) ;
 addOnclickByID('clearAllUploadsButton', () => prepareDestroyAllFiles() );
+addOnclickByID('musicInfoButton', () => { openModal('musicInfo') });
 
 // Emojis
 twemoji.parse($(`#musicTab_getStarted`).get(0));

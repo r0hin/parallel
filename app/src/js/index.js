@@ -75,12 +75,12 @@ window.sendPassResetEmail = async () => {
   const email = $(`#email3`).val();
   sendPasswordResetEmail(auth, email).then(() => {
     $('#emailresetbutton').html(`email sent`);
-    snac('Email Sent', `A password reset email was sent to your email, "${email}".`, 'success');
+    snac('Password Reset Email Sent', `A password reset email was sent to <b>${user.email}</b>. Please check your email and follow the instructions to reset your password.`, 'success');
     $(`#email3`).val('');
     emailSent = true;
   }).catch((err) => {
     $('#emailresetbutton').removeClass('disabled');
-    snac('Error', `${err}`, 'danger');
+    snac('Password Reset Email Error', `${err}`, 'danger');
   });
 }
 
@@ -138,7 +138,7 @@ window.signInWith = (service) => {
   }
 
   signInWithRedirect(auth, provider).catch((error) => {
-    snac('Error', error.message, 'danger');
+    snac('Authentication Error', error.message, 'danger');
 
     window.setTimeout(() => {
       $('.googlebtn').html(`<h3><i class='bx bxl-google'></i></h3>`);
@@ -153,7 +153,7 @@ window.submitLogin = () => {
   console.log('Attemping to login...');
   signInWithEmailAndPassword(auth, $('#email').val(), $('#password').val()).catch((error) => {
     $('#password').val('');
-    snac('Error', error.message, 'danger');
+    snac('Authentication Error', error.message, 'danger');
     window.setTimeout(() => {
       $('.submitbtn').html(`Submit`);
       $('.submitbtn').removeClass('disabled');
@@ -170,7 +170,7 @@ window.submitSignup = () => {
   console.log('Attemping to login...');
   createUserWithEmailAndPassword(auth, $('#email2').val(), $('#password2').val()).catch((error) => {
     $('#password2').val('');
-    snac('Error', error.message, 'danger');
+    snac('Authentication Error', error.message, 'danger');
     window.setTimeout(() => {
       $('.submitbtn').html(`Submit`);
       $('.submitbtn').removeClass('disabled');

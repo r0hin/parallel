@@ -105,7 +105,7 @@ export async function joinMusicParty(guildUID, guildID, channelID) {
   
   window.setTimeout(() => {
     // snac('Listening Party', `You are now connected to a listening party.`);
-    libraryPlayer.pause();
+    $(`#libraryPlayer`).get(0).pause();
     notifyTiny('Listening Party: Connected', false);
     $(`#${guildUID}${guildID}${channelID}TabItemMusic`).removeClass('invisibleOpacityAnimated')
     enableButton($(`#${scopedActiveChannel}musicPartyButton`), '<i class="bx bx-x"></i>');
@@ -409,10 +409,6 @@ async function goChannelNextTrack(guildUID, guildID, channelID) {
 }
 
 function sendToServerPlayer(nowPlaying, guildUID, guildID, channelID, timeOffset) {
-  if (!cachePausedMusic) {
-    libraryPlayer.pause();
-    cachePausedMusic = true;
-  }
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
   if (!activeListeningParty || activeListeningParty !== `${guildUID}/${guildID}/${channelID}`) { return };
   if (currentChannelMusicCode == nowPlaying) { return };

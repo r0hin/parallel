@@ -450,7 +450,7 @@ function setContextTrackItems(item, element) {
     contextItemList.eq(2).removeClass('hidden');
     contextItemList.eq(2).get(0).onclick = () => {
       addTrackToChannelQueue(trackID, activeListeningParty.split('/')[0], activeListeningParty.split('/')[1], activeListeningParty.split('/')[2]);
-      snac('Added', 'This track has been added to the listening party queue.', 'success');
+      snac('Queue Updated', 'This track has been added to the listening party queue.', 'success');
     }
   }
 
@@ -902,7 +902,7 @@ function setContextUserItems(item, element) {
       openFriendsDM(userID, userName);
       return;
     }
-    snac('Error', 'Become friends with this person to message them.');
+    snac('Message Error', 'You must first be friends with this person to message them.');
   }
 
   contextItemList.eq(2).get(0).onclick = () => {
@@ -914,7 +914,7 @@ function setContextUserItems(item, element) {
       }, 350)
       return;
     }
-    snac('Error', 'Become friends with this person to call them.')
+    snac('Message Error', 'You must be friends with this person to call them.')
   }
 
   // Guild stuff

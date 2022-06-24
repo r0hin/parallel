@@ -691,14 +691,14 @@ export async function pinMessage(scopedActiveChannel, messageID, messageSender, 
     c: messageHTMLtoText(null, $(`#messageContentOfID${messageID}`).get(0))
   });
 
-  snac('Pinned', '', 'success')
+  snac('Message Pinned', 'A message was successfully pinned in this lounge.', 'success')
 }
 
 export async function unpinMessage(messageID, scopedActiveChannel, skipNotify) {
   await remove(ref(rtdb, `channels/${scopedActiveChannel}/pinned/${messageID}`));
   
   if (!skipNotify) {
-    snac('Unpinned', '', 'success');
+    snac('Message Unpinned', 'A message was succesfully unpinned in this lounge.', 'success');
   }
 }
 

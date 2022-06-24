@@ -269,14 +269,14 @@ export function createPlaylist(addTrackIDToPlaylist, playlistNameInput, skipNoti
     // Check if limit on playlists.
     if (checkValidSubscription(cacheUser.subscription)) {
       if (cachePlaylists.length > 72) {
-        snac(`Playlist Limit`, `You have reached the maximum playlist count.`, 'danger');
+        snac(`Playlist Creation Error`, `You have reached the maximum playlist count.`, 'danger');
         resolve(false);
         return;
       }  
     }
     else {
       if (cachePlaylists.length > 42) {
-        snac(`Playlist Limit`, `You have reached the maximum playlist count. Upgrade to Parallel Infinite to create 40 more.`, 'danger');
+        snac(`Playlist Creation Error`, `You have reached the maximum playlist count. Upgrade to Parallel Infinite to create 40 more.`, 'danger');
         resolve(false);
         return;
       }
@@ -293,12 +293,12 @@ export function createPlaylist(addTrackIDToPlaylist, playlistNameInput, skipNoti
     closeModal();
 
     if (playlistName.length > 48) {
-      snac('Invalid Playlist Title', `Your playlist's title cannot be more than 48 characters. Proceeding with only the first 48 characters...`, 'danger');
+      snac('Playlist Creation Error', `Your playlist's title cannot be more than 48 characters. Proceeding with only the first 48 characters...`, 'danger');
       playlistName = `${playlistName.substring(0, 48)}...`;
     }
 
     if (!playlistName.length) {
-      snac('Invalid Playlist Title', `Your playlist's title cannot be empty.`, 'danger');
+      snac('Playlist Creation Error', `Your playlist's title cannot be empty.`, 'danger');
       window.setTimeout(() => {
         openNewPlaylistDialog();
       }, 1500)
@@ -324,7 +324,7 @@ export function createPlaylist(addTrackIDToPlaylist, playlistNameInput, skipNoti
     });
 
     if (!skipNotify) {
-      snac('Playlist Created', '', 'success');
+      snac('Playlist Created', 'This playlist was created successfully.', 'success');
     }
 
     if (addTrackIDToPlaylist) {

@@ -85,7 +85,7 @@ onAuthStateChanged(auth, async (user) => {
 
 export function sendVerify() {
   sendEmailVerification(user).then(function() {
-    snac('Email Verification Sent', 'Please check your inbox and click the email to continue.', 'success');
+    snac('Verification Email Sent', 'Please check your inbox and follow the instructions in the email we sent you to continue.', 'success');
 
     $('#verifyButton').removeClass("zoomIn");
     $('#verifyButton').removeClass("delay-5s");
@@ -141,7 +141,7 @@ export async function completeProfile() {
   const username = $('#username').val().trim();
 
   if (username.length === 0 || username.length > 16) {
-    snac('Invalid Username', 'Invalid username. It must be between 1 and 16 characters.', 'danger');
+    snac('Invalid Username', 'This username is invalid. It must be between 1 and 16 characters.', 'danger');
     $('#submitbtnprofile').html(` <i class='bx bx-check'></i> Continue `);
     $('#submitbtnprofile').removeClass('disabled');
     $('#submitbtnprofile').addClass('pulse');
@@ -156,7 +156,7 @@ export async function completeProfile() {
   console.log(result);
 
   if (result.data.data === false) {
-    snac('Username Taken', 'This username is already taken. Try using a different one.')
+    snac('Invalid Username', 'This username is taken already. Please try using a different one.')
     $('#submitbtnprofile').html(` <i class='bx bx-check'></i> Continue `)
     $('#submitbtnprofile').removeClass('disabled')
     $('#submitbtnprofile').addClass('pulse')
@@ -500,7 +500,7 @@ export async function removeTrackFromProfile() {
     track: false
   });
 
-  snac('Track Unlinked', 'Your profile no longer shows a track.', 'success');
+  snac('Track Removed', 'This track was removed from your profile.', 'success');
 }
 
 export async function addTrackToProfile(trackID) {
@@ -508,7 +508,7 @@ export async function addTrackToProfile(trackID) {
     track: trackID,
   });
 
-  snac('Track Linked', 'This track is now shown on your profile.', 'success');
+  snac('Track Added', 'This track is now shown publicly on your profile.', 'success');
 }
 
 function loadProfilePhotoChangeListener() {
@@ -634,7 +634,7 @@ export async function updateBiography() {
     bio: newBio
   });
 
-  snac('Status Updated', '', 'success');
+  snac('Status Updated', 'Your status was updated successfully.', 'success');
 }
 
 export async function updateLyrics() {
@@ -655,7 +655,7 @@ export async function updateLyrics() {
     }
   });
 
-  snac('Favorite Lyrics Updated', '', 'success');
+  snac('Favorite Lyrics Updated', 'Your favorite lyrics were updated successfully and are shown publicly on your profile.', 'success');
 }
 
 export async function removeLyrics() {
@@ -663,7 +663,7 @@ export async function removeLyrics() {
     lyrics: false
   });
 
-  snac('Favorite Lyrics Removed', '', 'success');
+  snac('Favorite Lyrics Removed', 'Your favorite lyrics were removed successfully and will not be shown on your profile.', 'success');
 }
 
 export async function removeBio() {
@@ -671,7 +671,7 @@ export async function removeBio() {
     bio: false
   });
 
-  snac('Status Removed', '', 'success');
+  snac('Status Removed', 'Your status was removed successfully.', 'success');
 }
 
 export async function ghChangelog() {
@@ -762,11 +762,11 @@ function addAccountConnection(key) {
   switch (key) {
     case 'Password':
       sendPasswordResetEmail(auth, user.email).then(() => {
-        snac('Email Sent', `A password reset email was sent to <b>${user.email}</b>`);
+        snac('Password Reset Email Sent', `A password reset email was sent to <b>${user.email}</b>. Please check your email and follow the instructions to reset your password.`, 'success');
         $(`#connection${key}Button`).html('Email Sent'); // Remain disabled indefinitely.
       }).catch((error) => {
         window.setTimeout(() => {
-          snac('Password Reset Error', `${error.message}`, 'danger');
+          snac('Password Reset Email Error', `${error.message}`, 'danger');
           $(`#connection${key}Button`).removeClass('disabled');
         }, 420);
       });
@@ -775,7 +775,7 @@ function addAccountConnection(key) {
     case 'Google':
       const googleProvider = new GoogleAuthProvider();
       linkWithRedirect(user, googleProvider).then((result) => {
-        snac('Google Account Linked', '', 'success');
+        snac('Google Account Linked', 'Your Google account was successfully linked to your account.', 'success');
         user = result.user;
 
         window.setTimeout(() => {
@@ -789,14 +789,14 @@ function addAccountConnection(key) {
     case 'Twitter':
       const twitterProvider = new TwitterAuthProvider();
       linkWithRedirect(user, twitterProvider).then((result) => {
-        snac('Twitter Account Linked', '', 'success');
+        snac('Twitter Account Linked', 'Your Twitter account was successfully linked to your account.', 'success');
         user = result.user;
         window.setTimeout(() => {
           $(`#connection${key}Button`).removeClass('disabled');
           checkConnections();
         }, 420);
       }).catch((error) => {
-        snac('Linking Error', error, 'danger');
+        snac('Account Linking Error', error, 'danger');
         window.setTimeout(() => {
           $(`#connection${key}Button`).removeClass('disabled');
         }, 420);
@@ -835,7 +835,7 @@ function removeAccountConnection(key, keyProper) {
   }
 
   unlink(user, providerId).then(() => {
-    snac(`${key} Unlinked`, '', 'success');
+    snac(`${key} Unlinked`, `${key} was successfully unlinked from your account.`, 'success');
     window.setTimeout(() => {
       $(`#connection${keyProper}Button`).removeClass('disabled');
       checkConnections();
@@ -852,7 +852,7 @@ export function changePassword() {
   sendPasswordResetEmail(auth, user.email).then(() => {
     $('#changePasswordButton').addClass('disabled');
     $('#changePasswordButton').html('Email Sent');
-    snac('Email Sent', `A password reset email was sent to <b>${user.email}</b>`);
+    snac('Password Reset Email Sent', `A password reset email was sent to <b>${user.email}</b>. Please check your email and follow the instructions to reset your password.`, 'success');
   })
 }
 
@@ -876,9 +876,9 @@ export async function openEmailInput() {
 export function changeEmail() {
   const newEmail = $('#updateEmailInput').val();
   updateEmail(auth.currentUser, newEmail).then(() => {
-    snac('Success', `Your email has been successfully updated to ${newEmail}.`, 'success');
+    snac('Email Updated', `Your email has been successfully updated to ${newEmail}.`, 'success');
   }).catch((error) => {
-    snac('Error', error);
+    snac('Email Update Error', error);
   });
 }
 
@@ -970,10 +970,10 @@ export function reportLounge(guildUID, guildID, channelID) {
     const result = await reportLounge({guildUID: guildUID, channelID: channelID, guildID: guildID});
   
     if (result.data) {
-      snac('Reported', 'This lounge has been reported successfully. We are currently investigating. Thanks!', 'success');
+      snac('Lounge Reported', 'This lounge has been reported successfully. We are currently investigating. Thanks!', 'success');
     }
     else {
-      snac('Error', 'Contact support or try again.', 'danger');
+      snac('Report Error', 'Contact support or try again.', 'danger');
     }
   }
 }
@@ -997,10 +997,10 @@ export function reportGroup(guildUID, guildID) {
     const result = await reportGroup({userID: guildUID, serverID: guildID});
 
     if (result.data) {
-      snac('Reported', 'This group has been reported successfully. We are currently investigating. Thanks!', 'success');
+      snac('Group Reported', 'This group has been reported successfully. We are currently investigating. Thanks!', 'success');
     }
     else {
-      snac('Error', 'Contact support or try again.', 'danger');
+      snac('Report Error', 'Contact support or try again.', 'danger');
     }
   }
 }
@@ -1024,10 +1024,10 @@ window.reportUser = (userID) => {
     const result = await reportUser({userID: userID});
 
     if (result.data) {
-      snac('Reported', 'This user has been reported successfully. We are currently investigating. Thanks!', 'success');
+      snac('User Reported', 'This user has been reported successfully. We are currently investigating. Thanks!', 'success');
     }
     else {
-      snac('Error', 'Contact support or try again.', 'danger');
+      snac('Report Error', 'Contact support or try again.', 'danger');
     }
   }
 }
@@ -1051,10 +1051,10 @@ export async function reportTrack(trackID, force) {
       const result = await reportTrack({trackID: trackID});
 
       if (result.data) {
-        snac('Reported', 'This track has been reported successfully. We are currently investigating. Thanks!', 'success');
+        snac('Track Reported', 'This track has been reported successfully. We are currently investigating. Thanks!', 'success');
       }
       else {
-        snac('Error', 'Contact support or try again.', 'danger');
+        snac('Report Error', 'Contact support or try again.', 'danger');
       }
     }
   }
@@ -1067,7 +1067,7 @@ export async function reportTrack(trackID, force) {
     const reportTrack = httpsCallable(functions, 'reportTrack');
     const result = await reportTrack({trackID: trackID});
     if (result.data) {
-      snac('Reported', 'This track has been reported successfully. We are currently investigating. Thanks!', 'success');
+      snac('Track Reported', 'This track has been reported successfully. We are currently investigating. Thanks!', 'success');
     }
   }
 }
@@ -1089,7 +1089,7 @@ export function requestNewTrack() {
     const reportMissingTrack = httpsCallable(functions, 'reportMissingTrack');
     await reportMissingTrack({trackDetailsLine: trackDetailsLine, notify: notify});
 
-    snac('Reported', 'Your requested track will be added as soon as possible. Thanks!', 'success');
+    snac('Track Request Sent', 'Your requested track will be added as soon as possible. Thanks!', 'success');
 
   }
 }

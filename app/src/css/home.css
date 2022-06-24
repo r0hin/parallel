@@ -550,7 +550,7 @@ svg.defs {
 }
 
 .chatMessage .topLevelMessageContentTwo {
-  padding: 12px 6px 12px 6px;
+  padding: 10px 4px 10px 4px;
   box-shadow: 0px 1px 12px -3px rgba(0,0,0,0.05);
   margin-top: 12px;
   border: 1px solid var(--bg4);
@@ -661,11 +661,25 @@ svg.defs {
   height: 100%;
 }
 
-.friendsHeader {
+.friendsHeader, .musicHeader, .accountHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 24px 12px 24px;
+}
+
+.accountHeader {
+  padding-top: 0px;
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-bottom: 12px;
+}
+
+.musicHeader {
+  padding-top: 0px;
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-bottom: 20px;
 }
 
 .friendViewContent .friendView {
@@ -718,7 +732,7 @@ svg.defs {
 }
 
 .friendsHeaderButtons {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   text-align: center;
   padding: 0px 12px 0px 12px;
 }
@@ -764,7 +778,7 @@ svg.defs {
 
 .friendsTab {
   overflow: auto;
-  height: calc(100% - 142px);
+  height: calc(100% - 134px);
   transition: all 1s;
   position: relative;
 }
@@ -1113,7 +1127,9 @@ span.yourProfile {
   transition: all 0.3s;
   white-space: normal;
   word-wrap: break-word;
-  padding: 4px 12px 4px 10px;
+  padding: 3px 12px 3px 10px;
+  font-weight: 300;
+  font-size: 14px;
   text-align: left;
   border-left: 2px solid transparent;
 }
@@ -2153,6 +2169,15 @@ img.bonusContentAttachmentImage:hover {
   overflow-y: auto;
 }
 
+/* #musicSidebarContent .sidebarHeader:first-of-type {
+  margin-top: 0px;
+  padding-bottom: 12px;
+  font-size: 1.8em;
+  text-transform: none;
+  font-weight: 700;
+  color: var(--fg1);
+} */
+
 .selfChatMessage video.bonusContentAttachmentImage {
   border-radius: 12px;
   margin-left: 12px;
@@ -3059,13 +3084,17 @@ div.pill.danger {
   text-align: left;
 }
 
+.tabGroup > .accountSidebarButton i {
+  left: 22px;
+}
+
 .sidebarButton:active {
   transform: scale(0.90) !important;
 }
 
 .musicSidebarButton, .accountSidebarButton {
   width: calc(100% - 38px);
-  margin-bottom: 12px !important;
+  margin-bottom: 6px !important;
   height: 32px;
 }
 
@@ -3119,7 +3148,7 @@ div.pill.danger {
   position: relative;
   margin: 0px 15px 6px 15px;
   border-radius: 8px;
-  padding: 4px 24px 4px 14px;
+  padding: 2px 18px 2px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3141,8 +3170,8 @@ div.pill.danger {
 }
 
 .guildMember img {
-  width: 36px; height: 36px;
-  min-width: 36px; min-height: 36px;
+  width: 28px; height: 28px;
+  min-width: 28px; min-height: 28px;
   object-fit: cover;
   clip-path: url(#squircle);
   display: inline-block;
@@ -3175,7 +3204,7 @@ div.pill.danger {
 
 .userCardMusic {
   width: 380px;
-  max-height: 510px;
+  max-height: 540px;
 }
 
 .userCardBanner {
@@ -3234,10 +3263,10 @@ div.pill.danger {
 }
 
 .friendCardList {
-  margin: 12px 24px 12px 24px;
+  margin: 8px 24px 8px 24px;
   background-color: var(--bg1);
-  padding: 10px 12px 10px 8px; border-radius: 16px;
-  height: 48px;
+  padding: 10px 12px 10px 8px; border-radius: 12px;
+  height: 38px;
   position: relative;
   transition: all 0.3s;
   border-left: 5px solid var(--bg1);
@@ -3293,7 +3322,8 @@ div.pill.danger {
 
 .activeFriendCard {
   margin-right: calc(24px - 5px);
-  border-right: 5px solid var(--bg2);
+  width: calc(100% - 5px);
+  border-right: 5px solid var(--b12);
 }
 
 .activeFriendCard .friendListItemContent .firstBox {
@@ -3308,9 +3338,9 @@ div.pill.danger {
 
 .friendCardList .friendcardlistimagepfp {
   clip-path: url(#squircle);
-  min-width: 48px;
-  width: 48px;
-  height: 48px;
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
   margin-right: 12px;
   object-fit: cover;
 }
@@ -3366,6 +3396,8 @@ div.pill.danger {
   padding-top: 0px;
   transition: all 0.5s;
   direction: ltr;
+  position: relative;
+  width: 278px;
 }
 
 .friendsListfriendsContentActive {
@@ -3624,8 +3656,10 @@ div.pill.danger {
 
 .friendListItemContent .presenceIndicator {
   position: absolute;
-  left: 39px; top: 41px;
+  left: 29px; top: 31px;
   border: 5px solid var(--bg1);
+  width: 10px; height: 10px;
+  border-radius: 8px;
 }
 
 .userCardBanner .presenceIndicator {
@@ -3640,7 +3674,7 @@ div.pill.danger {
 
 .guildMember .presenceIndicator {
   position: absolute;
-  left: 38px; top: 28px;
+  left: 24px; top: 22px;
   border: 3px solid var(--bg2);
   width: 9px; height: 9px;
   border-radius: 6px;
@@ -3959,7 +3993,7 @@ div.pill.danger {
   color: white;
 }
 
-.friendsActions .btn {
+.friendsActions .btn, .musicActions .btn {
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -6232,4 +6266,13 @@ img.emoji {
 #whatsChanged2 {
   max-height: calc(100vh - 240px);
   overflow-y: auto;
+}
+
+.friendsListSearch input {
+  padding: 8px;
+  width: calc(100% - 16px);
+}
+
+.friendsListSearch div.form div {
+  margin-top: 8px;
 }

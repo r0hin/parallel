@@ -1819,12 +1819,12 @@ export async function initalizePlayback(trackID) {
 }
 
 export function pauseMusicButton() {
-  libraryPlayer.pause();
+  $(`#libraryPlayer`).get(0).pause();
   document.activeElement.blur();
 }
 
 function playMusicButton() {
-  libraryPlayer.play();
+  $(`#libraryPlayer`).get(0).play();
   document.activeElement.blur();
 }
 
@@ -2132,12 +2132,7 @@ export function manageSpotify() {
 }
 
 async function loadSignedInSpotify(token) {
-  notifyTiny('Spotify linked.')
-
-  await timer(1000);
-
-  openSpecialServer('account');
-  settingsTab('transfer');
+  snac("Spotify Connected", "Your Spotify account is now connected to Parallel for this session. Navigate to <b>Settings > More > Transfer</b> to start managing playlists.", "success");
 
   const myProfileFetch = await fetch("https://api.spotify.com/v1/me", {
     headers: {

@@ -1162,8 +1162,8 @@
 
 #musicSidebarPlaylistFolders {
   position: relative;
-  margin-bottom: 12px;
-  padding-bottom: 4px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
 }
 
 #musicSidebarPlaylistFolders::after {

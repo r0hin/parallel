@@ -1,6 +1,6 @@
 {
   "name": "parallel",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "",
   "main": "scripts/main.js",
   "repository": {
@@ -49,6 +49,7 @@
     "js-confetti": "^0.10.2",
     "parcel-bundler": "^1.12.5",
     "request": "^2.88.2",
+    "tcp-port-used": "^1.0.2",
     "timeago.js": "^4.0.2",
     "ytcog": "^2.3.2"
   }
