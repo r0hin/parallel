@@ -170,6 +170,10 @@ tippy('#addServer', {
   content: 'Add a Group',
 });
 
+tippy('#updateServer', {
+  content: 'Update Available',
+});
+
 $(`#addServer`).get(0).onclick = () => openDropdown('addServerDropdown');
 
 tippy('#infiniteServer', {
