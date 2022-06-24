@@ -1,5 +1,6 @@
 const functions = require('firebase-functions')
 const admin = require("firebase-admin");
+const enforceAppCheck = false;
 
 exports.manageUploads = functions.storage.bucket('parallel-by-wop.appspot.com').object().onFinalize(async (object) => {
   const spawn = require("child-process-promise").spawn;
@@ -89,13 +90,17 @@ exports.manageUploads = functions.storage.bucket('parallel-by-wop.appspot.com').
 exports.resizeImages = functions.runWith({
   memory: '1GB'
 }).https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
   const path = require("path");
   const os = require("os");
   const tmpdir = os.tmpdir();
   const mkdirp = require("mkdirp");
   const sharp = require("sharp");
   const fs = require("fs-extra");
-
 
   // Called after uploading an image attachment. 
   const filePath = data.filePath;

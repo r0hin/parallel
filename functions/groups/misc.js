@@ -141,6 +141,11 @@ exports.payments = functions.https.onRequest(async (req, res) => {
 });
 
 exports.startPayment = functions.https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
   const secret = require("../secret.json");
   const stripeInstance = require('stripe')(secret.keyLive);
   const db = admin.firestore();
@@ -187,6 +192,11 @@ exports.startPayment = functions.https.onCall(async (data, context) => {
 });
 
 exports.customerPortal = functions.https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
   const secret = require("../secret.json");
   const stripeInstance = require('stripe')(secret.keyLive);
   const db = admin.firestore();
@@ -242,14 +252,14 @@ exports.updateTrackURL = functions.https.onCall(async (data, context) => {
 });
 
 exports.getLinkPreview = functions.https.onCall(async (data, context) => {
-  const cheerio = require('cheerio');
-  const getUrls = require('get-urls');
-  const fetch = require('node-fetch');
-
   // App check
   if (enforceAppCheck) {
     if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
   }
+
+  const cheerio = require('cheerio');
+  const getUrls = require('get-urls');
+  const fetch = require('node-fetch');
   
   const urls = Array.from(getUrls(data.content));
 
@@ -309,6 +319,11 @@ exports.searchParallelLibrary = functions.https.onCall(async (data, context) => 
 });
 
 exports.getArtistProfilePhoto = functions.https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
   const db = admin.firestore();
   const fetch = require('node-fetch')
   const artistID = data.artistID;

@@ -1051,7 +1051,7 @@ svg.defs {
 }
 
 .dropdown-content a:hover {
-  background-color: var(--bg1);
+  background-color: var(--bg3) !important;
   opacity: 1;
 }
 
@@ -3263,7 +3263,7 @@ div.pill.danger {
 }
 
 .friendCardList {
-  margin: 8px 24px 8px 24px;
+  margin: 10px 24px 10px 24px;
   background-color: var(--bg1);
   padding: 10px 12px 10px 8px; border-radius: 12px;
   height: 38px;
@@ -3347,7 +3347,7 @@ div.pill.danger {
 
 .countFriends {
   margin-left: 8px;
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--fg4);
   border-radius: 6px; padding: 0px 5px 0px 5px;
 }
 
@@ -4687,10 +4687,6 @@ h3 {
   white-space: nowrap;
 }
 
-#friendButtonsDropdown {
-  background-color: var(--bg1);
-}
-
 #newFriendButton {
   color: var(--primary)
 }
@@ -4742,16 +4738,16 @@ h3 {
 }
 
 #bookmarksContentContent {
-  padding: 12px 24px 0px 24px;
+  padding: 12px 20px 0px 20px;
 }
 
 .messageReplay {
   background-color: var(--bg1);
-  box-shadow: 0px 1px 14px -3px rgba(0,0,0,0.32);
-  padding: 10px 62px 10px 66px; margin: 8px 0px 12px 0px;
+  padding: 6px 62px 6px 66px; margin: 8px 0px 12px 0px;
   display: flex; flex-direction: column;
   border-radius: 12px; position: relative;
   text-align: left;
+  box-shadow: 0px 1px 7px -3px rgba(0,0,0,0.12);
 }
 
 .messageReplay img.profilePhotoReplay {
@@ -4765,7 +4761,7 @@ h3 {
 
 .messageReplay p {
   margin: 0px;
-  margin-top: 6px;
+  margin-top: 2px;
   overflow: hidden;
 }
 
@@ -4773,6 +4769,7 @@ h3 {
   position: absolute;
   right: 16px; top: 50%;
   transform: translate(0, -50%);
+  background-color: var(--bg2);
   margin: 0px;
 }
 
@@ -4955,7 +4952,7 @@ img.emoji {
   width: 340px; height: calc(100% - 156px);
   border-radius: 12px; 
   box-shadow: 0px 1px 14px -3px rgba(0,0,0,0.32);
-  background-color: var(--bg1);
+  background-color: var(--bg2);
   overflow-y: auto;
 }
 

@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { getPerformance } from "firebase/performance";
 
 window.isAppInitialized = false;
@@ -14,6 +15,11 @@ export function checkAppInitialized() {
       storageBucket: "parallel-by-wop.appspot.com",
       messagingSenderId: "77839003871",
       appId: "1:77839003871:web:6ea87ec99c5aa7c5b2396a",
+    });
+
+    const appCheck = initializeAppCheck(fbApp, {
+      provider: new ReCaptchaV3Provider("6Lca3TcdAAAAAMb0ZgqqIgC5ojFL85FFvokzmFh7"),
+      isTokenAutoRefreshEnabled: true
     });
   }
 };

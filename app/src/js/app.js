@@ -21,7 +21,7 @@ import { checkAppInitialized } from './firebaseChecks';
 import { startElectronProcesses } from './electronApp';
 
 window.user;
-window.gitHubVersion = '2.5.0';
+window.gitHubVersion = '2.3.1';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
