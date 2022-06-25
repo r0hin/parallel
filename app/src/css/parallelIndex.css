@@ -8,6 +8,10 @@
   --plyr-color-main: #F25E92 !important;
 }
 
+body {
+  user-select: none;
+}
+
 .primary {
   color: var(--primary)
 }

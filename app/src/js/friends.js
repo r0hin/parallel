@@ -144,7 +144,7 @@ window.confirmFriendRequest = async (userID) => {
   snac('Friend Request Sent', 'A friend request was successfully sent to this user.', 'success');
 }
 
-export function friendsTab(tab, el) {
+window.friendsTab = (tab, el) => {
   $(`.friendsTab`).addClass('hidden');
   $(`#friendsList${tab}`).removeClass('hidden');
   

@@ -1,32 +1,77 @@
 const { app, Menu, shell} = require('electron');
 const defaultMenu = require('electron-default-menu');
-
+const { autoUpdater } = require('electron-updater');
 const link = require('./link');
 
-exports.initializeMenuBar = function() {
-  const menu = defaultMenu(app, shell);
+exports.menuBar;
 
-  menu[0].submenu.splice(0, 1, {
+exports.initializeMenuBar = function() {
+  const menuBarDefault = defaultMenu(app, shell);
+  menuBar = [...menuBarDefault];
+  menuBar[0].submenu.splice(0, 1, {
     label: "About Parallel",
     click: () => {
-      link.menuBarFunctions('about')
+      link.menuBarFunctions('about');
     },
   });
 
-  menu[0].submenu.splice(1, 1, {
-    label: "Check for Updates",
-    click: () => {
-      console.log('Check for updates');
-    }
-  })
-
-  menu[0].submenu.splice(2, 0, {
+  menuBar[0].submenu.splice(1, 1, {
     label: "Preferences",
     click: () => {
-      console.log('Show preferences');
+      link.menuBarFunctions('preferences');
     },
     accelerator: 'CmdOrCtrl+,'
+  })
+
+  menuBar[0].submenu.splice(2, 0, {
+    label: "Check for Updates",
+    click: () => {
+      updateStatusNotify = true;
+      menuBar[0].submenu[2].enabled = false;
+      Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
+      autoUpdater.checkForUpdates();
+    }
   });
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
+  menuBar.splice(1, 0, {
+    label: "File",
+    submenu: [
+      {
+        label: "New Playlist",
+        click: () => {
+          link.menuBarFunctions('newPlaylist');
+        },
+        accelerator: 'CmdOrCtrl+N'
+      },
+      {
+        label: "New Playlist Folder",
+        click: () => {
+          link.menuBarFunctions('newPlaylistFolder');
+        },
+        accelerator: 'CmdOrCtrl+Shift+N'
+      },
+      // Expand menu to show new server 
+      {
+        label: "New Group",
+        submenu: [
+          {
+            label: "Create",
+            click: () => {
+              link.menuBarFunctions('newGroup');
+            }
+          },
+          {
+            label: "Join",
+            click: () => {
+              link.menuBarFunctions('joinGroup');
+            }
+          }
+        ],
+      }
+    ]
+  });
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
 }
+
+exports.updateStatusNotify = false;

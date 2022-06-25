@@ -73,6 +73,16 @@ h4,h5,h6 {
   cursor: var(--defaultByPointer);
   border: 0px;
   outline: none;
+  position: relative;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  top: -5px; left: -5px;
+  width: calc(100% + 10px); 
+  height: calc(100% + 10px);
+  opacity: 0.5;
 }
 
 .btn:active {

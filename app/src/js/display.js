@@ -1,5 +1,5 @@
 import { changePassword, changeProfilePhoto, completeProfile, deleteAccount, hideBookmarks, openEmailInput, removeBio, removeLyrics, removeTrackFromProfile, sendVerify, showBookmarks, signOutParallel, updateBiography, updateLyrics, requestNewTrack, startTutorial, prepareDestroyAllFiles } from './app';
-import { cancelFriendsSearch, friendEventListeners, friendsTab, toggleFriendsSort } from './friends';
+import { cancelFriendsSearch, friendEventListeners, toggleFriendsSort } from './friends';
 import { createPlaylist } from './library';
 import { backwardSong, clearHistory, clearQueue, forwardSong, loginSpotify, musicTab, openNewPlaylistDialog, openNewPlaylistFolderDialog, reloadSocialTab, searchMusicButton, spotifyPlaylistLookup, switchToHistory } from './music';
 import { expandTab, refreshInputDevices, refreshOutputDevices, retrieveSetting, settingsTab } from './settings';
@@ -268,8 +268,13 @@ export function displayInputEffect() {
 }; 
 
 export async function openModal(id) {
-  // currentChannel = '';
-  window.modalOpen = true;
+  if (modalOpen) {
+    // Close the modal if it's open
+    closeModal();
+    await timer(399);
+  }
+
+  modalOpen = true;
   $('#modalContent').html($('#modalContent_' + id).html());
   twemoji.parse($('#modalContent').get(0));
 

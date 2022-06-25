@@ -1,7 +1,7 @@
 const { app, BrowserWindow, shell, nativeTheme} = require('electron');
 const { autoUpdater } = require("electron-updater");
-
 const windowStateKeeper = require('electron-window-state');
+require('@electron/remote/main').initialize();
 
 const link = require('./link');
 const deeplinks = require('./deeplink');
@@ -110,10 +110,10 @@ const createWindow = () => {
   });
 
   // In development:
-  win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
+  // win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
 
   // In production:
-  // host.startServer(win, URLARGUMENTS);
+  host.startServer(win, URLARGUMENTS);
 }
 
 app.on('open-url', function (event, url) {

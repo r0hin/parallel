@@ -22,7 +22,7 @@ import { startMainElectronProcesses } from './electron';
 import { listenKeystrokes } from './keyboarde';
 
 window.user;
-window.gitHubVersion = '2.4.0';
+window.gitHubVersion = '2.4.2';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
@@ -267,7 +267,6 @@ async function startSetup() {
     }
 
     cacheUser = userDoc.data();
-    loadFriends(); // Before cache for comparison. Includes presence.
     loadDetails();
     loadMuted();
     loadServers();
@@ -277,6 +276,9 @@ async function startSetup() {
     loadBookmarks();
     loadBadges();
     loadIdle()
+
+    // Seem to be some issues with this in dev mode
+    loadFriends();
   });
 
   serversSortable();

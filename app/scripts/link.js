@@ -1,7 +1,8 @@
-const { ipcMain, Notification } = require('electron');
+const { ipcMain, Notification, BrowserWindow, dialog, Menu } = require('electron');
 const { autoUpdater } = require("electron-updater");
 const music = require('./music');
 const discord = require('./discord');
+const { updateStatusNotify, menuBar } = require('./menuBar');
 
 // Focus outgoing event
 exports.sendFocusEvent = (win, boolean) => {
@@ -48,6 +49,33 @@ exports.listenFunctions = (win) => {
 
         autoUpdater.on('update-available', () => {
           win.webContents.send('updateAvailable', true);
+          if (updateStatusNotify) {
+            // Show dialog
+            dialog.showMessageBox(win, {
+              type: 'info',
+              title: "Update Available",
+              message: "A new update is available. It is currently being downloaded.",
+              buttons: ['OK']
+            });
+            updateStatusNotify = false;
+            menuBar[0].submenu[2].enabled = false;
+            Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
+          }
+        });
+
+        autoUpdater.on('update-not-available', () => {
+          if (updateStatusNotify) {
+            // Show dialog
+            dialog.showMessageBox(win, {
+              type: 'info',
+              title: "No Update Available",
+              message: "You are running the latest version of the application.",
+              buttons: ['OK']
+            });
+            updateStatusNotify = false;
+            menuBar[0].submenu[2].enabled = false;
+            Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
+          }
         });
 
         autoUpdater.checkForUpdates();
@@ -94,12 +122,7 @@ exports.sendDeepLink = (win, data) => {
   win.webContents.send('deeplink', data);
 }
 
-exports.menuBarFunctions = (win, data) => {
-  switch (data) {
-    case 'about':
-      win.webContents.send('menuBar', 'about');
-      break;
-    default:
-      break;
-  }
+exports.menuBarFunctions = (data) => {
+  const win = BrowserWindow.getFocusedWindow();
+  win.webContents.send('menuBar', data);
 }

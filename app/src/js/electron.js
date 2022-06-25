@@ -18,7 +18,9 @@ export function startMainElectronProcesses() {
 
   electron.ipcRenderer.on('menuBar', (event, message) => {
     // About, settings, check for updates, etc.
-    alert("Please sign in to use menu bar functions.")
+    if (!window.user) {
+      alert("Please sign in to use this feature.")
+    }
   });
 
   electron.webFrame.setZoomFactor(parseInt(localStorage.getItem('setting_zoom')) || 1) ;

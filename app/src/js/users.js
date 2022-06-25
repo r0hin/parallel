@@ -1,6 +1,6 @@
-import { getFirestore, onSnapshot, getDoc, doc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
+import { getFirestore, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
 import { createTrack } from './componentse';
-import { closeModal, disableButton, displayImageAnimation, openModal, returnProperURL, securityConfirmText } from './display';
+import { closeModal, disableButton, openModal, securityConfirmText } from './display';
 import { checkAppInitialized } from './firebaseChecks';
 import { acceptRequest, openFriendsDM } from './friends';
 import { musicTab } from './music';
@@ -13,8 +13,6 @@ window.activeUserCard = false;
 window.cacheUserDetails = null;
 window.fullProfileActive = false;
 window.cancelUserQuery = null;
-
-const placeholderAlbumImage = 'https://firebasestorage.googleapis.com/v0/b/parallel-by-wop.appspot.com/o/app%2FdefaultAlbum.png?alt=media';
 
 checkAppInitialized();
 const db = getFirestore();
@@ -147,6 +145,7 @@ window.openUserCard = async (uID) => {
 
   $(`#${uID}openPlaylistsButton`).get(0).onclick = () => {
     closeUserPopout();
+    closeModal();
     openSpecialServer('music');
     musicTab('friends');
   }
@@ -299,7 +298,6 @@ window.openUserCard = async (uID) => {
         $(`#${uID}TrackContainer`).empty();
         
         const trackData = await makeMusicRequest(`songs/${querySnapshot.data().track}`);
-        console.log(trackData)
         createTrack(trackData.data[0], `${uID}TrackContainer`, null);
       }
 

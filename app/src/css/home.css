@@ -1131,6 +1131,7 @@ span.yourProfile {
   font-weight: 300;
   font-size: 14px;
   text-align: left;
+  user-select: text;
   border-left: 2px solid transparent;
 }
 
@@ -2889,6 +2890,15 @@ div.pill.danger {
   margin-bottom: 18px;
 }
 
+.server::after {
+  content: "";
+  position: absolute;
+  top: -5px; left: -5px;
+  width: calc(100% + 10px); 
+  height: calc(100% + 10px);
+  opacity: 0.5;
+}
+
 .server:active {
   transform: scale(0.90);
 }
@@ -3072,7 +3082,6 @@ div.pill.danger {
   position: relative;
   padding: 8px 24px 8px 34px;
   text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
   transition: all 0.3s;
   border-left: 5px solid var(--bg2);
@@ -3082,6 +3091,15 @@ div.pill.danger {
   outline: none; border: none;
   display: block;
   text-align: left;
+}
+
+.guildChannel::after, .sidebarButton::after, .musicSidebarButton::after, .accountSidebarButton::after {
+  content: "";
+  position: absolute;
+  top: -5px; left: -5px;
+  width: calc(100% + 10px); 
+  height: calc(100% + 10px);
+  opacity: 0.5;
 }
 
 .tabGroup > .accountSidebarButton i {
@@ -3154,6 +3172,15 @@ div.pill.danger {
   justify-content: space-between;
   transition: all 0.3s;
   height: 36px;
+}
+
+.guildMember::after {
+  content: "";
+  position: absolute;
+  top: -5px; left: -5px;
+  width: calc(100% + 10px); 
+  height: calc(100% + 10px);
+  opacity: 0.5;
 }
 
 .guildMember:active {
@@ -3270,6 +3297,15 @@ div.pill.danger {
   position: relative;
   transition: all 0.3s;
   border-left: 5px solid var(--bg1);
+}
+
+.friendCardList::after {
+  content: "";
+  position: absolute;
+  top: -5px; left: -5px;
+  width: calc(100% + 10px); 
+  height: calc(100% + 10px);
+  opacity: 0.5;
 }
 
 .friendGone {
@@ -5902,7 +5938,15 @@ img.emoji {
   color: var(--fg4);
   transform: scale(1);
   transition: all 0.3s;
-  overflow: hidden;
+}
+
+.guildFolder::after {
+  content: "";
+  position: absolute;
+  top: -5px; left: -5px;
+  width: calc(100% + 10px); 
+  height: calc(100% + 10px);
+  opacity: 0.5;
 }
 
 .guildFolderActive {
@@ -5965,6 +6009,7 @@ img.emoji {
   left: 50%; bottom: -12px;
   transform: translate(-50%, 0);
   font-size: 12px;
+  opacity: 0;
   font-weight: 700;
 }
 
@@ -5974,6 +6019,7 @@ img.emoji {
 
 .guildFolderActive .folderCount {
   bottom: 8px;
+  opacity: 1;
 }
 
 .gifsPickerContainer {

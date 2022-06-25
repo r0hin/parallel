@@ -10,7 +10,7 @@ import { commonArrayDifference, displayInputEffect, securityConfirmText, securit
 import { endAllCalls, manageVoiceChatDisplay } from './voice';
 import { addChannelListeners, closeCurrentChannel, markChannelAsRead, markChannelAsUnread, openGuildChannel, reevaluatePermissionsChannel, updateLoungeTypes } from './channels';
 import { showTippyListenerPresence, updatePresenceForUser } from './presence';
-import { addDMListeners, friendsTab, markDMRead } from './friends';
+import { addDMListeners, markDMRead } from './friends';
 import { getCroppedPhoto } from './app';
 import { exitEditorModePlaylist } from './library';
 import { checkAppInitialized } from './firebaseChecks';
@@ -455,7 +455,6 @@ export function openSpecialServer(id) {
   if (id === 'music') {
     loadMusic();
     hidePlaybackButton();
-    closeModal(); // Incase coming from user modal
 
     (editorModePlaylist ? exitEditorModePlaylist(editorModePlaylist) : null);
   }

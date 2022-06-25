@@ -2,8 +2,8 @@ const electron = window.require('electron');
 import { markChannelAsRead } from './channels';
 import { openModal } from './display';
 import { markDMRead } from './friends';
-import { openOtherPlaylist } from './music';
-import { openSpecialServer } from './servers';
+import { openNewPlaylistDialog, openNewPlaylistFolderDialog, openOtherPlaylist } from './music';
+import { createGroup, joinGroup, openSpecialServer } from './servers';
 
 window.winBrowserWindow = null;
 window.startTime = new Date().getTime();
@@ -79,8 +79,35 @@ export function startElectronProcesses() {
   })
   
   electron.ipcRenderer.on('serverPort', (event, arg) => {
-    serverPort = arg;
-    // `http://localhost:${serverPort}`  
+    serverPort = arg; // `http://localhost:${serverPort}`  
+  });
+
+  electron.ipcRenderer.on('menuBar', (event, arg) => {
+    console.log(event, arg)
+    switch (arg) {
+      case 'about':
+        openModal('credits');
+        break;
+      case 'preferences':
+        openSpecialServer('account')
+        break;
+      case 'newPlaylist':
+        openSpecialServer('music');
+        openNewPlaylistDialog();
+        break;
+      case 'newPlaylistFolder':
+        openSpecialServer('music');
+        openNewPlaylistFolderDialog();
+        break;
+      case 'newGroup': 
+        createGroup();
+        break;
+      case 'joinGroup':
+        joinGroup();
+        break;
+      default:
+        break;
+    }
   });
   
   electron.ipcRenderer.on('deeplink', (event, arg) => {
