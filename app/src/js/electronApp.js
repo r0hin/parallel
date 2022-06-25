@@ -14,6 +14,10 @@ window.markAsReadAfterFocus = {
 
 window.serverPort = null; // Important for music playback.
 
+window.sendToElectron = (dataType, dataContent) => {
+  electron.ipcRenderer.send(dataType, dataContent);
+}
+
 export function startElectronProcesses() {
   electron.ipcRenderer.send('functions', 'checkUpdate'); // Starts the hourly update checker.
   electron.ipcRenderer.send('music', 'startServer'); // Starts the internal server in Electron.

@@ -1,6 +1,7 @@
 import { getAuth, onAuthStateChanged } from '@firebase/auth';
 import { getFirestore, doc, getDoc, updateDoc, deleteField, FieldPath} from '@firebase/firestore';
 import { getFunctions, httpsCallable } from '@firebase/functions';
+import { startMainElectronProcesses } from './electron';
 import { checkAppInitializedAdmin } from './firebaseAdmin';
 
 checkAppInitializedAdmin();

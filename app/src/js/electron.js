@@ -1,6 +1,6 @@
 window.winBrowserWindow = null;
 
-const electron = require('electron');
+const electron = window.require('electron');
 
 export function startMainElectronProcesses() {
   electron.ipcRenderer.on('focus', (event, message) => {
@@ -66,7 +66,7 @@ function startWindowControlsListeners() {
   }
 }
 
-window.sendToElectron = (dataType, dataContent) => {
+export function sendToElectron(dataType, dataContent) {
   electron.ipcRenderer.send(dataType, dataContent);
 }
 

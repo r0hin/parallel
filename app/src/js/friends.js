@@ -14,6 +14,7 @@ import { retrieveSetting } from './settings';
 import { playMessageSound } from './sounds';
 import { joinGroup } from './servers';
 import { checkAppInitialized } from './firebaseChecks';
+import { sendToElectron } from './electron';
 
 window.activeMessageListener = '';
 window.activePinnedListener = '';

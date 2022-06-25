@@ -14,6 +14,7 @@ import { addDMListeners, friendsTab, markDMRead } from './friends';
 import { getCroppedPhoto } from './app';
 import { exitEditorModePlaylist } from './library';
 import { checkAppInitialized } from './firebaseChecks';
+import { sendToElectron } from './electron';
 
 window.serverData = {};
 window.firstLog = {};

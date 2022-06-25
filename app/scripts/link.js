@@ -4,8 +4,11 @@ const music = require('./music');
 const discord = require('./discord');
 
 // Focus outgoing event
-exports.sendFocusEvent = (win, boolean) => {
-  win.webContents.send('focus', boolean);
+exports.sendFocusEvent = (boolean) => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (win) {
+    win.webContents.send('focus', boolean);
+  }
 }
 
 // Notification incoming event

@@ -5,7 +5,6 @@ import { getAnalytics } from "firebase/analytics";
 import { getFunctions, httpsCallable } from '@firebase/functions';
 
 import * as timeago from 'timeago.js';
-import Croppr from 'croppr';
 
 import { openSpecialServer, loadMuted, loadServers, unreadIndicators, loadOutgoingServerRequests, updateServersOrder, leaveServer } from './servers';
 import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends';
@@ -19,9 +18,10 @@ import { loadRecentSearches, manageSpotify } from './music';
 import { processAttachment } from './channels';
 import { checkAppInitialized } from './firebaseChecks';
 import { startElectronProcesses } from './electronApp';
+import { startMainElectronProcesses } from './electron';
 
 window.user;
-window.gitHubVersion = '2.3.2';
+window.gitHubVersion = '2.3.3';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
@@ -303,7 +303,7 @@ async function startSetup() {
   }
 
   startMainElectronProcesses();
-  startElectronProcesses();
+  startElectronProcesses()
 }
 
 function loadDetails() {

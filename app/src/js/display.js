@@ -11,6 +11,7 @@ import { Picker } from 'emoji-picker-element';
 import { playNotification } from './sounds';
 import { goToCheckout, manageSubscription } from './stripe';
 import { updateApp } from './electronApp';
+import { sendToElectron } from './electron';
 
 window.noTrackTimeout = null;
 window.modalOpen = false;

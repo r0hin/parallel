@@ -1,4 +1,5 @@
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, TwitterAuthProvider, signInWithRedirect, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail} from '@firebase/auth';
+import { startMainElectronProcesses } from './electron';
 import { checkAppInitialized } from './firebaseChecks';
 
 checkAppInitialized();
