@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, shell, nativeTheme} = require('electron');
+const { app, BrowserWindow, shell, nativeTheme} = require('electron');
 const { autoUpdater } = require("electron-updater");
 
 const windowStateKeeper = require('electron-window-state');

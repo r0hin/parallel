@@ -9,7 +9,7 @@ app.use(cors({credentials: true, origin: true}));
 
 exports.startServer = (win) => {
   const server = app.listen(0, async () => {
-    links.sendServerPort(win, server.address().port);
+    links.sendServerPort(server.address().port);
     console.log('Server started on port ' + server.address().port);
 
     // Start session

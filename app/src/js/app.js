@@ -21,7 +21,7 @@ import { startElectronProcesses } from './electronApp';
 import { startMainElectronProcesses } from './electron';
 
 window.user;
-window.gitHubVersion = '2.3.3';
+window.gitHubVersion = '2.3.4';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
