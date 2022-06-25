@@ -11,7 +11,7 @@ import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends
 import { listenCalls } from './voice';
 import { loadPlaylists } from './library';
 import { loadDefaultValues, settingsTab } from './settings';
-import { bookmarksArrayDifference, closeModal, disableButton, displayImageAnimation, filesArrayDifference, fileTypeMatches, hideUploadProgress, messageHTMLtoText, openModal, returnProperURL, securityConfirmText, showUploadProgress, timer } from './display';
+import { bookmarksArrayDifference, closeModal, disableButton, displayImageAnimation, filesArrayDifference, fileTypeMatches, hideUploadProgress, loadDisplay, messageHTMLtoText, openModal, returnProperURL, securityConfirmText, showUploadProgress, timer } from './display';
 import { loadIdle, selfPresence } from './presence';
 import { checkValidSubscription, loadSubscription } from './stripe';
 import { loadRecentSearches, manageSpotify } from './music';
@@ -19,6 +19,7 @@ import { processAttachment } from './channels';
 import { checkAppInitialized } from './firebaseChecks';
 import { startElectronProcesses } from './electronApp';
 import { startMainElectronProcesses } from './electron';
+import { listenKeystrokes } from './keyboarde';
 
 window.user;
 window.gitHubVersion = '2.3.4';
@@ -303,7 +304,9 @@ async function startSetup() {
   }
 
   startMainElectronProcesses();
-  startElectronProcesses()
+  startElectronProcesses();
+  loadDisplay();
+  listenKeystrokes();
 }
 
 function loadDetails() {
@@ -675,30 +678,6 @@ export async function removeBio() {
   snac('Status Removed', 'Your status was removed successfully.', 'success');
 }
 
-export async function ghChangelog() {
-  const changelogDoc = await getDoc(doc(db, `app/changelog`));
-  const features = changelogDoc.data().features;
-  const enhance = changelogDoc.data().enhance;
-  const bugs = changelogDoc.data().bugs;
-  const other = changelogDoc.data().other;
-
-  const html = `
-    ${features.length ? `<div class="changelogSectionHeader featureSection">New Features</div>` : ``}
-    ${features.map(feature => `<div class="changelogLineItem">${feature}</div>`).join('')}
-
-    ${enhance.length ? `<div class="changelogSectionHeader enhanceSection">Enhancements</div>` : ``}
-    ${enhance.map(enhancement => `<div class="changelogLineItem">${enhancement}</div>`).join('')}
-
-    ${bugs.length ? `<div class="changelogSectionHeader bugSection">Bug Fixes</div>` : ``}
-    ${bugs.map(bug => `<div class="changelogLineItem">${bug}</div>`).join('')}
-
-    ${other.length ? `<div class="changelogSectionHeader otherSection">Other</div>` : ``}
-    ${other.map(otherItem => `<div class="changelogLineItem">${otherItem}</div>`).join('')}
-  `
-
-  return html;
-}
-
 function checkConnections() {
   let passwordExists = false;
   let googleExists = false;
@@ -924,7 +903,7 @@ function loadVersioning(uid) {
     const lastVersionNumber = parseInt(lastVersion.replaceAll('.', ''));
     const currentVersionNumber = parseInt(gitHubVersion.replaceAll('.', ''));
     localStorage.setItem(`lastVersion`, gitHubVersion);
-    if (lastVersionNumber < currentVersionNumber) {
+    if ((lastVersionNumber < currentVersionNumber) && localStorage.getItem('recentNotes')) {
       // App was just updated.
       openModal('updatedApp');
       $(`#whatsChangedTitle`).html("🎉 What's New? 🎉");

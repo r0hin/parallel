@@ -62,8 +62,8 @@ libraryPlayer.on('volumechange', event => {
   const inputVolume = event;
 });
 
-navigator.mediaSession.setActionHandler('play', function() { libraryPlayer.play() });
-navigator.mediaSession.setActionHandler('pause', function() { libraryPlayer.pause() });
+navigator.mediaSession.setActionHandler('play', function() { libraryPlayer.get(0).play() });
+navigator.mediaSession.setActionHandler('pause', function() { libraryPlayer.get(0).pause() });
 navigator.mediaSession.setActionHandler('seekbackward', function() { });
 navigator.mediaSession.setActionHandler('seekforward', function() { });
 navigator.mediaSession.setActionHandler('previoustrack', function() {if (musicPlaying.id) {backwardSong()} });
@@ -1799,9 +1799,6 @@ export async function initalizePlayback(trackID) {
 
   setNoTrackUI();
 
-  // Pause track.
-  libraryPlayer.pause();
-
   console.log(trackID)
   const trackDetails = await makeMusicRequest(`songs/${trackID}?include=artists`);  
 
@@ -1831,7 +1828,7 @@ function playMusicButton() {
 function playerDidEnd() {
   if (enableLoopConst) {
     libraryPlayer.restart();
-    libraryPlayer.play();
+    libraryPlayer.get(0).play();
     // snac('Replaying current track.', '', '');
     return;
   }
@@ -1887,7 +1884,7 @@ export function forwardSong() {
 
   }
   else { // no song next in queue
-    libraryPlayer.pause();
+    libraryPlayer.get(0).pause();
     hidePlaybackView();
     updateQueue('nowPlaying');
     setMusicStatus(false);

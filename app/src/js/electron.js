@@ -1,5 +1,4 @@
-window.winBrowserWindow = null;
-
+const winBrowserWindow = window.require('@electron/remote');
 const electron = window.require('electron');
 
 export function startMainElectronProcesses() {

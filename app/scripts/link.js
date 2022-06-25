@@ -1,19 +1,15 @@
-const { ipcMain, Notification, BrowserWindow } = require('electron');
+const { ipcMain, Notification } = require('electron');
 const { autoUpdater } = require("electron-updater");
 const music = require('./music');
 const discord = require('./discord');
 
 // Focus outgoing event
-exports.sendFocusEvent = (boolean) => {
-  const win = BrowserWindow.getFocusedWindow();
-  if (win) {
-    win.webContents.send('focus', boolean);
-  }
+exports.sendFocusEvent = (win, boolean) => {
+  win.webContents.send('focus', boolean);
 }
 
 // Notification incoming event
-exports.listenNotifications = () => {
-  const win = BrowserWindow.getFocusedWindow();
+exports.listenNotifications = (win) => {
   ipcMain.on('notification', async (event, arg) => {
     const notification = new Notification({
       title: arg.title,
@@ -41,8 +37,7 @@ exports.listenNotifications = () => {
   });
 }
 
-exports.listenFunctions = () => {
-  const win = BrowserWindow.getFocusedWindow();
+exports.listenFunctions = (win) => {
   ipcMain.on('functions', async (event, arg) => {
     switch (arg) {
       case 'update':
@@ -66,8 +61,7 @@ exports.listenFunctions = () => {
   });
 }
 
-exports.listenMusic = () => {
-  const win = BrowserWindow.getFocusedWindow();
+exports.listenMusic = (win) => {
   ipcMain.on('music', (event, args, args2) => {
     switch (args) {
       case 'startServer':
@@ -88,24 +82,19 @@ exports.listenMusic = () => {
   });
 }
 
-exports.sendServerPort = (data) => {
-  const win = BrowserWindow.getFocusedWindow();
+exports.sendServerPort = (win, data) => {
   win.webContents.send('serverPort', data);
 }
 
-exports.sendUpdateEvent = (data) => {
-  const win = BrowserWindow.getFocusedWindow();
+exports.sendUpdateEvent = (win, data) => {
   win.webContents.send('update', data);
 }
 
-exports.sendDeepLink = (data) => {
-  const win = BrowserWindow.getFocusedWindow();
+exports.sendDeepLink = (win, data) => {
   win.webContents.send('deeplink', data);
 }
 
-exports.menuBarFunctions = (data) => {
-  const win = BrowserWindow.getFocusedWindow();
-
+exports.menuBarFunctions = (win, data) => {
   switch (data) {
     case 'about':
       win.webContents.send('menuBar', 'about');

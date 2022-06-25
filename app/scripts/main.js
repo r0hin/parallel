@@ -59,11 +59,11 @@ const createWindow = () => {
   });
 
   win.on('focus', () => {
-    link.sendFocusEvent(true);
+    link.sendFocusEvent(win, true);
   });
 
   win.on('blur', () => {
-    link.sendFocusEvent(false);
+    link.sendFocusEvent(win, false);
   });
 
 
@@ -94,13 +94,13 @@ const createWindow = () => {
 
   autoUpdater.addListener('update-downloaded', (updateInfo) => {
     console.log('Update downloaded.')
-    link.sendUpdateEvent(updateInfo)
+    link.sendUpdateEvent(win, updateInfo)
   });
 
-  link.listenNotifications();
-  link.listenFunctions();
-  link.listenMusic();
-  deeplinks.singleInstanceMode();
+  link.listenNotifications(win);
+  link.listenFunctions(win);
+  link.listenMusic(win);
+  deeplinks.singleInstanceMode(win);
   discord.startDiscord();
 
   app.on('open-url', function (event, url) {
@@ -109,10 +109,10 @@ const createWindow = () => {
   });
 
   // In development:
-  // win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
+  win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
 
   // In production:
-  host.startServer(win, URLARGUMENTS);
+  // host.startServer(win, URLARGUMENTS);
 }
 
 app.on('open-url', function (event, url) {

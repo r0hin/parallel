@@ -3479,10 +3479,10 @@ elliptic@^6.5.3:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
-emoji-picker-element@^1.11.3:
-  version "1.11.3"
-  resolved "https://registry.npmjs.org/emoji-picker-element/-/emoji-picker-element-1.11.3.tgz"
-  integrity sha512-2pPwqgZ1JLn7hdu3LdJpfyREmvCWP5gKhkGFqAK/mIXKz/uYx+U6DZsMoGAHjdkh+njE+CEkHjHW3eTq/eYAfQ==
+emoji-picker-element@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/emoji-picker-element/-/emoji-picker-element-1.10.0.tgz#0bc1d62fec69a522efcd0f0744f8b1d9184476cc"
+  integrity sha512-l1sP3PbALkftO/WUS6Ba+lUPFdMVURsgE/RDoruyc97IlMjnbjOINRmreca2G1F9jwg69ePtcVpk8iOivnrDPQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"

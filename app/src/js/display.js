@@ -1,4 +1,4 @@
-import { changePassword, changeProfilePhoto, completeProfile, deleteAccount, ghChangelog, hideBookmarks, openEmailInput, removeBio, removeLyrics, removeTrackFromProfile, sendVerify, showBookmarks, signOutParallel, updateBiography, updateLyrics, requestNewTrack, startTutorial, prepareDestroyAllFiles } from './app';
+import { changePassword, changeProfilePhoto, completeProfile, deleteAccount, hideBookmarks, openEmailInput, removeBio, removeLyrics, removeTrackFromProfile, sendVerify, showBookmarks, signOutParallel, updateBiography, updateLyrics, requestNewTrack, startTutorial, prepareDestroyAllFiles } from './app';
 import { cancelFriendsSearch, friendEventListeners, friendsTab, toggleFriendsSort } from './friends';
 import { createPlaylist } from './library';
 import { backwardSong, clearHistory, clearQueue, forwardSong, loginSpotify, musicTab, openNewPlaylistDialog, openNewPlaylistFolderDialog, reloadSocialTab, searchMusicButton, spotifyPlaylistLookup, switchToHistory } from './music';
@@ -36,153 +36,6 @@ export function timer(ms) {
   return new Promise(res => setTimeout(res, ms));
 } 
 
-tippy.setDefaultProps({
-  // Props
-  placement: 'right',
-  arrow: false,
-  dynamicTitle: true,
-  animation: 'shift-toward',
-});
-
-$(`#pfpseudoelement`).get(0).onclick = () => openSpecialServer('account');
-
-tippy('#serverAddButton', {
-  content: 'Join a Group',
-  placement: 'top',
-});
-
-tippy('#serverViewRequestsButton', {
-  content: 'View Outgoing Requests',
-  placement: 'top',
-});
-
-tippy('#musicPopoutFront', {
-  content: 'Expand',
-  placement: 'top',
-});
-
-tippy('#collapsePopout', {
-  content: 'Collapse',
-  placement: 'top',
-});
-
-tippy('#bookmarksCloseButton', {
-  content: 'Close',
-  placement: 'top',
-});
-
-tippy('#trackMoreOptions', {
-  content: 'More Options',
-  placement: 'top',
-});
-
-tippy(`#newFriendButton`, {
-  content: 'Add Friend',
-  placement: 'top',
-});
-
-tippy(`#friendSortButton`, {
-  content: 'Toggle Sort',
-  placement: 'top',
-});
-
-tippy(`#storageSortButton`, {
-  content: 'Toggle Sort',
-  placement: 'top',
-});
-
-tippy(`#bookmarksButton`, {
-  content: 'Bookmarks',
-  placement: 'top',
-});
-
-tippy(`#keycodesButton`, {
-  content: 'Details',
-  placement: 'top',
-});
-
-tippy('#friendsServer', {
-  content: 'Friends',
-});
-
-tippy(`#refreshFriendsButton`, {
-  content: 'Refresh Playlists',
-  placement: 'top',
-});
-
-tippy(`#voiceChatButtonVideoFriends`, {
-  content: 'Stream Video',
-  placement: 'top',
-});
-
-tippy(`#voiceChatButtonScreenFriends`, {
-  content: 'Stream Screen',
-  placement: 'top',
-});
-
-tippy('#voiceChatStopWatchingButton3', {
-  content: 'Stop Watching',
-  placement: 'top',
-});
-
-tippy('#DMEndCall', {
-  content: 'Leave Voice',
-  placement: 'top',
-});
-
-tippy('#dmMuteButton', {
-  content: 'Mute',
-  placement: 'top',
-});
-
-tippy('#dmDeafenButton', {
-  content: 'Deafen',
-  placement: 'top',
-});
-
-tippy(`#questionMarkButton`, {
-  content: 'Request a Track',
-  placement: 'top',
-})
-
-$(`#voiceChatStopWatchingButton3`).onclick = () => {
-  leaveVideoDM(connectedToVideo);
-}
-
-$(`#friendsServer`).get(0).onclick = () => openSpecialServer('friends');
-
-tippy('#newPlaylistButton', {
-  content: 'New Playlist',
-  placement: 'top',
-});
-
-tippy('#newPlaylistFolderButton', {
-  content: 'New Playlist Folder',
-  placement: 'top',
-});
-
-tippy('#musicServer', {
-  content: 'Music',
-});
-
-$(`#musicServer`).get(0).onclick = () => openSpecialServer('music');
-
-tippy('#addServer', {
-  content: 'Add a Group',
-});
-
-tippy('#updateServer', {
-  content: 'Update Available',
-});
-
-$(`#addServer`).get(0).onclick = () => openDropdown('addServerDropdown');
-
-tippy('#infiniteServer', {
-  content: 'Parallel Infinite',
-});
-
-$(`#infiniteServer`).get(0).onclick = () => openSpecialServer('infinite');
-
 try {
   Object.defineProperty(String.prototype, 'capitalize', {
     value: function() {
@@ -192,7 +45,216 @@ try {
   }); 
 } catch (error) {}
 
-displayInputEffect();
+export function loadDisplay() {
+  tippy.setDefaultProps({
+    // Props
+    placement: 'right',
+    arrow: false,
+    dynamicTitle: true,
+    animation: 'shift-toward',
+  });
+  
+  $(`#pfpseudoelement`).get(0).onclick = () => openSpecialServer('account');
+  
+  tippy('#serverAddButton', {
+    content: 'Join a Group',
+    placement: 'top',
+  });
+  
+  tippy('#serverViewRequestsButton', {
+    content: 'View Outgoing Requests',
+    placement: 'top',
+  });
+  
+  tippy('#musicPopoutFront', {
+    content: 'Expand',
+    placement: 'top',
+  });
+  
+  tippy('#collapsePopout', {
+    content: 'Collapse',
+    placement: 'top',
+  });
+  
+  tippy('#bookmarksCloseButton', {
+    content: 'Close',
+    placement: 'top',
+  });
+  
+  tippy('#trackMoreOptions', {
+    content: 'More Options',
+    placement: 'top',
+  });
+  
+  tippy(`#newFriendButton`, {
+    content: 'Add Friend',
+    placement: 'top',
+  });
+  
+  tippy(`#friendSortButton`, {
+    content: 'Toggle Sort',
+    placement: 'top',
+  });
+  
+  tippy(`#storageSortButton`, {
+    content: 'Toggle Sort',
+    placement: 'top',
+  });
+  
+  tippy(`#bookmarksButton`, {
+    content: 'Bookmarks',
+    placement: 'top',
+  });
+  
+  tippy(`#keycodesButton`, {
+    content: 'Details',
+    placement: 'top',
+  });
+  
+  tippy('#friendsServer', {
+    content: 'Friends',
+  });
+  
+  tippy(`#refreshFriendsButton`, {
+    content: 'Refresh Playlists',
+    placement: 'top',
+  });
+  
+  tippy(`#voiceChatButtonVideoFriends`, {
+    content: 'Stream Video',
+    placement: 'top',
+  });
+  
+  tippy(`#voiceChatButtonScreenFriends`, {
+    content: 'Stream Screen',
+    placement: 'top',
+  });
+  
+  tippy('#voiceChatStopWatchingButton3', {
+    content: 'Stop Watching',
+    placement: 'top',
+  });
+  
+  tippy('#DMEndCall', {
+    content: 'Leave Voice',
+    placement: 'top',
+  });
+  
+  tippy('#dmMuteButton', {
+    content: 'Mute',
+    placement: 'top',
+  });
+  
+  tippy('#dmDeafenButton', {
+    content: 'Deafen',
+    placement: 'top',
+  });
+  
+  tippy(`#questionMarkButton`, {
+    content: 'Request a Track',
+    placement: 'top',
+  })
+  
+  $(`#voiceChatStopWatchingButton3`).onclick = () => {
+    leaveVideoDM(connectedToVideo);
+  }
+  
+  $(`#friendsServer`).get(0).onclick = () => openSpecialServer('friends');
+  
+  tippy('#newPlaylistButton', {
+    content: 'New Playlist',
+    placement: 'top',
+  });
+  
+  tippy('#newPlaylistFolderButton', {
+    content: 'New Playlist Folder',
+    placement: 'top',
+  });
+  
+  tippy('#musicServer', {
+    content: 'Music',
+  });
+  
+  $(`#musicServer`).get(0).onclick = () => openSpecialServer('music');
+  
+  tippy('#addServer', {
+    content: 'Add a Group',
+  });
+  
+  tippy('#updateServer', {
+    content: 'Update Available',
+  });
+  
+  $(`#addServer`).get(0).onclick = () => openDropdown('addServerDropdown');
+  
+  tippy('#infiniteServer', {
+    content: 'Parallel Infinite',
+  });
+  
+  $(`#infiniteServer`).get(0).onclick = () => openSpecialServer('infinite');
+  
+  displayInputEffect();
+
+  // Enter on click
+  $('#searchMusic').get(0).addEventListener("keyup", (event) => {
+    console.log('event');
+    if (event.keyCode === 13) { $('#musicSearchButton').get(0).click() }
+
+    // Gather search suggesstions with timeouts
+    window.clearTimeout(searchTimeout);
+    searchTimeout = window.setTimeout(async () => {
+      if (!$('#searchMusic').val()) { $('#searchSuggestions').empty(); return };
+
+      const suggestions = await makeMusicRequest(`search/suggestions?kinds=terms&term=${$('#searchMusic').val()}`);
+      $('#searchSuggestions').empty();
+      suggestions.results.suggestions.forEach((suggestion) => {
+        const a = document.createElement('div');
+        a.setAttribute('class', 'searchSuggestionMusic');
+        a.innerHTML = suggestion.displayTerm;
+        a.onclick = () => {
+          $('#searchMusic').val(suggestion.searchTerm);
+          $('#musicSearchButton').get(0).click();
+        }
+        $('#searchSuggestions').append(a);
+      });
+    }, 299);
+  });
+
+  $(`#searchSpotifyPlaylistID`).get(0).addEventListener("keyup", (event) => {
+    if (event.keyCode === 13) {
+      spotifyPlaylistLookup();
+    }
+  });
+
+  window.addEventListener('online', function(e) {
+    window.location.reload();
+  }, false);
+  
+  window.addEventListener('offline', function(e) {
+    console.log('Client has become offline.');
+    $('#offlineView').removeClass('fadeOut');
+    $('#offlineView').addClass('fadeIn');
+    $('#offlineView').removeClass('hidden');
+  }, false);
+
+  // $('#incomingCallImage').get(0).setAttribute('crossOrigin', '');
+  // $('#incomingCallImage').get(0).addEventListener('load', () => processCallColors());
+
+  $('#DMConnectedImg').get(0).setAttribute('crossOrigin', '');
+  $('#DMConnectedImg').get(0).addEventListener('load', () => processConnectingColors());
+
+  $(`.infiniteNotice`).each((index, object) => {
+    $(object).get(0).onclick = () => {
+      openSpecialServer('infinite');
+    }
+  })
+
+  loadOnclicks();
+
+  // Emojis
+  twemoji.parse($(`#musicTab_getStarted`).get(0));
+}
+
 export function displayInputEffect() {
   $('input').on('focusin', function() {
     $(this).parent().find('label').addClass('active');
@@ -246,12 +308,6 @@ export async function openModal(id) {
       break;
     case 'updatedApp':
       closeOnEnter = true;
-
-      // Fetch update data.
-      const data = await ghChangelog();
-      console.log(data)
-      $(`#whatsChangedTitle`).html(`What's New?`)
-      $(`#whatsChanged`).html(data)
       break;
     case 'updateAvailable':
       // Click the primary action button. 
@@ -400,37 +456,6 @@ export function closeModal() {
   fullProfileActive = false;
 }
 
-// Enter on click
-
-$('#searchMusic').get(0).addEventListener("keyup", (event) => {
-  if (event.keyCode === 13) { $('#musicSearchButton').get(0).click() }
-
-  // Gather search suggesstions with timeouts
-  window.clearTimeout(searchTimeout);
-  searchTimeout = window.setTimeout(async () => {
-    if (!$('#searchMusic').val()) { $('#searchSuggestions').empty(); return };
-
-    const suggestions = await makeMusicRequest(`search/suggestions?kinds=terms&term=${$('#searchMusic').val()}`);
-    $('#searchSuggestions').empty();
-    suggestions.results.suggestions.forEach((suggestion) => {
-      const a = document.createElement('div');
-      a.setAttribute('class', 'searchSuggestionMusic');
-      a.innerHTML = suggestion.displayTerm;
-      a.onclick = () => {
-        $('#searchMusic').val(suggestion.searchTerm);
-        $('#musicSearchButton').get(0).click();
-      }
-      $('#searchSuggestions').append(a);
-    });
-  }, 299);
-});
-
-$(`#searchSpotifyPlaylistID`).get(0).addEventListener("keyup", (event) => {
-  if (event.keyCode === 13) {
-    spotifyPlaylistLookup();
-  }
-});
-
 // Shuffle array
 export function shuffleArray(array) { // Fisher-Yates shuffle
   let currentIndex = array.length,  randomIndex;
@@ -518,17 +543,6 @@ export function encode(n){for(var r="0x",t=n.length,e=0;e<t;e++)r+=n.charCodeAt(
 
 window.decode2 = (r) => {for(var e="",n=(r=r.slice(2)).length,o=0;o<n;){var t=r.slice(o,o+=2);e+=String.fromCharCode(parseInt(t,16))}return e}
 window.encode2 = (n) => {for(var r="0x",t=n.length,e=0;e<t;e++)r+=n.charCodeAt(e).toString(16);return r}
-
-window.addEventListener('online', function(e) {
-  window.location.reload();
-}, false);
-
-window.addEventListener('offline', function(e) {
-  console.log('Client has become offline.');
-  $('#offlineView').removeClass('fadeOut');
-  $('#offlineView').addClass('fadeIn');
-  $('#offlineView').removeClass('hidden');
-}, false);
 
 export function tConvert(t){return 1<(t=t.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/)||[t]).length&&((t=t.slice(1))[5]=+t[0]<12?":AM":":PM",t[0]=+t[0]%12||12),t=(t=(t=t.join("")).split(":"))[0]+":"+t[1]+" "+t[3]}
 
@@ -1281,12 +1295,6 @@ export function displaySystemNotification(TITLE, BODY, HANDLER, UID, username) {
   }
 }
 
-// $('#incomingCallImage').get(0).setAttribute('crossOrigin', '');
-// $('#incomingCallImage').get(0).addEventListener('load', () => processCallColors());
-
-$('#DMConnectedImg').get(0).setAttribute('crossOrigin', '');
-$('#DMConnectedImg').get(0).addEventListener('load', () => processConnectingColors());
-
 function processCallColors() {
   const colors = colorThief.getColor($(`#incomingCallImage`).get(0));
   $(`#incomingCall`).get(0).setAttribute('style', `background-color: rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, 1)`);
@@ -1731,130 +1739,111 @@ export function addOnclickByID(ObjectID, directFunction) {
   $(`#${ObjectID}`).get(0).onclick = directFunction;
 }
 
-$(`.infiniteNotice`).each((index, object) => {
-  $(object).get(0).onclick = () => {
-    openSpecialServer('infinite');
-  }
-})
-
-
-addOnclickByID('userPopoutsContainerBackground', () => {closeUserPopout()});
-addOnclickByID('fullscreenImageElementWallpaper', () => {fadeOutFullscreenImage()});
-addOnclickByID('musicPopoutFront', () => {expandMusicPopout()});
-addOnclickByID('playerBackwardButtonMini', () => {backwardSong(); document.activeElement.blur();});
-addOnclickByID('playerForwardButtonMini', () => {forwardSong(); document.activeElement.blur();});
-addOnclickByID('collapsePopout', () => {collapseMusicPopout()});
-addOnclickByID('modal-background', () => {closeModal()});
-
-addOnclickByID('newPlaylistCreateButton', () => {createPlaylist()});
-addOnclickByID('previewRequestButtonFriends', () => {prepareFriendRequest()});
-addOnclickByID('submitbtnprofile', () => {completeProfile()});
-addOnclickByID('verifyButton', () => {sendVerify()});
-addOnclickByID('replayIntro', () => {startTutorial()});
-
-addOnclickByID('settingsTabButton_general', () => {expandTab('general')});
-addOnclickByID('settingsTabButton_profile', () => {settingsTab('profile')});
-addOnclickByID('settingsTabButton_account', () => {settingsTab('account')});
-addOnclickByID('settingsTabButton_appearance', () => {settingsTab('appearance')});
-addOnclickByID('settingsTabButton_notifications', () => {settingsTab('notifications')});
-addOnclickByID('settingsTabButton_feedback', () => {window.open(`https://docs.google.com/forms/d/18Y82qsZ_eMTsIXu3EpygzUor2LUOen4G_ZAzscFPpsw/`)});
-addOnclickByID('settingsTabButton_getStarted', () => {settingsTab('getStarted')})
-addOnclickByID('settingsTabButton_storage', () => {settingsTab('storage')});
-addOnclickByID('settingsTabButton_advanced', () => {settingsTab('advanced')});
-addOnclickByID('settingsTabButton_sounds', () => {settingsTab('sounds')});
-addOnclickByID('settingsTabButton_playback', () => {expandTab('playback')});
-addOnclickByID('settingsTabButton_guide', () => {expandTab('guide')});
-addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel/releases/latest')});
-addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.net/support')});
-addOnclickByID('settingsTabButton_questions', () => {window.open('https://github.com/r0hin/parallel/discussions')});
-addOnclickByID('settingsTabButton_features', () => {window.open('https://github.com/r0hin/parallel/issues')});
-addOnclickByID('settingsTabButton_bugs', () => {window.open('https://github.com/r0hin/parallel/issues')});
-
-// todo: acceptable use policy
-addOnclickByID('linkToAcceptableUse', () => {window.open('https://parallelsocial.net/support')});
-
-addOnclickByID('settingsTabButton_playbackSettings', () => {settingsTab('playbackSettings')});
-addOnclickByID('settingsTabButton_playbackOutput', () => {settingsTab('playbackOutput')})
-addOnclickByID('settingsTabButton_transfer', () => {settingsTab('transfer')});
-
-addOnclickByID('linkSpotifyButton', () => {loginSpotify()});
-addOnclickByID('inputDevicesRefreshButton', () => {refreshInputDevices()});
-addOnclickByID('outputDevicesRefreshButton', () => {refreshOutputDevices()});
-
-addOnclickByID('changePFPButton', () => {changeProfilePhoto()});
-addOnclickByID('signOutButton', () => {signOutParallel()});
-addOnclickByID('newBioButton', () => {openModal('newBio')});
-addOnclickByID('newLyricsButton', () => {openModal('newLyrics')});
-addOnclickByID('removeLyricsButton', () => {removeLyrics()});
-addOnclickByID('removeBioButton', () => {removeBio()});
-addOnclickByID('openModalContactButton', () => {openModal('contact')});
-addOnclickByID('openModalCreditsButton', () => {openModal('credits')});
-
-addOnclickByID('setThemeLightButton', () => {setTheme('light')});
-addOnclickByID('setThemeAutoButton', () => {setTheme('auto')});
-addOnclickByID('setThemeDarkButton', () => {setTheme('dark')});
-addOnclickByID('newFriendButton', () => {openModal('newFriend')});
-addOnclickByID('friendSortButton', () => {toggleFriendsSort()});
-addOnclickByID('friendsTabFriendsButton', () => {friendsTab('friends', $(`#friendsTabFriendsButton`).get(0)) });
-addOnclickByID('friendsTabIncomingButton', () => {friendsTab('incoming', $(`#friendsTabIncomingButton`).get(0)) });
-addOnclickByID('friendsTabOutgoingButton', () => {friendsTab('outgoing', $(`#friendsTabOtherButton`).get(0)) });
-addOnclickByID('friendsTabBlockedButton', () => {friendsTab('blocked', $(`#friendsTabOtherButton`).get(0)) });
-addOnclickByID('noFriendsAddFriendButton', () => {openModal('newFriend')});
-addOnclickByID('cancelFriendsSearchIcon', () => {cancelFriendsSearch()});
-addOnclickByID('musicTabButton_explore', () => {musicTab('explore')});
-addOnclickByID('musicTabButton_friends', () => {musicTab('friends')});
-addOnclickByID('musicTabButton_search', () => {musicTab('search')});
-addOnclickByID('musicTabButton_queue', () => {musicTab('queue')});
-addOnclickByID('newPlaylistButton', () => {openNewPlaylistDialog()});
-addOnclickByID('newPlaylistFolderButton', () => {openNewPlaylistFolderDialog()});
-addOnclickByID('musicTabButton_saved', () => {musicTab('saved')});
-addOnclickByID('musicSearchButton', () => {searchMusicButton()});
-addOnclickByID('refreshFriendsButton', () => {reloadSocialTab()});
-addOnclickByID('updateQueueText', () => {switchToHistory()});
-addOnclickByID('queueClearButton', () => {clearQueue()});
-addOnclickByID('historyClearButton', () => {clearHistory()});
-addOnclickByID('playerBackwardButton', () => {backwardSong(); document.activeElement.blur();});
-addOnclickByID('playerForwardButton', () => {forwardSong(); document.activeElement.blur();});
-
-addOnclickByID('checkoutOne', () => {goToCheckout("price_1KFmL0Ba3MWDKrNRw1Q45Hx4")});
-addOnclickByID('checkoutTwo', () => {goToCheckout("price_1KFmLWBa3MWDKrNRy95tTKwo")});
-addOnclickByID('checkoutThree', () => {goToCheckout("price_1KFmMWBa3MWDKrNRvyTENeRA")});
-addOnclickByID('manageSubscriptionButton', () => {manageSubscription()});
-
-addOnclickByID('changeEmailButton', () => {openEmailInput()});
-addOnclickByID('changePasswordButton', () => {changePassword()});
-addOnclickByID('bookmarksButton', () => { showBookmarks() });
-addOnclickByID('bookmarksBackground', () => {hideBookmarks()});
-addOnclickByID('bookmarksCloseButton', () => {hideBookmarks()});
-addOnclickByID('keycodesButton', () => {openModal('keyCodes')});
-addOnclickByID('removeLinkedTrackButton', () => {removeTrackFromProfile()});
-addOnclickByID('deleteAccountButton', () => {deleteAccount()});
-addOnclickByID('gettingStartedProfilePhoto', () => { settingsTab('account'); });
-addOnclickByID('gettingStartedSpotify', () => { settingsTab('transfer'); });
-addOnclickByID('gettingStartedAppearance', () => { settingsTab('appearance'); });
-addOnclickByID('gettingStartedInfinite', () => { openSpecialServer('infinite'); });
-addOnclickByID('gettingStartedAddFriends', () => { openSpecialServer('friends'); });
-addOnclickByID('gettingStartedGroup', () => { openSpecialServer('add'); });
-addOnclickByID('gettingStartedMusic', () => { openSpecialServer('music'); });
-addOnclickByID('gettingStartedSupport', () => { openModal('contact'); });
-addOnclickByID('questionMarkButton', () => { requestNewTrack() })
-addOnclickByID('createGroupButton', () => { createGroup() });
-addOnclickByID('openJoinGroupButton', () => { joinGroup() });
-addOnclickByID('createGroupFolderButton', () => { createGroupFolder() });
-addOnclickByID('updateServer', () => updateApp()) ;
-addOnclickByID('clearAllUploadsButton', () => prepareDestroyAllFiles() );
-addOnclickByID('musicInfoButton', () => { openModal('musicInfo') });
-
-// Emojis
-twemoji.parse($(`#musicTab_getStarted`).get(0));
-
-if (window.location.href.includes('.ca')) {
-  $(`#emaillink1`).attr('href', 'mailto:support@parallelsocial.ca');
-  $(`#emaillink1`).html('support@parallelsocial.ca');
-  $(`#emaillink2`).attr('href', 'mailto:support@parallelsocial.ca');
-  $(`#emaillink2`).html('support@parallelsocial.ca');
-
-  $(`#weblink1`).attr('href', 'https://parallelsocial.ca/policies.pdf');
-  $(`#weblink2`).attr('href', 'https://parallelsocial.ca/policies.pdf');
-  $(`#weblink3`).attr('href', 'https://parallelsocial.ca/policies.pdf');
+function loadOnclicks() {
+  addOnclickByID('userPopoutsContainerBackground', () => {closeUserPopout()});
+  addOnclickByID('fullscreenImageElementWallpaper', () => {fadeOutFullscreenImage()});
+  addOnclickByID('musicPopoutFront', () => {expandMusicPopout()});
+  addOnclickByID('playerBackwardButtonMini', () => {backwardSong(); document.activeElement.blur();});
+  addOnclickByID('playerForwardButtonMini', () => {forwardSong(); document.activeElement.blur();});
+  addOnclickByID('collapsePopout', () => {collapseMusicPopout()});
+  addOnclickByID('modal-background', () => {closeModal()});
+  
+  addOnclickByID('newPlaylistCreateButton', () => {createPlaylist()});
+  addOnclickByID('previewRequestButtonFriends', () => {prepareFriendRequest()});
+  addOnclickByID('submitbtnprofile', () => {completeProfile()});
+  addOnclickByID('verifyButton', () => {sendVerify()});
+  addOnclickByID('replayIntro', () => {startTutorial()});
+  
+  addOnclickByID('settingsTabButton_general', () => {expandTab('general')});
+  addOnclickByID('settingsTabButton_profile', () => {settingsTab('profile')});
+  addOnclickByID('settingsTabButton_account', () => {settingsTab('account')});
+  addOnclickByID('settingsTabButton_appearance', () => {settingsTab('appearance')});
+  addOnclickByID('settingsTabButton_notifications', () => {settingsTab('notifications')});
+  addOnclickByID('settingsTabButton_feedback', () => {window.open(`https://docs.google.com/forms/d/18Y82qsZ_eMTsIXu3EpygzUor2LUOen4G_ZAzscFPpsw/`)});
+  addOnclickByID('settingsTabButton_getStarted', () => {settingsTab('getStarted')})
+  addOnclickByID('settingsTabButton_storage', () => {settingsTab('storage')});
+  addOnclickByID('settingsTabButton_advanced', () => {settingsTab('advanced')});
+  addOnclickByID('settingsTabButton_sounds', () => {settingsTab('sounds')});
+  addOnclickByID('settingsTabButton_playback', () => {expandTab('playback')});
+  addOnclickByID('settingsTabButton_guide', () => {expandTab('guide')});
+  addOnclickByID('settingsTabButton_updates', () => {window.open('https://github.com/r0hin/parallel/releases/latest')});
+  addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.net/support')});
+  addOnclickByID('settingsTabButton_questions', () => {window.open('https://github.com/r0hin/parallel/discussions')});
+  addOnclickByID('settingsTabButton_features', () => {window.open('https://github.com/r0hin/parallel/issues')});
+  addOnclickByID('settingsTabButton_bugs', () => {window.open('https://github.com/r0hin/parallel/issues')});
+  
+  // todo: acceptable use policy
+  addOnclickByID('linkToAcceptableUse', () => {window.open('https://parallelsocial.net/support')});
+  
+  addOnclickByID('settingsTabButton_playbackSettings', () => {settingsTab('playbackSettings')});
+  addOnclickByID('settingsTabButton_playbackOutput', () => {settingsTab('playbackOutput')})
+  addOnclickByID('settingsTabButton_transfer', () => {settingsTab('transfer')});
+  
+  addOnclickByID('linkSpotifyButton', () => {loginSpotify()});
+  addOnclickByID('inputDevicesRefreshButton', () => {refreshInputDevices()});
+  addOnclickByID('outputDevicesRefreshButton', () => {refreshOutputDevices()});
+  
+  addOnclickByID('changePFPButton', () => {changeProfilePhoto()});
+  addOnclickByID('signOutButton', () => {signOutParallel()});
+  addOnclickByID('newBioButton', () => {openModal('newBio')});
+  addOnclickByID('newLyricsButton', () => {openModal('newLyrics')});
+  addOnclickByID('removeLyricsButton', () => {removeLyrics()});
+  addOnclickByID('removeBioButton', () => {removeBio()});
+  addOnclickByID('openModalContactButton', () => {openModal('contact')});
+  addOnclickByID('openModalCreditsButton', () => {openModal('credits')});
+  
+  addOnclickByID('setThemeLightButton', () => {setTheme('light')});
+  addOnclickByID('setThemeAutoButton', () => {setTheme('auto')});
+  addOnclickByID('setThemeDarkButton', () => {setTheme('dark')});
+  addOnclickByID('newFriendButton', () => {openModal('newFriend')});
+  addOnclickByID('friendSortButton', () => {toggleFriendsSort()});
+  addOnclickByID('friendsTabFriendsButton', () => {friendsTab('friends', $(`#friendsTabFriendsButton`).get(0)) });
+  addOnclickByID('friendsTabIncomingButton', () => {friendsTab('incoming', $(`#friendsTabIncomingButton`).get(0)) });
+  addOnclickByID('friendsTabOutgoingButton', () => {friendsTab('outgoing', $(`#friendsTabOtherButton`).get(0)) });
+  addOnclickByID('friendsTabBlockedButton', () => {friendsTab('blocked', $(`#friendsTabOtherButton`).get(0)) });
+  addOnclickByID('noFriendsAddFriendButton', () => {openModal('newFriend')});
+  addOnclickByID('cancelFriendsSearchIcon', () => {cancelFriendsSearch()});
+  addOnclickByID('musicTabButton_explore', () => {musicTab('explore')});
+  addOnclickByID('musicTabButton_friends', () => {musicTab('friends')});
+  addOnclickByID('musicTabButton_search', () => {musicTab('search')});
+  addOnclickByID('musicTabButton_queue', () => {musicTab('queue')});
+  addOnclickByID('newPlaylistButton', () => {openNewPlaylistDialog()});
+  addOnclickByID('newPlaylistFolderButton', () => {openNewPlaylistFolderDialog()});
+  addOnclickByID('musicTabButton_saved', () => {musicTab('saved')});
+  addOnclickByID('musicSearchButton', () => {searchMusicButton()});
+  addOnclickByID('refreshFriendsButton', () => {reloadSocialTab()});
+  addOnclickByID('updateQueueText', () => {switchToHistory()});
+  addOnclickByID('queueClearButton', () => {clearQueue()});
+  addOnclickByID('historyClearButton', () => {clearHistory()});
+  addOnclickByID('playerBackwardButton', () => {backwardSong(); document.activeElement.blur();});
+  addOnclickByID('playerForwardButton', () => {forwardSong(); document.activeElement.blur();});
+  
+  addOnclickByID('checkoutOne', () => {goToCheckout("price_1KFmL0Ba3MWDKrNRw1Q45Hx4")});
+  addOnclickByID('checkoutTwo', () => {goToCheckout("price_1KFmLWBa3MWDKrNRy95tTKwo")});
+  addOnclickByID('checkoutThree', () => {goToCheckout("price_1KFmMWBa3MWDKrNRvyTENeRA")});
+  addOnclickByID('manageSubscriptionButton', () => {manageSubscription()});
+  
+  addOnclickByID('changeEmailButton', () => {openEmailInput()});
+  addOnclickByID('changePasswordButton', () => {changePassword()});
+  addOnclickByID('bookmarksButton', () => { showBookmarks() });
+  addOnclickByID('bookmarksBackground', () => {hideBookmarks()});
+  addOnclickByID('bookmarksCloseButton', () => {hideBookmarks()});
+  addOnclickByID('keycodesButton', () => {openModal('keyCodes')});
+  addOnclickByID('removeLinkedTrackButton', () => {removeTrackFromProfile()});
+  addOnclickByID('deleteAccountButton', () => {deleteAccount()});
+  addOnclickByID('gettingStartedProfilePhoto', () => { settingsTab('account'); });
+  addOnclickByID('gettingStartedSpotify', () => { settingsTab('transfer'); });
+  addOnclickByID('gettingStartedAppearance', () => { settingsTab('appearance'); });
+  addOnclickByID('gettingStartedInfinite', () => { openSpecialServer('infinite'); });
+  addOnclickByID('gettingStartedAddFriends', () => { openSpecialServer('friends'); });
+  addOnclickByID('gettingStartedGroup', () => { openSpecialServer('add'); });
+  addOnclickByID('gettingStartedMusic', () => { openSpecialServer('music'); });
+  addOnclickByID('gettingStartedSupport', () => { openModal('contact'); });
+  addOnclickByID('questionMarkButton', () => { requestNewTrack() })
+  addOnclickByID('createGroupButton', () => { createGroup() });
+  addOnclickByID('openJoinGroupButton', () => { joinGroup() });
+  addOnclickByID('createGroupFolderButton', () => { createGroupFolder() });
+  addOnclickByID('updateServer', () => updateApp()) ;
+  addOnclickByID('clearAllUploadsButton', () => prepareDestroyAllFiles() );
+  addOnclickByID('musicInfoButton', () => { openModal('musicInfo') });
 }
