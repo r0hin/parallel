@@ -2,17 +2,17 @@
 // Demanding if 100+ friends. The listeners will be created and then not changed.
 // Similar system to servers. Maybe hard cap on both for 110 ish.
 
-import { getDatabase, ref, onValue, push, onDisconnect, set, serverTimestamp, off, query, remove, get, Database, goOffline, goOnline } from "firebase/database";
+import { getDatabase, ref, onValue, onDisconnect, set, serverTimestamp, off, query, remove } from "firebase/database";
 import * as timeago from 'timeago.js';
-
-checkAppInitialized;
-const rtdb = getDatabase();
 
 import { displayImageAnimation, friendsArrayDifference } from "./display";
 import { sendMusicStatus } from "./electronApp";
 import { checkAppInitialized } from "./firebaseChecks";
 import { buildMusicSocialCard } from "./music";
 import { retrieveSetting } from "./settings";
+
+checkAppInitialized();
+const rtdb = getDatabase();
 
 window.presenceFriends = [];
 window.onlineBook = {};

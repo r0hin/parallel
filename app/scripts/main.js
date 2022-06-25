@@ -37,6 +37,7 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false,
       nativeWindowOpen: true,
+      enableRemoteModule: true,
     },
     titleBarStyle: 'hiddenInset',
     frame: false,

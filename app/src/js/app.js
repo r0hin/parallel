@@ -22,7 +22,7 @@ import { startMainElectronProcesses } from './electron';
 import { listenKeystrokes } from './keyboarde';
 
 window.user;
-window.gitHubVersion = '2.3.4';
+window.gitHubVersion = '2.4.0';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
