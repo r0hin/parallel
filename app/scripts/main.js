@@ -1,12 +1,13 @@
 const { app, BrowserWindow, Menu, shell, nativeTheme} = require('electron');
 const { autoUpdater } = require("electron-updater");
-const defaultMenu = require('electron-default-menu');
+
 const windowStateKeeper = require('electron-window-state');
 
 const link = require('./link');
 const deeplinks = require('./deeplink');
 const discord = require('./discord');
 const host = require('./host');
+const menuBar = require('./menuBar');
 
 autoUpdater.autoDownload = true;
 
@@ -58,11 +59,11 @@ const createWindow = () => {
   });
 
   win.on('focus', () => {
-    link.sendFocusEvent(win, true);
+    link.sendFocusEvent(true);
   });
 
   win.on('blur', () => {
-    link.sendFocusEvent(win, false);
+    link.sendFocusEvent(false);
   });
 
 
@@ -93,18 +94,18 @@ const createWindow = () => {
 
   autoUpdater.addListener('update-downloaded', (updateInfo) => {
     console.log('Update downloaded.')
-    link.sendUpdateEvent(win, updateInfo)
+    link.sendUpdateEvent(updateInfo)
   });
 
-  link.listenNotifications(win);
-  link.listenFunctions(win);
-  link.listenMusic(win);
-  deeplinks.singleInstanceMode(win);
+  link.listenNotifications();
+  link.listenFunctions();
+  link.listenMusic();
+  deeplinks.singleInstanceMode();
   discord.startDiscord();
 
   app.on('open-url', function (event, url) {
     event.preventDefault();
-    deeplinks.handleLink(win, url);
+    deeplinks.handleLink(url);
   });
 
   // In development:
@@ -123,9 +124,8 @@ app.on('open-url', function (event, url) {
 
 app.on('ready', () => {
   createWindow();
-
-  const menu = defaultMenu(app, shell);
-  Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
+  // Create the Application's main menu
+  menuBar.initializeMenuBar();
 });
 
 app.on('window-all-closed', () => {

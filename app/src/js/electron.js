@@ -1,45 +1,50 @@
 window.winBrowserWindow = null;
-window.isElectron = true;
 
-const electron = window.require('electron');
+const electron = require('electron');
 
-electron.ipcRenderer.on('focus', (event, message) => {
-  if (message) {
-    $('#unfocusedStyles').html(``);
+export function startMainElectronProcesses() {
+  electron.ipcRenderer.on('focus', (event, message) => {
+    if (message) {
+      $('#unfocusedStyles').html(``);
+    }
+    else {
+      $('#unfocusedStyles').html(`
+        :root {
+          --primary: grey !important;
+          --secondary: grey !important;
+        }
+      `);
+    }
+  });
+
+  electron.ipcRenderer.on('menuBar', (event, message) => {
+    // About, settings, check for updates, etc.
+    alert("Please sign in to use menu bar functions.")
+  });
+
+  electron.webFrame.setZoomFactor(parseInt(localStorage.getItem('setting_zoom')) || 1) ;
+
+  switch (window.require('os').platform()) {
+    case 'darwin':
+      $('#pointerStyles').html(`
+        :root {
+          --defaultByPointer: default;
+          --defaultLabelPadding: 0px;
+          --iconPlacementDefault: 50%; 
+          --iconPlacementGuild: 54%;
+          --defaultInputPadding: 13px;
+          --questionMarkTop: 19px; 
+          --questionMarkRight: 4px;
+          --trackAuthorHeight: 20px;
+          --chatMessagePadding: 4px;
+        }
+      `);
+      break;
+    case 'win32':
+      $(`#windowsControls`).removeClass('hidden');
+      startWindowControlsListeners();
+      break;
   }
-  else {
-    $('#unfocusedStyles').html(`
-      :root {
-        --primary: grey !important;
-        --secondary: grey !important;
-      }
-    `);
-  }
-});
-
-
-electron.webFrame.setZoomFactor(parseInt(localStorage.getItem('setting_zoom')) || 1) ;
-
-switch (window.require('os').platform()) {
-  case 'darwin':
-    $('#pointerStyles').html(`
-      :root {
-        --defaultByPointer: default;
-        --defaultLabelPadding: 0px;
-        --iconPlacementDefault: 50%; 
-        --iconPlacementGuild: 54%;
-        --defaultInputPadding: 13px;
-        --questionMarkTop: 19px; 
-        --questionMarkRight: 4px;
-        --trackAuthorHeight: 20px;
-        --chatMessagePadding: 4px;
-      }
-    `);
-    break;
-  case 'win32':
-    $(`#windowsControls`).removeClass('hidden');
-    startWindowControlsListeners();
-    break;
 }
 
 function startWindowControlsListeners() {
@@ -62,35 +67,27 @@ function startWindowControlsListeners() {
 }
 
 window.sendToElectron = (dataType, dataContent) => {
-  if (isElectron) {
-    electron.ipcRenderer.send(dataType, dataContent);
-  }
+  electron.ipcRenderer.send(dataType, dataContent);
 }
 
 export function zoomIn() {
-  if (isElectron) {
-    if (electron.webFrame.getZoomFactor() < 1.6) {
-      notifyTiny('Zoomed in.', true);
-      electron.webFrame.setZoomFactor(electron.webFrame.getZoomFactor() + 0.1);
-      localStorage.setItem('setting_zoom', (electron.webFrame.getZoomFactor()).toString());
-    }
+  if (electron.webFrame.getZoomFactor() < 1.6) {
+    notifyTiny('Zoomed in.', true);
+    electron.webFrame.setZoomFactor(electron.webFrame.getZoomFactor() + 0.1);
+    localStorage.setItem('setting_zoom', (electron.webFrame.getZoomFactor()).toString());
   }
 }
 
 export function zoomOut() {
-  if (isElectron) {
-    if (electron.webFrame.getZoomFactor() > 0.5) {
-      notifyTiny('Zoomed out.', true);
-      electron.webFrame.setZoomFactor(electron.webFrame.getZoomFactor() - 0.1);
-      localStorage.setItem('setting_zoom', (electron.webFrame.getZoomFactor()).toString());
-    }
+  if (electron.webFrame.getZoomFactor() > 0.5) {
+    notifyTiny('Zoomed out.', true);
+    electron.webFrame.setZoomFactor(electron.webFrame.getZoomFactor() - 0.1);
+    localStorage.setItem('setting_zoom', (electron.webFrame.getZoomFactor()).toString());
   }
 }
 
 export function resetZoom() {
-  if (isElectron) {
-    electron.webFrame.setZoomFactor(1);
-    localStorage.setItem('setting_zoom', (electron.webFrame.getZoomFactor()).toString());
-    notifyTiny('Zoom reset.', true);
-  }
+  electron.webFrame.setZoomFactor(1);
+  localStorage.setItem('setting_zoom', (electron.webFrame.getZoomFactor()).toString());
+  notifyTiny('Zoom reset.', true);
 }

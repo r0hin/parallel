@@ -11,6 +11,7 @@ const auth = getAuth();
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     window.user = auth.currentUser;
+    startMainElectronProcesses();
   }
   else {
     // window.location.replace('https://parallelsocial.net')

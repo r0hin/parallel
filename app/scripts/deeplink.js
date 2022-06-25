@@ -1,4 +1,4 @@
-const { app } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
 const link = require('./link');
@@ -15,7 +15,8 @@ exports.setLinkHandler = () => {
 }
 
 // Force single application instance
-exports.singleInstanceMode = (win) => {
+exports.singleInstanceMode = () => {
+  const win = BrowserWindow.getFocusedWindow();
   const gotTheLock = app.requestSingleInstanceLock()
   if (!gotTheLock) {
     app.quit();
@@ -35,7 +36,8 @@ exports.singleInstanceMode = (win) => {
   }
 }
 
-exports.handleLink = (win, url) => {
+exports.handleLink = (url) => {
+  const win = BrowserWindow.getFocusedWindow();
   const arguments = url.replace('parallel://', '').split('.');
 
   switch (arguments[0]) {

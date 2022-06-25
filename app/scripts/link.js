@@ -1,4 +1,4 @@
-const { ipcMain, Notification } = require('electron');
+const { ipcMain, Notification, BrowserWindow } = require('electron');
 const { autoUpdater } = require("electron-updater");
 const music = require('./music');
 const discord = require('./discord');
@@ -9,7 +9,8 @@ exports.sendFocusEvent = (win, boolean) => {
 }
 
 // Notification incoming event
-exports.listenNotifications = (win) => {
+exports.listenNotifications = () => {
+  const win = BrowserWindow.getFocusedWindow();
   ipcMain.on('notification', async (event, arg) => {
     const notification = new Notification({
       title: arg.title,
@@ -37,7 +38,8 @@ exports.listenNotifications = (win) => {
   });
 }
 
-exports.listenFunctions = (win) => {
+exports.listenFunctions = () => {
+  const win = BrowserWindow.getFocusedWindow();
   ipcMain.on('functions', async (event, arg) => {
     switch (arg) {
       case 'update':
@@ -61,7 +63,8 @@ exports.listenFunctions = (win) => {
   });
 }
 
-exports.listenMusic = (win) => {
+exports.listenMusic = () => {
+  const win = BrowserWindow.getFocusedWindow();
   ipcMain.on('music', (event, args, args2) => {
     switch (args) {
       case 'startServer':
@@ -82,14 +85,29 @@ exports.listenMusic = (win) => {
   });
 }
 
-exports.sendServerPort = (win, data) => {
+exports.sendServerPort = (data) => {
+  const win = BrowserWindow.getFocusedWindow();
   win.webContents.send('serverPort', data);
 }
 
-exports.sendUpdateEvent = (win, data) => {
+exports.sendUpdateEvent = (data) => {
+  const win = BrowserWindow.getFocusedWindow();
   win.webContents.send('update', data);
 }
 
-exports.sendDeepLink = (win, data) => {
+exports.sendDeepLink = (data) => {
+  const win = BrowserWindow.getFocusedWindow();
   win.webContents.send('deeplink', data);
+}
+
+exports.menuBarFunctions = (data) => {
+  const win = BrowserWindow.getFocusedWindow();
+
+  switch (data) {
+    case 'about':
+      win.webContents.send('menuBar', 'about');
+      break;
+    default:
+      break;
+  }
 }

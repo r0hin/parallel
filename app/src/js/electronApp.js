@@ -47,6 +47,7 @@ export function startElectronProcesses() {
   });
 
   electron.ipcRenderer.on('update', (event, arg) => {
+    localStorage.setItem('recentNotes', arg.releaseNotes);
     $(`#updateServer`).removeClass('serverGone');
     // If within first three minutes of app launch, don't allow skip update
     if (new Date().getTime() - startTime < (180 * 1000)) {
@@ -129,10 +130,4 @@ export function manageDeepLink() {
 
 export function sendMusicStatus(status, detail) {
   electron.ipcRenderer.send('music', status, detail);
-}
-
-window.sendToElectron = (dataType, dataContent) => {
-  if (isElectron) {
-    electron.ipcRenderer.send(dataType, dataContent);
-  }
 }

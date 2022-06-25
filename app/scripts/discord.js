@@ -3,9 +3,14 @@ const clientID = '886693671641153578'
 let rpc = null;
 
 exports.startDiscord = () => {
-  DiscordRPC.register(clientID);
-  rpc = new DiscordRPC.Client({ transport: 'ipc' });
-  rpc.login({clientId: clientID});
+  try {
+    DiscordRPC.register(clientID);
+    rpc = new DiscordRPC.Client({ transport: 'ipc' });
+    rpc.login({clientId: clientID});
+  }
+  catch (e) {
+    console.log(`Error connecting to Discord.`);
+  }
 
   rpc.on('ready', () => {
     rpc.setActivity({

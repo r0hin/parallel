@@ -114,6 +114,7 @@ $(`#email3`).get(0).addEventListener("keyup", function(event) {
 
 // Auth
 onAuthStateChanged(auth, (user) => {
+  startMainElectronProcesses();
   if (user) {
     window.location.replace('app.html');
   } else {

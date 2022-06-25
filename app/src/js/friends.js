@@ -10,7 +10,6 @@ import { createPresenceListeners, showTippyListenerPresence, updatePresenceForUs
 import { checkValidSubscription } from './stripe';
 import { hideMediaViewDM, joinScreenDM, joinVideoDM, manageVCFriendsDisplay } from './voice';
 import { blockUser, unblockUser } from './users';
-import { returnIsElectron } from './electron';
 import { retrieveSetting } from './settings';
 import { playMessageSound } from './sounds';
 import { joinGroup } from './servers';

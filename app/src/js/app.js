@@ -21,7 +21,7 @@ import { checkAppInitialized } from './firebaseChecks';
 import { startElectronProcesses } from './electronApp';
 
 window.user;
-window.gitHubVersion = '2.3.1';
+window.gitHubVersion = '2.3.2';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
@@ -302,6 +302,7 @@ async function startSetup() {
     $(`#adminPanel`).addClass('hidden');
   }
 
+  startMainElectronProcesses();
   startElectronProcesses();
 }
 
@@ -918,6 +919,23 @@ function getCredential() {
 
 // VERSIONINING
 function loadVersioning(uid) {
+  const lastVersion = localStorage.getItem(`lastVersion`);
+  if (lastVersion) {
+    const lastVersionNumber = parseInt(lastVersion.replaceAll('.', ''));
+    const currentVersionNumber = parseInt(gitHubVersion.replaceAll('.', ''));
+    localStorage.setItem(`lastVersion`, gitHubVersion);
+    if (lastVersionNumber < currentVersionNumber) {
+      // App was just updated.
+      openModal('updatedApp');
+      $(`#whatsChangedTitle`).html("🎉 What's New? 🎉");
+      $(`#whatsChangedVersion`).html(`Version ${gitHubVersion}`);
+      $(`#whatsChanged`).html(localStorage.getItem('recentNotes'));
+    }
+  }
+  else {
+    localStorage.setItem(`lastVersion`, gitHubVersion);
+  }
+
   onSnapshot(doc(db, `app/onLoad`), (doc) => {
     if (disableCoreListeners) {
       return;
