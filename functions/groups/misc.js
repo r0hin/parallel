@@ -151,7 +151,8 @@ exports.startPayment = functions.https.onCall(async (data, context) => {
   const db = admin.firestore();
 
   const priceID = data.priceID;
-  const userID = context.auth.uid;
+  const userID = data.userID;
+  const userEmail = data.userEmail;
 
   const successURL = data.successURL;
   const cancelURL = data.cancelURL;
@@ -170,8 +171,8 @@ exports.startPayment = functions.https.onCall(async (data, context) => {
     success_url: successURL,
     cancel_url: cancelURL,
     client_reference_id: userID,
-    customer_email: context.auth.token.email,
-    allow_promotional_codes: true,
+    customer_email: userEmail,
+    allow_promotion_codes: true,
   }
 
   if (isTrial) {

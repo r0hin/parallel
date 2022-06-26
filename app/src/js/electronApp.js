@@ -1,8 +1,8 @@
-const electron = window.require('electron');
+window.electron = window.require('electron');
 import { markChannelAsRead } from './channels';
-import { openModal } from './display';
+import { openModal } from './displays';
 import { markDMRead } from './friends';
-import { openNewPlaylistDialog, openNewPlaylistFolderDialog, openOtherPlaylist } from './music';
+import { backwardSong, forwardSong, openNewPlaylistDialog, openNewPlaylistFolderDialog, openOtherPlaylist } from './music';
 import { createGroup, joinGroup, openSpecialServer } from './servers';
 
 window.winBrowserWindow = null;
@@ -19,6 +19,7 @@ window.sendToElectron = (dataType, dataContent) => {
 }
 
 export function startElectronProcesses() {
+  window.electron = window.require('electron');
   electron.ipcRenderer.send('functions', 'checkUpdate'); // Starts the hourly update checker.
   electron.ipcRenderer.send('music', 'startServer'); // Starts the internal server in Electron.
 
@@ -105,6 +106,49 @@ export function startElectronProcesses() {
       case 'joinGroup':
         joinGroup();
         break;
+      case 'forward':
+        // Seek fowrad
+        if (musicPlaying.id && !activeListeningParty) {
+          libraryPlayer.currentTime += 10;
+        }
+        break;
+      case 'skip':
+        if (musicPlaying.id) {
+          forwardSong();
+        }
+        break;
+      case 'previous':
+        if (musicPlaying.id && !activeListeningParty) {
+          libraryPlayer.currentTime -= 10;
+        }
+        break;
+      case 'skipBackward':
+        if (!activeListeningParty && musicPlaying.id) {
+          backwardSong();
+        }
+        break;
+      case 'volumeUp':
+        libraryPlayer.volume += 0.05;
+        break;
+      case 'volumeDown':
+        libraryPlayer.volume -= 0.05;
+        break;
+      case 'friends':
+        openSpecialServer('friends');
+        break;
+      case 'music':
+        openSpecialServer('music');
+        break;
+      case 'servers':
+        $(`#addServer`).get(0).click();
+        break;
+      case 'infinite':
+        openSpecialServer('infinite');
+        break;
+      case 'account':
+        openSpecialServer('account');
+        break;
+        break;
       default:
         break;
     }
@@ -160,5 +204,10 @@ export function manageDeepLink() {
 }
 
 export function sendMusicStatus(status, detail) {
-  electron.ipcRenderer.send('music', status, detail);
+  if (activeListeningParty) {
+    electron.ipcRenderer.send('music', status, detail, true);
+  }
+  else {
+    electron.ipcRenderer.send('music', status, detail, false);
+  }
 }

@@ -5,7 +5,7 @@
 import { getDatabase, ref, onValue, onDisconnect, set, serverTimestamp, off, query, remove } from "firebase/database";
 import * as timeago from 'timeago.js';
 
-import { displayImageAnimation, friendsArrayDifference } from "./display";
+import { displayImageAnimation, friendsArrayDifference } from "./displays";
 import { sendMusicStatus } from "./electronApp";
 import { checkAppInitialized } from "./firebaseChecks";
 import { buildMusicSocialCard } from "./music";

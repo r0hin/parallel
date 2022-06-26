@@ -112,3 +112,5 @@ pass.txt
 ## All files in app/output
 app/output/
 
+functions/webhook.json
+functions/secret.json

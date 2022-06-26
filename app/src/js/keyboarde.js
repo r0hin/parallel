@@ -1,6 +1,6 @@
 import { hideBookmarks } from "./app";
 import { prepareEditMessage } from "./channels";
-import { closeEmojiPicker, closeGifPicker, closeModal, fadeOutFullscreenImage } from "./display";
+import { closeEmojiPicker, closeGifPicker, closeModal, fadeOutFullscreenImage } from "./displays";
 import { resetZoom, zoomIn, zoomOut } from "./electron";
 import { prepareDMEditMessage } from "./friends";
 
@@ -34,20 +34,15 @@ export function listenKeystrokes() {
       switch (e.code) {
         case 'Space':
           if (!document.activeElement.tagName.toLowerCase().includes('input') && !document.activeElement.classList.contains('playlistDescription') && !document.activeElement.classList.contains('contentEditableMessage') && !document.activeElement.tagName.toLowerCase().includes('textarea')) {
-            if (musicPlaying) {
-              if (libraryPlayer.playing) {
-                $(`#libraryPlayer`).get(0).pause();
-              }
-              else {
-                $(`#libraryPlayer`).get(0).play();
-              }
+            if (musicPlaying.id && !activeListeningParty) {
+              $(`#playerPauseButton`).get(0).click();
             }
             e.preventDefault();
           }
           break;
         case 'ArrowRight':
           if (!document.activeElement.tagName.toLowerCase().includes('input') && !document.activeElement.classList.contains('playlistDescription') && !document.activeElement.classList.contains('contentEditableMessage') && !document.activeElement.tagName.toLowerCase().includes('textarea')) {
-            if (musicPlaying) {
+            if (musicPlaying.id && !activeListeningParty) {
               libraryPlayer.forward(10);
             }
             e.preventDefault();
@@ -55,7 +50,7 @@ export function listenKeystrokes() {
           break;
         case 'ArrowLeft':
           if (!document.activeElement.tagName.toLowerCase().includes('input') && !document.activeElement.classList.contains('playlistDescription') && !document.activeElement.classList.contains('contentEditableMessage') && !document.activeElement.tagName.toLowerCase().includes('textarea')) {
-            if (musicPlaying) {
+            if (musicPlaying.id && !activeListeningParty) {
               libraryPlayer.rewind(10);
             }
             e.preventDefault();

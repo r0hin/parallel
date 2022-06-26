@@ -5,7 +5,7 @@ import * as timeago from 'timeago.js';
 import { getCroppedPhoto } from './app';
 import { createAlbum, createArtist, createTrack } from './componentse';
 
-import { commonArrayDifference, securityConfirmTextIDs, playlistArrayDifference, openModal, closeModal, timer, showUploadProgress, hideUploadProgress, displayImageAnimation, securityConfirmText, messageHTMLtoText, displayInputEffect, windowSelected } from './display'
+import { commonArrayDifference, securityConfirmTextIDs, playlistArrayDifference, openModal, closeModal, timer, showUploadProgress, hideUploadProgress, displayImageAnimation, securityConfirmText, messageHTMLtoText, displayInputEffect, windowSelected } from './displays'
 import { manageDeepLink } from './electronApp';
 import { checkAppInitialized } from './firebaseChecks';
 import { clearMusicViewsPlaylist, musicTab, openOtherPlaylist } from './music';

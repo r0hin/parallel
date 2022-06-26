@@ -2,7 +2,7 @@ const { ipcMain, Notification, BrowserWindow, dialog, Menu } = require('electron
 const { autoUpdater } = require("electron-updater");
 const music = require('./music');
 const discord = require('./discord');
-const { updateStatusNotify, menuBar } = require('./menuBar');
+const { getUpdateStatusNotify, menuBar, enablePlaybackControls, disablePlaybackControls, setUpdateStatusNotify } = require('./menuBar');
 
 // Focus outgoing event
 exports.sendFocusEvent = (win, boolean) => {
@@ -44,44 +44,57 @@ exports.listenFunctions = (win) => {
       case 'update':
         autoUpdater.quitAndInstall()
         break;
+      case 'oneTimeCheckUpdate':
+        setUpdateStatusNotify(true);
+        autoUpdater.checkForUpdates();
+        break;
       case "checkUpdate":
         console.log('Starting check updates.')
-
+        console.log('here4');
         autoUpdater.on('update-available', () => {
+          console.log('here3');
           win.webContents.send('updateAvailable', true);
-          if (updateStatusNotify) {
+          if (getUpdateStatusNotify) {
+            console.log('here5');
             // Show dialog
             dialog.showMessageBox(win, {
               type: 'info',
               title: "Update Available",
-              message: "A new update is available. It is currently being downloaded.",
+              message: "A new update is available! We will start downloading it for you now.",
               buttons: ['OK']
             });
-            updateStatusNotify = false;
+            setUpdateStatusNotify(false);
             menuBar[0].submenu[2].enabled = false;
             Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
           }
         });
 
         autoUpdater.on('update-not-available', () => {
-          if (updateStatusNotify) {
+           console.log('here1');
+          if (getUpdateStatusNotify()) {
+            console.log('here2')
             // Show dialog
             dialog.showMessageBox(win, {
               type: 'info',
               title: "No Update Available",
-              message: "You are running the latest version of the application.",
+              message: "You are running the latest version of Parallel.",
               buttons: ['OK']
             });
-            updateStatusNotify = false;
+            setUpdateStatusNotify(false);
             menuBar[0].submenu[2].enabled = false;
             Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
           }
         });
 
+        autoUpdater.on('error', (error) => {
+          console.log(error);
+        });
+
         autoUpdater.checkForUpdates();
         setInterval(() => {
           autoUpdater.checkForUpdates();
-        }, 1000 * 60 * 60); // every hour
+        }, 1000 * 60 * 30); // Check for updates every 30 minutes
+        break;
       default:
         break;
     }
@@ -90,19 +103,29 @@ exports.listenFunctions = (win) => {
 }
 
 exports.listenMusic = (win) => {
-  ipcMain.on('music', (event, args, args2) => {
+  ipcMain.on('music', (event, args, args2, args3) => {
     switch (args) {
       case 'startServer':
         music.startServer(win);
         break;
       case 'playing':
+        if (!args3) { // If not listening party
+          enablePlaybackControls();
+        }
         discord.setStatus(`▶️: ${args2}`);
         break;
       case 'paused':
         discord.setStatus(`⏸️: ${args2}`);
         break;
       case 'stopped':
+        disablePlaybackControls();
         discord.clearStatus();
+        break;
+      case 'listeningPartyJoin':
+        disablePlaybackControls();
+        break;
+      case 'listeningPartyLeave':
+        enablePlaybackControls();
         break;
       default:
         break;

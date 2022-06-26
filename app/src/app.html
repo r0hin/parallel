@@ -679,6 +679,16 @@
     </center>
   </div>
 
+  <div id="modalContent_deleteMessage" class="hidden">
+    <h3>Delete Message</h3>
+    <p>Are you sure you would like to delete this message?</p>
+    <br>   
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1 dangerButton" id="deleteMessageConfirm">Confirm</button>
+    </center>
+  </div>
+
   <div id="modalContent_kickMember" class="hidden">
     <h3>Kick Member</h3>
     <p>Are you sure you would like to kick this member?</p>
@@ -1108,11 +1118,11 @@
               </div>
             </div>
             <div class="bottomButtonsAccount">
-              <button id="settingsTabButton_features" class="btn"><b>Request Features</b><p>GitHub Issues</p></button>
-              <button id="settingsTabButton_bugs" class="btn"><b>Report Bugs</b><p>GitHub Issues</p></button>
+              <button id="settingsTabButton_features" class="btn"><b>Features & Bugs</b><p>GitHub Issues</p></button>
               <button id="settingsTabButton_questions" class="btn"><b>Ask Questions</b><p>GitHub Discussions</p></button>
-              <button id="settingsTabButton_updates" class="btn"></button>
               <button id="settingsTabButton_support" class="btn"><b>Get Support</b><p id="supportButtonText"></p></button>
+              <button id="settingsTabButton_updates" class="btn"></button>
+              <button id="settingsTabButton_checkUpdates" class="btn"><b>Check Updates</b><p>Click to check for updates.</p></button>
             </div>
           </div>
         </div>
@@ -2033,8 +2043,8 @@
   <!-- Tippy --> <script src="https://unpkg.com/tippy.js@6"></script>
   <!-- Cosha --> <script src="https://unpkg.com/cosha"></script>
 
-  
   <!-- Firebase --> <script type="module" src="./js/firebaseChecks.js"></script>
+  <!-- Display --> <script src="./js/displays.js"></script>
 
   <!-- Components --> <script type="module" src="./js/componentse.js"></script>
   <!-- Electron --> <script type="module" src="./js/electronApp.js"></script>
@@ -2046,7 +2056,6 @@
   <!-- MusicVC --> <script type="module" src="./js/vcMusic.js"></script>
   <!-- Context --> <script type="module" src="./js/context.js"></script>
   <!-- Friends --> <script type="module" src="./js/friends.js"></script>
-  <!-- Display --> <script type="module" src="./js/display.js"></script>
   <!-- Servers --> <script type="module" src="./js/servers.js"></script>
   <!-- Library --> <script type="module" src="./js/library.js"></script>
   <!-- Sounds --> <script type="module" src="./js/sounds.js"></script>

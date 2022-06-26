@@ -11,7 +11,7 @@ import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends
 import { listenCalls } from './voice';
 import { loadPlaylists } from './library';
 import { loadDefaultValues, settingsTab } from './settings';
-import { bookmarksArrayDifference, closeModal, disableButton, displayImageAnimation, filesArrayDifference, fileTypeMatches, hideUploadProgress, loadDisplay, messageHTMLtoText, openModal, returnProperURL, securityConfirmText, showUploadProgress, timer } from './display';
+import { bookmarksArrayDifference, closeModal, disableButton, displayImageAnimation, filesArrayDifference, fileTypeMatches, hideUploadProgress, loadDisplay, messageHTMLtoText, openModal, returnProperURL, securityConfirmText, showUploadProgress, timer } from './displays';
 import { loadIdle, selfPresence } from './presence';
 import { checkValidSubscription, loadSubscription } from './stripe';
 import { loadRecentSearches, manageSpotify } from './music';
@@ -22,7 +22,7 @@ import { startMainElectronProcesses } from './electron';
 import { listenKeystrokes } from './keyboarde';
 
 window.user;
-window.gitHubVersion = '2.4.2';
+window.gitHubVersion = '2.5.0';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
@@ -203,6 +203,11 @@ async function startSetup() {
   console.log("%ccode runs happy", css);
   console.log("%cParallel Dev Tools 🚀", css2);
 
+  startMainElectronProcesses();
+  startElectronProcesses();
+  loadDisplay();
+  listenKeystrokes();
+
   $('#newUser').addClass('hidden');
   $('#returningUser').removeClass('hidden');
   // Account setup.
@@ -267,18 +272,21 @@ async function startSetup() {
     }
 
     cacheUser = userDoc.data();
-    loadDetails();
-    loadMuted();
-    loadServers();
-    loadOutgoingServerRequests();
-    loadPlaylists();
-    loadSubscription();
-    loadBookmarks();
-    loadBadges();
-    loadIdle()
 
-    // Seem to be some issues with this in dev mode
-    loadFriends();
+    window.setTimeout(() => {
+      loadDetails();
+      loadMuted();
+      loadOutgoingServerRequests();
+      loadPlaylists();
+      loadSubscription();
+      loadBookmarks();
+      loadBadges();
+      loadIdle()
+      
+      // Seem to be some issues with this in dev/production mode
+      loadServers();
+      loadFriends();
+    }, 499);
   });
 
   serversSortable();
@@ -304,11 +312,6 @@ async function startSetup() {
     adminUser = false;
     $(`#adminPanel`).addClass('hidden');
   }
-
-  startMainElectronProcesses();
-  startElectronProcesses();
-  loadDisplay();
-  listenKeystrokes();
 }
 
 function loadDetails() {

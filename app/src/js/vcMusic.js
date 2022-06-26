@@ -1,6 +1,7 @@
 import { getDatabase, off, ref, push, onValue, query, remove, set, update, onDisconnect } from '@firebase/database';
 import { createTrack } from './componentse';
-import { commonArrayDifference, disableButton, displayImageAnimation, enableButton, returnProperURL } from './display';
+import { commonArrayDifference, disableButton, displayImageAnimation, enableButton, returnProperURL } from './displays';
+import { sendMusicStatus } from './electronApp';
 import { checkAppInitialized } from './firebaseChecks';
 import { getPlaybackURL, sendTrackToPlayerRevamp } from './playback';
 import { setMusicStatus } from './presence';
@@ -105,6 +106,7 @@ export async function joinMusicParty(guildUID, guildID, channelID) {
   
   window.setTimeout(() => {
     // snac('Listening Party', `You are now connected to a listening party.`);
+    sendMusicStatus('listeningPartyJoin');
     $(`#libraryPlayer`).get(0).pause();
     notifyTiny('Listening Party: Connected', false);
     $(`#${guildUID}${guildID}${channelID}TabItemMusic`).removeClass('invisibleOpacityAnimated')
@@ -130,6 +132,8 @@ export async function leaveListeningParty(guildUID, guildID, channelID) {
   listeningPartyDisconnect.cancel();
 
   window.setTimeout(() => {
+    sendMusicStatus('listeningPartyLeave');
+    notifyTiny('Listening Party: Disconnected', false);
     enableButton($(`#${scopedActiveChannel}musicPartyButton`), '<i class="bx bx-music"></i>');
     $(`#${scopedActiveChannel}musicPartyButton`).get(0)._tippy.setContent(`Join Music Party`);
     $(`#${scopedActiveChannel}musicPartyButton`).get(0).onclick = () => {
@@ -142,8 +146,8 @@ export async function leaveListeningParty(guildUID, guildID, channelID) {
     modifyChannelTab(guildUID, guildID, channelID, 'Chat');
   }
 
-  if (musicPlaying) {
-    setMusicStatus(musicPlaying, true);
+  if (musicPlaying.id) {
+    setMusicStatus(musicPlaying, false);
   }
   else {
     setMusicStatus(false);
@@ -424,13 +428,6 @@ function serverPlayerDidEnd(guildUID, guildID, channelID) {
 
   $(`#channelMusicAudio${scopedActiveChannel}`).get(0).src = '';
   updateVCState(guildUID, guildID, channelID, cacheChannelVCMusic[scopedActiveChannel], 'forwardSong');
-
-  if (musicPlaying) {
-    setMusicStatus(musicPlaying, true);
-  }
-  else {
-    setMusicStatus(false);
-  }
 }
 
 window.updateVolumeFromSlider = (scopedActiveChannel) => {

@@ -2584,11 +2584,6 @@ h1 * {
   padding-left: 48px !important;
 }
 
-.accountSidebarButtonInGroupActive {
-  background-color: var(--bg3) !important;
-  border-left: 5px solid var(--primary) !important;
-}
-
 .accountContent {
   overflow-y: auto;
 }
@@ -3014,7 +3009,7 @@ div.pill.danger {
 
 .guildTopName p {
   font-size: 14px;
-
+  font-weight: 600;
   display: block;/* or inline-block */
   text-overflow: ellipsis;
   word-wrap: break-word;
@@ -3078,13 +3073,13 @@ div.pill.danger {
   margin: 0px 15px 0px 15px;
   font-size: 88%;
   color: var(--fg4);
-  border-radius: 8px;
+  border-radius: 6px;
   position: relative;
   padding: 8px 24px 8px 34px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: all 0.3s;
-  border-left: 5px solid var(--bg2);
+  transition: all 0.3s !important;
+  border-left: 0px solid var(--bg2) !important;
   border-right: 5px solid var(--bg2);
   height: 18px;
   background-color: var(--bg2);
@@ -3119,6 +3114,7 @@ div.pill.danger {
 .sidebarButtonActive {
   background-color: var(--bg1) !important;
   border-left: 5px solid var(--primary) !important;
+  transition: all 0.3s;
 }
 
 .sidebarText {
@@ -3154,7 +3150,7 @@ div.pill.danger {
 .guildChannel:hover, .sidebarButton:hover, .musicSidebarButton:hover, .accountSidebarButton:hover {
   color: var(--fg3);
   cursor: var(--defaultByPointer);
-  background-color: var(--bg3);
+  background-color: var(--bg3) !important;
 }
 
 .guildChannelActive{
@@ -5847,7 +5843,7 @@ img.emoji {
   color: var(--fg3);
 }
 
-#settingsTabButton_updates, #settingsTabButton_support, #settingsTabButton_questions, #settingsTabButton_features, #settingsTabButton_bugs {
+#settingsTabButton_updates, #settingsTabButton_support, #settingsTabButton_questions, #settingsTabButton_features, #settingsTabButton_checkUpdates {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -5858,11 +5854,11 @@ img.emoji {
   text-align: left;
 }
 
-#settingsTabButton_updates:hover, #settingsTabButton_support:hover, #settingsTabButton_questions:hover, #settingsTabButton_features:hover, #settingsTabButton_bugs:hover {
+#settingsTabButton_updates:hover, #settingsTabButton_support:hover, #settingsTabButton_questions:hover, #settingsTabButton_features:hover, #settingsTabButton_checkUpdates:hover {
   background-color: var(--bg3);
 }
 
-#settingsTabButton_updates p, #settingsTabButton_support p, #settingsTabButton_questions p, #settingsTabButton_features p, #settingsTabButton_bugs p {
+#settingsTabButton_updates p, #settingsTabButton_support p, #settingsTabButton_questions p, #settingsTabButton_features p, #settingsTabButton_checkUpdates p {
   color: var(--fg3);  
   font-weight: 500;
   margin: 6px 0px 0px 0px;
@@ -6318,4 +6314,9 @@ img.emoji {
 
 .friendsListSearch div.form div {
   margin-top: 8px;
+}
+
+.accountSidebarButtonInGroupActive {
+  background-color: var(--bg3) !important;
+  border-left: 5px solid var(--primary) !important;
 }

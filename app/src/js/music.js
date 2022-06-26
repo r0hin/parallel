@@ -6,15 +6,14 @@ checkAppInitialized();
 const db = getFirestore();
 const functions = getFunctions();
 
-import { closeModal, disableButton, displayImageAnimation, enableButton, hidePlaybackView, openModal, playlistArrayDifference, returnProperURL, securityConfirmText, securityConfirmTextIDs, setNoTrackUI, setTrackUI, shuffleArray, timer } from './display';
+import { closeModal, disableButton, displayImageAnimation, enableButton, hidePlaybackView, openModal, playlistArrayDifference, returnProperURL, securityConfirmText, securityConfirmTextIDs, setNoTrackUI, setTrackUI, shuffleArray, timer } from './displays';
 import { addPlaylistToLibrary, albumLibraryListener, artistLibraryListener, clonePlaylistToLibrary, createPlaylist, createPlaylistFolder, openPlaylist, removePlaylistFromLibrary, trackLibraryListener, prepareRemovePlaylistFromLibrary } from './library';
 import { sendTrackToPlayerRevamp } from './playback';
 import { setMusicStatus, updatePresenceForUser } from './presence';
 import { openSpecialServer } from './servers';
-import { settingsTab } from './settings';
 import { checkValidSubscription } from './stripe';
 import { playlistSelector } from './context';
-import { leaveListeningParty } from './vcMusic';
+import { leaveListeningParty, skipTrackVCMusic } from './vcMusic';
 import { createAlbum, createApplePlaylist, createArtist, createGenre, createTrack } from './componentse';
 import { checkAppInitialized } from './firebaseChecks';
 
@@ -62,12 +61,25 @@ libraryPlayer.on('volumechange', event => {
   const inputVolume = event;
 });
 
-navigator.mediaSession.setActionHandler('play', function() { libraryPlayer.get(0).play() });
-navigator.mediaSession.setActionHandler('pause', function() { libraryPlayer.get(0).pause() });
+navigator.mediaSession.setActionHandler('play', function() { $(`#libraryPlayer`).get(0).play() });
+navigator.mediaSession.setActionHandler('pause', function() { $(`#libraryPlayer`).get(0).pause() });
 navigator.mediaSession.setActionHandler('seekbackward', function() { });
 navigator.mediaSession.setActionHandler('seekforward', function() { });
 navigator.mediaSession.setActionHandler('previoustrack', function() {if (musicPlaying.id) {backwardSong()} });
-navigator.mediaSession.setActionHandler('nexttrack', function() { if (musicPlaying.id) {forwardSong()}});
+navigator.mediaSession.setActionHandler('nexttrack', function() {
+  if (musicPlaying.id) {
+    if (activeListeningParty) {
+      const guildUID = activeListeningParty.split('/')[0];
+      const guildID = activeListeningParty.split('/')[1];
+      if (serverData[guildUID + guildID].owner == user.uid || serverData[guildUID + guildID].staff.includes(`${user.uid}`)) {
+        skipTrackVCMusic(guildUID, guildID, activeListeningParty.split('/')[2]);
+      }
+    }
+    else if (musicPlaying.id) {
+      forwardSong();
+    }
+  }
+});
 
 window.setInterval(() => {
   if ((libraryPlayerElement.duration - libraryPlayerElement.currentTime) < 0.7) {
@@ -1828,7 +1840,7 @@ function playMusicButton() {
 function playerDidEnd() {
   if (enableLoopConst) {
     libraryPlayer.restart();
-    libraryPlayer.get(0).play();
+    $(`#libraryPlayer`).get(0).play();
     // snac('Replaying current track.', '', '');
     return;
   }
@@ -1884,7 +1896,7 @@ export function forwardSong() {
 
   }
   else { // no song next in queue
-    libraryPlayer.get(0).pause();
+    $(`#libraryPlayer`).get(0).pause();
     hidePlaybackView();
     updateQueue('nowPlaying');
     setMusicStatus(false);

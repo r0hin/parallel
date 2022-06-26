@@ -1,6 +1,6 @@
 import { addTrackToProfile, reportGroup, reportLounge, reportTrack, saveMessage, unsaveMessage, removeTrackFromProfile } from './app';
 import { deleteMessage, markChannelAsRead, markChannelAsUnread, muteChannel, pinMessage, prepareEditMessage, unmuteChannel, unpinMessage } from './channels';
-import { closeModal, disableButton, messageHTMLtoText, openModal } from './display';
+import { closeModal, disableButton, messageHTMLtoText, openModal } from './displays';
 import { deleteDMMessage, markDMRead, markDMUnread, openFriendsDM, pinDMMessage, prepareDMEditMessage, prepareRemoveFriend, unpinDMMessage } from './friends';
 import { addAlbumToPlaylist, addPlaylistToFolder, deletePlaylistFolder, openPlaylist, prepareDeletePlaylist, prepareRemovePlaylistFromLibrary, prepareRenameFolder, prepareRenamePlaylist, removePlaylistFromFolder, removePlaylistFromLibrary, removeTrackFromPlaylist } from './library';
 import { disableLoop, enableLoop, openModifyPointerModal, openNewPlaylistDialog, openNewPlaylistFolderDialog, updateQueue } from './music';
@@ -635,11 +635,15 @@ function setContextMessageItems(item, element) {
 
   contextItemList.eq(6).get(0).onclick = () => {
     // Delete Message
-    if (messageType == 'DM') {
-      deleteDMMessage(messageChannel, messageID);
-    }
-    else if (messageType == 'Channel') {
-      deleteMessage(messageChannel, messageID);
+    openModal('deleteMessage');
+    $(`#deleteMessageConfirm`).get(0).onclick = () => {
+      closeModal();
+      if (messageType == 'DM') {
+        deleteDMMessage(messageChannel, messageID);
+      }
+      else if (messageType == 'Channel') {
+        deleteMessage(messageChannel, messageID);
+      }
     }
   }
 

@@ -9,7 +9,7 @@ import { endAllCalls, leaveVideoDM, shareScreenDM, shareVideoDM } from './voice'
 
 import { Picker } from 'emoji-picker-element';
 import { playNotification } from './sounds';
-import { goToCheckout, manageSubscription } from './stripe';
+import { manageSubscription } from './stripe';
 import { updateApp } from './electronApp';
 import { sendToElectron } from './electron';
 
@@ -381,6 +381,9 @@ export async function openModal(id) {
       window.primaryActionFunc = () => { $(`#modalContent`).find(`.b-1`).get(0).click(); }
       break;
     case 'deleteLounge':
+      window.primaryActionFunc = () => { $(`#modalContent`).find(`.b-1`).get(0).click(); }
+      break;
+    case 'deleteMessage':
       window.primaryActionFunc = () => { $(`#modalContent`).find(`.b-1`).get(0).click(); }
       break;
     case 'deleteFriend':
@@ -1025,7 +1028,7 @@ export function showPlaybackView() {
     }
 
     .sidebarLeftContent {
-      height: calc(100% - 138px) !important; 
+      height: calc(100% - 118px) !important; 
     }
 
     .voiceChatSidebarLeft {
@@ -1775,7 +1778,7 @@ function loadOnclicks() {
   addOnclickByID('settingsTabButton_support', () => {window.open('https://parallelsocial.net/support')});
   addOnclickByID('settingsTabButton_questions', () => {window.open('https://github.com/r0hin/parallel/discussions')});
   addOnclickByID('settingsTabButton_features', () => {window.open('https://github.com/r0hin/parallel/issues')});
-  addOnclickByID('settingsTabButton_bugs', () => {window.open('https://github.com/r0hin/parallel/issues')});
+  addOnclickByID('settingsTabButton_checkUpdates', () => {electron.ipcRenderer.send('functions', 'oneTimeCheckUpdate');});
   
   // todo: acceptable use policy
   addOnclickByID('linkToAcceptableUse', () => {window.open('https://parallelsocial.net/support')});

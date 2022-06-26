@@ -3,7 +3,7 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 import * as timeago from 'timeago.js';
 import JSConfetti from 'js-confetti'
 
-import { openModal } from "./display";
+import { openModal } from "./displays";
 import { checkAppInitialized } from './firebaseChecks';
 
 window.currentSubscription = null;
@@ -67,12 +67,14 @@ export function checkValidSubscription(date) {
   return false;
 }
 
-export async function goToCheckout(priceID) {
+window.goToCheckout = async(priceID) => {
   $(`.purchaseButton`).addClass('disabled');
   notifyTiny('Requesting checkout...');
   
   const startPayment = httpsCallable(functions, 'startPayment');
   const result = await startPayment({
+    userID: user.uid || window.location.replace('https://parallel.glitch.me/'),
+    userEmail : user.email || window.location.replace('https://parallel.glitch.me/'),
     priceID: priceID,
     successURL: `${window.location.href}?a=stripeSuccess`,
     cancelURL: `${window.location.href}?a=stripeCancel`,  

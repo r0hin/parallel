@@ -6,7 +6,7 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 import * as timeago from 'timeago.js';
 
 import { clearMusicViews, loadMusic } from './music';
-import { commonArrayDifference, displayInputEffect, securityConfirmText, securityConfirmTextIDs, showPlaybackButton, windowSelected, hidePlaybackButton, disableButton, enableButton, timer, showUploadProgress, hideUploadProgress, openModal, closeModal, returnProperURL, displayImageAnimation } from './display';
+import { commonArrayDifference, displayInputEffect, securityConfirmText, securityConfirmTextIDs, showPlaybackButton, windowSelected, hidePlaybackButton, disableButton, enableButton, timer, showUploadProgress, hideUploadProgress, openModal, closeModal, returnProperURL, displayImageAnimation } from './displays';
 import { endAllCalls, manageVoiceChatDisplay } from './voice';
 import { addChannelListeners, closeCurrentChannel, markChannelAsRead, markChannelAsUnread, openGuildChannel, reevaluatePermissionsChannel, updateLoungeTypes } from './channels';
 import { showTippyListenerPresence, updatePresenceForUser } from './presence';
@@ -808,10 +808,10 @@ async function openServer(guildUID, guildID) {
         // Custom CSS for active channel color
         const targetServerCSS = `
           .${guildUID}${guildID}ServerIcon::before {
-            background-color: rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, 1);
+            background-color: rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, 1) !important;
           }
           .${guildUID}${guildID}guildChannelActive {
-            border-left: 5px solid rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, 1);
+            border-left: 5px solid rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, 1) !important;
           }
         `;
 
