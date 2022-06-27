@@ -70,11 +70,33 @@ exports.startServer = (win) => {
       videoID = search.videos[0].id;
     }
 
-    const video = new ytcog.Video(session, {
+    let video = new ytcog.Video(session, {
       id: videoID
     });
 
     await video.fetch();
+    console.log(Math.abs(video.duration - (parseInt(req.query.duration) / 1000)) > 5)
+    if (Math.abs(video.duration - (parseInt(req.query.duration) / 1000)) > 5) {
+      const search3 = new ytcog.Search(session, {
+        query: `${req.query.artist} ${req.query.title} audio`,
+        period: 'any',
+        quantity: 1
+      });
+  
+      await search3.fetch();
+  
+      if (!search3.videos.length) {
+        res.send("Error 0x03");
+        return;
+      }
+      else {
+        video = new ytcog.Video(session, {
+          id: search3.videos[0].id
+        });
+
+        await video.fetch();
+      }
+    }
 
     if (!video.audioStreams.length) res.send("Error 0x02");
 

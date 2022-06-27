@@ -257,6 +257,10 @@ a:active, a:active i, a:active * {
   flex-direction: row;
 }
 
+#windowControls .btn:active {
+  transform: scale(1) !important;
+}
+
 #windowsControls .closeWindowButton {
   background-color: transparent;
   color: var(--fg1);
@@ -273,10 +277,6 @@ a:active, a:active i, a:active * {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-}
-
-#windowsControls .closeWindowButton:active {
-  transform: scale(0.70) !important;
 }
 
 #windowsControls .closeWindowButton:hover {

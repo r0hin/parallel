@@ -30,7 +30,6 @@ window.gifsPickerSearchTyping = false;
 window.searchTimeout = null;
 
 const placeholderAlbumImage = 'https://firebasestorage.googleapis.com/v0/b/parallel-by-wop.appspot.com/o/app%2FdefaultAlbum.png?alt=media';
-const tenorKey = `LFKPD848ETKW`;
 
 export function timer(ms) {
   return new Promise(res => setTimeout(res, ms));
@@ -1407,6 +1406,7 @@ window.openGifPicker = async (ID) => {
       $(`#${ID}gifsPickerGifsContainerTrending`).removeClass('hidden');
 
       // Populate trending gifs https://g.tenor.com/v1/categories
+      const tenorKey = `LFKPD848ETKW`;
       const fetchResponse = await fetch(`https://g.tenor.com/v1/categories?key=${tenorKey}&contentfilter=low`);
       const response = await fetchResponse.json();
 
@@ -1452,6 +1452,7 @@ export async function searchGifs(ID, fast) {
   // Rate limit
   window.clearTimeout(gifsPickerSearchTimeout);
   gifsPickerSearchTimeout = setTimeout(async () => {
+    const tenorKey = `LFKPD848ETKW`;
     const fetchResponse = await fetch(`https://g.tenor.com/v1/search?key=${tenorKey}&q=${searchTermLower}&contentfilter=low&limit=30`);
     const response = await fetchResponse.json();
     

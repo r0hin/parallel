@@ -8,7 +8,7 @@ const perf = getPerformance();
 export function getPlaybackURL(trackDetails) {
   return new Promise(async (resolve, reject) => {
     const timerOne = new Date().getTime();
-    const fetched = await fetch(`http://localhost:${serverPort}/play?isrc=${trackDetails.attributes.isrc}&title=${trackDetails.attributes.name}&artist=${trackDetails.attributes.artistName}`);
+    const fetched = await fetch(`http://localhost:${serverPort}/play?isrc=${trackDetails.attributes.isrc}&title=${trackDetails.attributes.name}&artist=${trackDetails.attributes.artistName}&duration=${trackDetails.attributes.durationInMillis}`);
     console.log(`Done stage 1 in ${(new Date().getTime() - timerOne) / 1000}s.`);
     const response = await fetched.json();
     resolve(response.url);

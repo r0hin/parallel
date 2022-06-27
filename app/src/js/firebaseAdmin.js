@@ -1,24 +1,25 @@
 import { initializeApp } from "firebase/app";
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+// import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { getPerformance } from "firebase/performance";
 
 export function checkAppInitializedAdmin() {
   if (!window.isAppInitialized) {
     window.isAppInitialized = true;
     const fbApp = initializeApp({
-      apiKey: "AIzaSyDusrpo9Bxk7uvnFUCLBJjxrPT8hCb81Z8",
+      apiKey: "AIzaSyDwSVIkiXmE5CFqOkqyew75zX5pRbpuboo",
       authDomain: "parallel-by-wop.firebaseapp.com",
       databaseURL: "https://parallel-by-wop-default-rtdb.firebaseio.com",
       projectId: "parallel-by-wop",
       storageBucket: "parallel-by-wop.appspot.com",
       messagingSenderId: "77839003871",
-      appId: "1:77839003871:web:6ea87ec99c5aa7c5b2396a",
+      appId: "1:77839003871:web:b546052cf3f5a3d9b2396a",
+      measurementId: "G-WTBYX3FY97"
     });
 
-    const appCheck = initializeAppCheck(fbApp, {
-      provider: new ReCaptchaV3Provider("6Lca3TcdAAAAAMb0ZgqqIgC5ojFL85FFvokzmFh7"),
-      isTokenAutoRefreshEnabled: true
-    });
+    // const appCheck = initializeAppCheck(fbApp, {
+    //   provider: new ReCaptchaV3Provider("6Lca3TcdAAAAAMb0ZgqqIgC5ojFL85FFvokzmFh7"),
+    //   isTokenAutoRefreshEnabled: true
+    // });
   }
 };
 

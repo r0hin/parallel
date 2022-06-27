@@ -115,6 +115,8 @@ export async function joinMusicParty(guildUID, guildID, channelID) {
     $(`#${scopedActiveChannel}musicPartyButton`).get(0).onclick = () => {
       leaveListeningParty(guildUID, guildID, channelID);
     }
+
+    $(`#${guildUID}${guildID}Server`).addClass('listeningPartyServer');
   }, 999);
 }
 
@@ -133,6 +135,7 @@ export async function leaveListeningParty(guildUID, guildID, channelID) {
 
   window.setTimeout(() => {
     sendMusicStatus('listeningPartyLeave');
+    $(`#${guildUID}${guildID}Server`).removeClass('listeningPartyServer');
     notifyTiny('Listening Party: Disconnected', false);
     enableButton($(`#${scopedActiveChannel}musicPartyButton`), '<i class="bx bx-music"></i>');
     $(`#${scopedActiveChannel}musicPartyButton`).get(0)._tippy.setContent(`Join Music Party`);

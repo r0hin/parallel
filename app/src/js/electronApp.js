@@ -179,7 +179,7 @@ export function updateApp() {
   });
   window.setTimeout(() => {
     electron.ipcRenderer.send('functions', 'update');
-  }, 3000);
+  }, 1500);
 }
 
 

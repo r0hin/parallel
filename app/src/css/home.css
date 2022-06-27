@@ -1440,6 +1440,8 @@ span.yourProfile {
   vertical-align: middle;
   margin-right: 8px;
   box-sizing: border-box;
+  position: absolute;
+  right: 2px; top: 12px;
   /* clip-path: url(#squircle); */
   transition: all 0.3s;
   /* transition: border 1s; */
@@ -1462,8 +1464,8 @@ span.yourProfile {
 
 #DMConnectedName, .ConnectedName {
   vertical-align: middle;
-  float: right;
-  text-align: right;
+  float: left;
+  text-align: left;
   margin-bottom: 0px;
 }
 
@@ -1576,7 +1578,7 @@ span.yourProfile {
   color: white;
   background-color: red;
   position: absolute;
-  left: 12px; top: 36px;
+  right: 12px; top: 36px;
   height: 42px; width: 42px;
   border-radius: 8px;
   transform: translate(0, -50%);
@@ -2917,7 +2919,7 @@ div.pill.danger {
   opacity: 0.8  ;
 }
 
-.serverActive, #addServer:hover {
+.serverActive {
   background-color: var(--primary);
   border-radius: 12px;
   color: white;
@@ -2978,7 +2980,7 @@ div.pill.danger {
 }
 
 .sidebarLeftInCall .sidebarLeftContent {
-  height: calc(100% - 130px)
+  height: calc(100% - 120px)
 }
 
 .guildMemberList {
@@ -3469,6 +3471,31 @@ div.pill.danger {
   clip-path: none;
 }
 
+@keyframes listeningPartyServerPulse  {
+  from {
+    border: 4px solid var(--fg1);
+    transition: all 0.5s;
+  }
+  to {
+    border: 4px solid var(--secondary);
+    transition: all 0.5s;
+  }
+}
+
+.listeningPartyServer {
+  animation-name: listeningPartyServerPulse;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  animation-duration: 1s;
+  animation-delay: 1.5s;
+
+  transition: all 1.5s;
+  border: 4px solid var(--seconday);
+  width: calc(55px - 8px);
+  height: calc(55px - 8px);
+  clip-path: none;
+}
+
 .inCallServer::before {
   width: 4px;
   transition: all 0.5s;
@@ -3692,6 +3719,7 @@ div.pill.danger {
   border: 5px solid var(--bg1);
   width: 10px; height: 10px;
   border-radius: 8px;
+  z-index: 3;
 }
 
 .userCardBanner .presenceIndicator {
@@ -5949,7 +5977,7 @@ img.emoji {
   margin-bottom: 4px;
 }
 
-.guildFolder:hover {
+.guildFolder:hover, #addServer:hover, #friendsServer:hover, #musicServer:hover {
   background-color: var(--bg3);
   color: var(--fg1);
 }
