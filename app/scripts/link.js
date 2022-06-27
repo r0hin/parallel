@@ -2,7 +2,7 @@ const { ipcMain, Notification, BrowserWindow, dialog, Menu } = require('electron
 const { autoUpdater } = require("electron-updater");
 const music = require('./music');
 const discord = require('./discord');
-const { getUpdateStatusNotify, menuBar, enablePlaybackControls, disablePlaybackControls, setUpdateStatusNotify } = require('./menuBar');
+const { getUpdateStatusNotify, enablePlaybackControls, disablePlaybackControls, setUpdateStatusNotify } = require('./menuBar');
 
 // Focus outgoing event
 exports.sendFocusEvent = (win, boolean) => {
@@ -54,7 +54,7 @@ exports.listenFunctions = (win) => {
         autoUpdater.on('update-available', () => {
           console.log('here3');
           win.webContents.send('updateAvailable', true);
-          if (getUpdateStatusNotify) {
+          if (getUpdateStatusNotify()) {
             console.log('here5');
             // Show dialog
             dialog.showMessageBox(win, {
@@ -64,8 +64,7 @@ exports.listenFunctions = (win) => {
               buttons: ['OK']
             });
             setUpdateStatusNotify(false);
-            menuBar[0].submenu[2].enabled = false;
-            Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
+            
           }
         });
 
@@ -81,8 +80,6 @@ exports.listenFunctions = (win) => {
               buttons: ['OK']
             });
             setUpdateStatusNotify(false);
-            menuBar[0].submenu[2].enabled = false;
-            Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
           }
         });
 

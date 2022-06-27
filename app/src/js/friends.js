@@ -5,8 +5,8 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 
 import * as timeago from 'timeago.js';
 
-import { securityConfirmText, displayInputEffect, dmKEYify, tConvert, linkify, scrollBottomMessagesDM, showDroplet, disableButton, enableButton, closeModal, showUploadProgress, hideUploadProgress, friendsArrayDifference, timer, returnProperURL, displayImageAnimation, displaySystemNotification, returnProperAttachmentURL, openModal, messageHTMLtoText, returnProperLinkThumbnail, fileTypeMatches, searchGifs, securityConfirmTextIDs } from './displays';
-import { createPresenceListeners, showTippyListenerPresence, updatePresenceForUser } from './presence';
+import { securityConfirmText, displayInputEffect, dmKEYify, tConvert, linkify, scrollBottomMessagesDM, showDroplet, disableButton, enableButton, closeModal, showUploadProgress, hideUploadProgress, timer, displayImageAnimation, displaySystemNotification, returnProperAttachmentURL, openModal, messageHTMLtoText, returnProperLinkThumbnail, fileTypeMatches, searchGifs, securityConfirmTextIDs } from './app';
+import { showTippyListenerPresence, updatePresenceForUser } from './presence';
 import { checkValidSubscription } from './stripe';
 import { hideMediaViewDM, joinScreenDM, joinVideoDM, manageVCFriendsDisplay } from './voice';
 import { blockUser, unblockUser } from './users';

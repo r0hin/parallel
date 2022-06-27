@@ -6,7 +6,7 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 import * as timeago from 'timeago.js';
 
 import { clearMusicViews, loadMusic } from './music';
-import { commonArrayDifference, displayInputEffect, securityConfirmText, securityConfirmTextIDs, showPlaybackButton, windowSelected, hidePlaybackButton, disableButton, enableButton, timer, showUploadProgress, hideUploadProgress, openModal, closeModal, returnProperURL, displayImageAnimation } from './displays';
+import { commonArrayDifference, displayInputEffect, securityConfirmText, showPlaybackButton, windowSelected, hidePlaybackButton, disableButton, enableButton, timer, showUploadProgress, hideUploadProgress, openModal, closeModal, displayImageAnimation } from './app';
 import { endAllCalls, manageVoiceChatDisplay } from './voice';
 import { addChannelListeners, closeCurrentChannel, markChannelAsRead, markChannelAsUnread, openGuildChannel, reevaluatePermissionsChannel, updateLoungeTypes } from './channels';
 import { showTippyListenerPresence, updatePresenceForUser } from './presence';

@@ -1,6 +1,6 @@
 import { hideBookmarks } from "./app";
 import { prepareEditMessage } from "./channels";
-import { closeEmojiPicker, closeGifPicker, closeModal, fadeOutFullscreenImage } from "./displays";
+import { closeEmojiPicker, closeGifPicker, closeModal, fadeOutFullscreenImage } from "./app";
 import { resetZoom, zoomIn, zoomOut } from "./electron";
 import { prepareDMEditMessage } from "./friends";
 

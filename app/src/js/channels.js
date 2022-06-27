@@ -2,7 +2,7 @@ import { getFirestore, deleteField, doc, updateDoc, serverTimestamp as dbts, arr
 import { getDatabase, off, remove, ref, get as rtdbget, query, endBefore, orderByKey, limitToLast, onChildAdded, onChildChanged, onChildRemoved, onValue, push, update, serverTimestamp as rtdbts} from '@firebase/database';
 import { getStorage, ref as storageRef, uploadBytesResumable } from '@firebase/storage';
 import { getFunctions, httpsCallable } from '@firebase/functions';
-import { closeModal, disableButton, displayImageAnimation, displayInputEffect, enableButton, fileTypeMatches, hideUploadProgress, insertAtCursor, messageHTMLtoText, openModal, returnProperAttachmentURL, returnProperLinkThumbnail, returnProperURL, scrollBottomMessages, searchGifs, securityConfirmText, securityConfirmTextIDs, showDroplet, showUploadProgress, tConvert, timer } from './displays';
+import { closeModal, disableButton, displayImageAnimation, displayInputEffect, enableButton, fileTypeMatches, hideUploadProgress, insertAtCursor, messageHTMLtoText, openModal, returnProperAttachmentURL, returnProperLinkThumbnail, scrollBottomMessages, searchGifs, securityConfirmText, showDroplet, showUploadProgress, tConvert, timer } from './app';
 import { endAllCalls, manageVoiceChatDisplay } from './voice';
 import { clearQueueVCMusic, joinMusicParty, searchInChannel, skipTrackVCMusic } from './vcMusic';
 import { addIndicator, checkServerUnread, removeIndicator } from './servers';

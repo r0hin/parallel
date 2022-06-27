@@ -3,7 +3,7 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 import * as timeago from 'timeago.js';
 import JSConfetti from 'js-confetti'
 
-import { openModal } from "./displays";
+import { openModal } from "./app";
 import { checkAppInitialized } from './firebaseChecks';
 
 window.currentSubscription = null;

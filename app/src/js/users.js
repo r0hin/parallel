@@ -1,6 +1,6 @@
 import { getFirestore, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
 import { createTrack } from './componentse';
-import { closeModal, disableButton, openModal, securityConfirmText } from './displays';
+import { closeModal, disableButton, openModal, securityConfirmText } from './app';
 import { checkAppInitialized } from './firebaseChecks';
 import { acceptRequest, openFriendsDM } from './friends';
 import { musicTab } from './music';

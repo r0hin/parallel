@@ -1,6 +1,6 @@
 import { addTrackToProfile, reportGroup, reportLounge, reportTrack, saveMessage, unsaveMessage, removeTrackFromProfile } from './app';
 import { deleteMessage, markChannelAsRead, markChannelAsUnread, muteChannel, pinMessage, prepareEditMessage, unmuteChannel, unpinMessage } from './channels';
-import { closeModal, disableButton, messageHTMLtoText, openModal } from './displays';
+import { closeModal, disableButton, messageHTMLtoText, openModal } from './app';
 import { deleteDMMessage, markDMRead, markDMUnread, openFriendsDM, pinDMMessage, prepareDMEditMessage, prepareRemoveFriend, unpinDMMessage } from './friends';
 import { addAlbumToPlaylist, addPlaylistToFolder, deletePlaylistFolder, openPlaylist, prepareDeletePlaylist, prepareRemovePlaylistFromLibrary, prepareRenameFolder, prepareRenamePlaylist, removePlaylistFromFolder, removePlaylistFromLibrary, removeTrackFromPlaylist } from './library';
 import { disableLoop, enableLoop, openModifyPointerModal, openNewPlaylistDialog, openNewPlaylistFolderDialog, updateQueue } from './music';

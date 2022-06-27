@@ -1,6 +1,6 @@
 import { getPerformance } from "firebase/performance";
 import { checkAppInitialized } from "./firebaseChecks";
-import { decode } from "./displays";
+import { decode } from "./app";
 
 checkAppInitialized();
 const perf = getPerformance();

@@ -4,8 +4,7 @@ const { autoUpdater } = require('electron-updater');
 const link = require('./link');
 
 let updateStatusNotify = false;
-
-exports.menuBar;
+let menuBar = null;
 
 exports.initializeMenuBar = function() {
   const menuBarDefault = defaultMenu(app, shell);
@@ -221,4 +220,9 @@ exports.getUpdateStatusNotify = () => {
 
 exports.setUpdateStatusNotify = (status) => {
   updateStatusNotify = status;
+
+  if (status = false) {
+    menuBar[0].submenu[2].enabled = false;
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menuBar));
+  }
 }

@@ -1,5 +1,5 @@
 import { storageListener } from "./app";
-import { closeModal, disableButton, enableButton, openModal } from "./displays";
+import { closeModal, disableButton, enableButton, openModal } from "./app";
 import { setReadReciepts } from "./friends";
 import { checkValidSubscription } from "./stripe";
 import { endAllCalls } from "./voice";

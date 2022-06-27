@@ -1,6 +1,6 @@
 window.electron = window.require('electron');
 import { markChannelAsRead } from './channels';
-import { openModal } from './displays';
+import { openModal } from './app';
 import { markDMRead } from './friends';
 import { backwardSong, forwardSong, openNewPlaylistDialog, openNewPlaylistFolderDialog, openOtherPlaylist } from './music';
 import { createGroup, joinGroup, openSpecialServer } from './servers';

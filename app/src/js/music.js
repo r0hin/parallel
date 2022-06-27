@@ -6,7 +6,7 @@ checkAppInitialized();
 const db = getFirestore();
 const functions = getFunctions();
 
-import { closeModal, disableButton, displayImageAnimation, enableButton, hidePlaybackView, openModal, playlistArrayDifference, returnProperURL, securityConfirmText, securityConfirmTextIDs, setNoTrackUI, setTrackUI, shuffleArray, timer } from './displays';
+import { closeModal, disableButton, displayImageAnimation, enableButton, hidePlaybackView, openModal, playlistArrayDifference, securityConfirmText, setNoTrackUI, setTrackUI, shuffleArray, timer } from './app';
 import { addPlaylistToLibrary, albumLibraryListener, artistLibraryListener, clonePlaylistToLibrary, createPlaylist, createPlaylistFolder, openPlaylist, removePlaylistFromLibrary, trackLibraryListener, prepareRemovePlaylistFromLibrary } from './library';
 import { sendTrackToPlayerRevamp } from './playback';
 import { setMusicStatus, updatePresenceForUser } from './presence';
