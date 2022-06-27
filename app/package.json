@@ -25,7 +25,10 @@
     "mac": {
       "publish": [
         "github"
-      ]
+      ],
+      "entitlements": "./build/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
     }
   },
   "keywords": [],
@@ -33,7 +36,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^19.0.4",
-    "electron-builder": "^23.0.3"
+    "electron-builder": "^23.0.3",
+    "electron-notarize": "^1.2.1"
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",

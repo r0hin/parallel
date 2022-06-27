@@ -10,7 +10,6 @@ const host = require('./host');
 const menuBar = require('./menuBar');
 
 autoUpdater.autoDownload = true;
-
 process.setMaxListeners(15);
 
 // Deep link handler
@@ -124,6 +123,10 @@ app.on('open-url', function (event, url) {
 });
 
 app.on('ready', () => {
+  if (process.platform === 'win32') {
+    app.setAppUserModelId("ParallelInc.Parallel");
+  }
+
   createWindow();
   // Create the Application's main menu
   menuBar.initializeMenuBar();
