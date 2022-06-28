@@ -5,7 +5,7 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 
 import * as timeago from 'timeago.js';
 
-import { securityConfirmText, displayInputEffect, dmKEYify, tConvert, linkify, scrollBottomMessagesDM, showDroplet, disableButton, enableButton, closeModal, showUploadProgress, hideUploadProgress, timer, displayImageAnimation, displaySystemNotification, returnProperAttachmentURL, openModal, messageHTMLtoText, returnProperLinkThumbnail, fileTypeMatches, searchGifs, securityConfirmTextIDs } from './app';
+import { securityConfirmText, displayInputEffect, dmKEYify, tConvert, linkify, scrollBottomMessagesDM, showDroplet, disableButton, enableButton, closeModal, showUploadProgress, hideUploadProgress, timer, displayImageAnimation, displaySystemNotification, returnProperAttachmentURL, openModal, messageHTMLtoText, returnProperLinkThumbnail, fileTypeMatches, searchGifs } from './app';
 import { showTippyListenerPresence, updatePresenceForUser } from './presence';
 import { checkValidSubscription } from './stripe';
 import { hideMediaViewDM, joinScreenDM, joinVideoDM, manageVCFriendsDisplay } from './voice';
@@ -1115,7 +1115,6 @@ window.sendDMMessage = async (uID, messageInput, force) => {
     snac('Invalid Message', 'Your message cannot be longer than 1200 characters.', 'danger')
     return;
   }
-
   
   if (disableMessageSending) {
     return;

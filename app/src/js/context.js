@@ -561,7 +561,11 @@ function setContextTrackItems(item, element) {
   }
 
   contextItemList.eq(15).get(0).onclick = () => { reportTrack(trackID) };
-  contextItemList.eq(16).get(0).onclick = () => {copyToClipboard(`track:${trackID}`)};
+  contextItemList.eq(16).get(0).onclick = () => {
+    copyToClipboard(`track:${trackID}`, true);
+    snac('Copied to Clipboard', 'Share code copied to clipboard. Paste this in a lounge or DM to share this track.', 'success');
+  };
+  contextItemList.eq(17).get(0).onclick = () => {copyToClipboard(`${trackID}`)};
 }
 
 function setContextMessageItems(item, element) {

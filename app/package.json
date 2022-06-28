@@ -1,6 +1,6 @@
 {
   "name": "parallel",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "",
   "main": "scripts/main.js",
   "repository": {
@@ -11,8 +11,8 @@
     "start": "yarn parcel ./src/login.html ./src/app.html ./src/admin.html",
     "electron": "electron .",
     "build": "node scripts/start.js && electron-builder build",
-    "buildIntel": "node scripts/start.js && electron-builder build --ia32",
-    "pub": "node scripts/start.js && electron-builder -p always"
+    "pub": "node scripts/start.js && electron-builder -p always --arm64",
+    "pubM1": "node scripts/start.js && electron-builder -p always --x64"
   },
   "build": {
     "appId": "in.r0h.parallel",

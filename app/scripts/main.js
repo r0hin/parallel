@@ -112,7 +112,7 @@ const createWindow = () => {
   // win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
 
   // In production:
-  host.startServer(win, URLARGUMENTS);
+  host.startServer(win, URLARGUMENTS); 
 }
 
 app.on('open-url', function (event, url) {

@@ -1128,7 +1128,7 @@ span.yourProfile {
   white-space: normal;
   word-wrap: break-word;
   padding: 3px 12px 3px 10px;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 14px;
   text-align: left;
   user-select: text;
@@ -6347,4 +6347,18 @@ img.emoji {
 .accountSidebarButtonInGroupActive {
   background-color: var(--bg3) !important;
   border-left: 5px solid var(--primary) !important;
+}
+
+.openSourceAcknowledgements {
+  /* Default monospace font */
+  font-family: monospace; 
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 12px;
+  background-color: var(--bg4);
+  color: var(--fg4);
+  list-style-type: none;
+  max-height: calc(100vh - 560px);
+  overflow-y: auto;
+
 }

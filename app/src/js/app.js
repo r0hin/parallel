@@ -7,7 +7,6 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 import * as timeago from 'timeago.js';
 import { Picker } from 'emoji-picker-element';
 
-
 import { openSpecialServer, loadMuted, loadServers, unreadIndicators, loadOutgoingServerRequests, updateServersOrder, leaveServer } from './servers';
 import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends';
 import { listenCalls } from './voice';
@@ -31,7 +30,7 @@ import { updateApp } from './electronApp';
 import { sendToElectron } from './electron';
 
 window.user;
-window.gitHubVersion = '2.5.2';
+window.gitHubVersion = '2.5.3';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
@@ -2064,9 +2063,11 @@ export function windowSelected() {
   // To do
 }
 
-window.copyToClipboard = (textToCopy) => {
+window.copyToClipboard = (textToCopy, skipNotify) => {
   navigator.clipboard.writeText(textToCopy).then(() => {
-    snac('Text Copied', 'Text copied to clipboard');
+    if (!skipNotify) {
+      snac('Copied', 'Text copied to clipboard successfully.', 'success');
+    }
   })
   .catch(err => {
     window.prompt("Copy to clipboard:", textToCopy);
