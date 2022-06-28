@@ -3,7 +3,7 @@ const footer = `
   <div>
     <b>Parallel</b><br>
     <a class="footerLink" href="https://parallelsocial.net">Home</a>
-    <a class="footerLink" href="https://parallelsocial.net/infinite">infinite</a>
+    <a class="footerLink" href="https://parallelsocial.net/infinite">Infinite</a>
     <a class="footerLink" href="https://parallelsocial.net/support">Support</a>
   </div>
   <div>

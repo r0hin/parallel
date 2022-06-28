@@ -1,7 +1,9 @@
 require('dotenv').config();
 const { notarize } = require('electron-notarize');
 
+
 exports.default = async function(context) {
+  const { appOutDir } = context;  
 
   // If on macos
   if (process.platform !== 'darwin') {
@@ -16,7 +18,7 @@ exports.default = async function(context) {
   try {
     const value = await notarize({
       tool: "notarytool",
-      appPath: "./dist/mac-arm64/Parallel 2.app",
+      appPath: `${appOutDir}/${context.packager.appInfo.productFilename}.app`,
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.APPLE_TEAM_ID,

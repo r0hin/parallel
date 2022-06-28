@@ -11,12 +11,14 @@
     "start": "yarn parcel ./src/login.html ./src/app.html ./src/admin.html",
     "electron": "electron .",
     "build": "node scripts/start.js && electron-builder build",
+    "buildIntel": "node scripts/start.js && electron-builder build --ia32",
     "pub": "node scripts/start.js && electron-builder -p always"
   },
   "build": {
     "appId": "in.r0h.parallel",
     "productName": "Parallel 2",
     "copyright": "Copyright © 2022 Parallel, Inc",
+    "afterSign": "scripts/notarize.js",
     "win": {
       "publish": [
         "github"
