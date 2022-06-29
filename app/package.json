@@ -11,8 +11,8 @@
     "start": "yarn parcel ./src/login.html ./src/app.html ./src/admin.html",
     "electron": "electron .",
     "build": "node scripts/start.js && electron-builder build",
-    "pub": "node scripts/start.js && electron-builder -p always --arm64",
-    "pubM1": "node scripts/start.js && electron-builder -p always --x64"
+    "pubWin": "node scripts/start.js && electron-builder -p always",
+    "pub": "node scripts/start.js && electron-builder --macos --arm64 --x64 -p always"
   },
   "build": {
     "appId": "in.r0h.parallel",
