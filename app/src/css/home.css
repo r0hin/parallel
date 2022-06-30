@@ -377,22 +377,6 @@ svg.defs {
   transition: all 0.3s;
 }
 
-.tabViewSettingsBar {
-  position: absolute;
-  right: 24px; padding: 4px 12px 4px 12px;
-
-  background-color: var(--bg1);
-  border-radius: 12px;
-}
-
-.TabViewSettingsAdmin {
-  top: 152px;
-}
-
-.TabViewSettingsOwner {
-  top: 223px;
-}
-
 .musicContainerTabViewSettings {
   width: calc(100% - 200px);
 }

@@ -180,8 +180,20 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
         <h3 class="guildChannelViewTitle" id="${scopedActiveChannel}guildChannelViewTitle">${securityConfirmTextIDs(channelName, true)}</h3>
         <div>
           <button onclick="openChannelPinned('${scopedActiveChannel}')" class="btn tabButton roundedButton invisible" id="${scopedActiveChannel}pinnedMessagesButtonCounterpoart"><i class="bx bx-pin"></i></button>
-          <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Music')" id="${scopedActiveChannel}TabItemMusic" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton invisibleOpacityAnimated musicButton"><i class='bx bx-music'></i></button>
-          <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Settings')" id="${scopedActiveChannel}TabItemSettings" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton"><i class='bx bx-cog'></i></button>
+          <button id="${scopedActiveChannel}TabItemMusic" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton invisibleOpacityAnimated musicButton"><i class='bx bx-music'></i></button>
+          <div class="dropdown">
+            <button onclick="openDropdown('${scopedActiveChannel}SettingsChannelDropdown')" id="${scopedActiveChannel}TabItemSettings" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton dropdownButton"><i class='bx bx-cog'></i></button>
+            <div id="${scopedActiveChannel}SettingsChannelDropdown" class="dropdown-content">
+              <a id="channelMarkButton${scopedActiveChannel}" class="btn"></a>
+              <a id="${scopedActiveChannel}channelMuteButton" class="btn"></a>
+              <div id="${scopedActiveChannel}channelSettingsDivider1" class="dropdownDivider"></div>
+              <a id="channelRenameButton${scopedActiveChannel}" class="btn">Rename Lounge</a>
+              <a id="channelDeleteButton${scopedActiveChannel}" class="btn">Delete Lounge</a>
+              <div id="${scopedActiveChannel}channelSettingsDivider2" class="dropdownDivider"></div>
+              <a id="disablePublicView${scopedActiveChannel}" class="btn"></a>
+              <a id="disablePublicEdit${scopedActiveChannel}" class="btn"></a>
+            </div>
+          </div>
         </div>
       </div>  
       <div id="${scopedActiveChannel}TabViewChat" class="${scopedActiveChannel}TabView ${scopedActiveChannel}TabView messagesContainerTabView">
@@ -275,23 +287,6 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
           </div></div>
         </div>
       </div>
-
-      <div id="${scopedActiveChannel}TabViewSettings" class="hidden ${scopedActiveChannel}TabView musicContainerTabView musicContainerTabViewNonChat musicContainerTabViewSettings">
-        <div class="tabViewSettingsBar">
-          <button id="channelMarkButton${scopedActiveChannel}" class="btn b-3 roundedButton"></button>
-          <button id="${scopedActiveChannel}channelMuteButton" class="btn b-3 roundedButton"></button>
-        </div>
-
-        <div id="${scopedActiveChannel}TabViewSettingsAdmin" class="tabViewSettingsBar TabViewSettingsAdmin hidden">
-          <button id="channelRenameButton${scopedActiveChannel}" class="btn b-3 roundedButton"><i class="bx bx-rename"></i></button>
-          <button id="channelDeleteButton${scopedActiveChannel}" class="btn b-3 roundedButton dangerButton"><i class="bx bx-trash"></i></button>
-        </div>
-
-        <div id="${scopedActiveChannel}TabViewSettingsOwner" class="tabViewSettingsBar TabViewSettingsOwner hidden">
-          <button id="disablePublicView${scopedActiveChannel}" class="btn b-3 roundedButton"></button>
-          <button id="disablePublicEdit${scopedActiveChannel}" class="btn b-3 roundedButton"></button>
-        </div>
-      </div>
     </div>
 
     <div class="channelSecondaryGrid" id="channelSecondaryGrid${scopedActiveChannel}">
@@ -332,19 +327,11 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
   twemoji.parse($(`#emojiButton${scopedActiveChannel}`).get(0));
 
   if (mutedServers.includes(`${scopedActiveChannel}`)) {
-    $(`#${scopedActiveChannel}channelMuteButton`).html(`<i class="bx bx-bell-off"></i>`);
-    tippy($(`#${scopedActiveChannel}channelMuteButton`).get(0), {
-      content: 'Unmute Lounge',
-      placement: 'top',
-    });
+    $(`#${scopedActiveChannel}channelMuteButton`).html(`Unmute Lounge`);
     $(`#${scopedActiveChannel}channelMuteButton`).get(0).onclick = () => unmuteChannel(guildUID, guildID, channelID);
   }
   else {
-    tippy($(`#${scopedActiveChannel}channelMuteButton`).get(0), {
-      content: 'Mute Lounge',
-      placement: 'top',
-    });
-    $(`#${scopedActiveChannel}channelMuteButton`).html(`<i class="bx bx-bell"></i>`);
+    $(`#${scopedActiveChannel}channelMuteButton`).html(`Mute Lounge`);
     $(`#${scopedActiveChannel}channelMuteButton`).get(0).onclick = () => muteChannel(guildUID, guildID, channelID);
   }
 
@@ -428,26 +415,14 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
   });
 
   if (addPendingIndicator[scopedActiveChannel]) {
-    $(`#channelMarkButton${scopedActiveChannel}`).html(`<i class="bx bx-notification-off"></i>`);
-    tippy($(`#channelMarkButton${scopedActiveChannel}`).get(0), {
-      content: 'Mark as Read',
-      placement: 'top',
-    });
+    $(`#channelMarkButton${scopedActiveChannel}`).html(`Mark as Read`);
     $(`#channelMarkButton${scopedActiveChannel}`).get(0).onclick = () => markChannelAsRead(guildUID, guildID, channelID);
   }
   else {
-    $(`#channelMarkButton${scopedActiveChannel}`).html(`<i class="bx bx-notification"></i>`);
-    tippy($(`#channelMarkButton${scopedActiveChannel}`).get(0), {
-      content: 'Mark as Unread',
-      placement: 'top',
-    });
+    $(`#channelMarkButton${scopedActiveChannel}`).html(`Mark as Unread`);
     $(`#channelMarkButton${scopedActiveChannel}`).get(0).onclick = () => markChannelAsUnread(guildUID, guildID, channelID);
   }
 
-  tippy($(`#channelRenameButton${scopedActiveChannel}`).get(0), {
-    content: 'Rename Lounge',
-    placement: 'top',
-  });
   $(`#channelRenameButton${scopedActiveChannel}`).get(0).onclick = () => {
     renameLoungePrepare(guildUID, guildID, channelID);
   }
@@ -719,19 +694,30 @@ window.loadMoreChannelMessages = async (guildUID, guildID, channelID) => {
 
 export function reevaluatePermissionsChannel(guildUID, guildID, channelID) {
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
-  $(`#${scopedActiveChannel}TabViewSettingsAdmin`).addClass('hidden');
+  $(`#${scopedActiveChannel}channelSettingsDivider1`).addClass('hidden');
+  $(`#${scopedActiveChannel}channelSettingsDivider2`).addClass('hidden');
+  $(`#channelRenameButton${scopedActiveChannel}`).addClass('hidden');
+  $(`#channelDeleteButton${scopedActiveChannel}`).addClass('hidden');
+  $(`#disablePublicView${scopedActiveChannel}`).addClass('hidden');
+  $(`#disablePublicEdit${scopedActiveChannel}`).addClass('hidden');
   $(`#${scopedActiveChannel}musicAdminBar`).addClass('hidden');
   $(`#${scopedActiveChannel}searchResultsChannelForm`).removeClass('searchResultsChannelFormAdmin');
 
   if (serverData[guildUID + guildID].owner == user.uid || serverData[guildUID + guildID].staff.includes(`${user.uid}`)) {
     // Staff member
-    $(`#${scopedActiveChannel}TabViewSettingsAdmin`).removeClass('hidden');
+    $(`#${scopedActiveChannel}channelSettingsDivider1`).removeClass('hidden');
+    $(`#channelRenameButton${scopedActiveChannel}`).removeClass('hidden');
+    $(`#channelDeleteButton${scopedActiveChannel}`).removeClass('hidden');
+
     $(`#${scopedActiveChannel}musicAdminBar`).removeClass('hidden');
     $(`#${scopedActiveChannel}searchResultsChannelForm`).addClass('searchResultsChannelFormAdmin');
   }
 
   if (serverData[guildUID + guildID].owner == user.uid) {
     // Owner
+    $(`#${scopedActiveChannel}channelSettingsDivider2`).removeClass('hidden');
+    $(`#disablePublicView${scopedActiveChannel}`).removeClass('hidden');
+    $(`#disablePublicEdit${scopedActiveChannel}`).removeClass('hidden');
     $(`#${scopedActiveChannel}TabViewSettingsOwner`).removeClass('hidden');
   }
 
@@ -1363,16 +1349,16 @@ export async function muteChannel(guildUID, guildID, channelID, showNotification
   }
 
   window.setTimeout(() => {
-    $(`#${guildUID}${guildID}${channelID}channelMuteButton`).html('<i class="bx bx-bell-off"></i>');
+    $(`#${guildUID}${guildID}${channelID}channelMuteButton`).html('Unmute Lounge');
     try {
-      $(`#${guildUID}${guildID}${channelID}channelMuteButton`).get(0)._tippy.setContent('Unmute Lounge');
       $(`#${guildUID}${guildID}${channelID}channelMuteButton`).get(0).onclick = () => unmuteChannel(guildUID, guildID, channelID, false);
     } catch (error) { }
     $(`#${guildUID}${guildID}${channelID}channelMuteButton`).removeClass('disabled');
 
-    $(`#${guildUID}${guildID}${channelID}guildChannelElement`).removeClass('mutedChannelNotificationTransition');
+    $(`#${guildUID}${guildID}${channelID}guildChannelElement`).removeClass('mutedChannelNotificationTransition');  
   }, 800);
 
+  mutedServers.push(`${guildUID}${guildID}${channelID}`);
   checkServerUnread(guildUID, guildID);
 }
 
@@ -1392,9 +1378,8 @@ export async function unmuteChannel(guildUID, guildID, channelID, showNotificati
   }
 
   window.setTimeout(() => {
-    $(`#${guildUID}${guildID}${channelID}channelMuteButton`).html('<i class="bx bx-bell-off"></i>');
+    $(`#${guildUID}${guildID}${channelID}channelMuteButton`).html('Mute Lounge');
     try {
-      $(`#${guildUID}${guildID}${channelID}channelMuteButton`).get(0)._tippy.setContent('Mute Lounge');
       $(`#${guildUID}${guildID}${channelID}channelMuteButton`).get(0).onclick = () => muteChannel(guildUID, guildID, channelID, false);
     } catch (error) { }
     $(`#${guildUID}${guildID}${channelID}channelMuteButton`).removeClass('disabled');
@@ -1402,6 +1387,7 @@ export async function unmuteChannel(guildUID, guildID, channelID, showNotificati
     $(`#${guildUID}${guildID}${channelID}guildChannelElement`).removeClass('mutedChannelNotificationTransition');
   }, 800)
   
+  mutedServers = mutedServers.filter(x => x != `${guildUID}${guildID}${channelID}`);
   checkServerUnread(guildUID, guildID);
 }
 

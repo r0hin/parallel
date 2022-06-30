@@ -1,4 +1,4 @@
-const { ipcMain, Notification, BrowserWindow, dialog, Menu } = require('electron');
+const { ipcMain, Notification, BrowserWindow, dialog, app } = require('electron');
 const { autoUpdater } = require("electron-updater");
 const music = require('./music');
 const discord = require('./discord');
@@ -35,6 +35,10 @@ exports.listenNotifications = (win) => {
     });
 
     notification.show();
+  });
+
+  ipcMain.on('notificationBadges', async (event, arg) => {
+    app.setBadgeCount(arg);
   });
 }
 
@@ -95,7 +99,6 @@ exports.listenFunctions = (win) => {
       default:
         break;
     }
-
   });
 }
 

@@ -1,6 +1,6 @@
 import { getDatabase, off, ref, push, onValue, query, remove, set, update, onDisconnect } from '@firebase/database';
 import { createTrack } from './componentse';
-import { commonArrayDifference, disableButton, displayImageAnimation, enableButton, returnProperURL } from './app';
+import { commonArrayDifference, disableButton, displayImageAnimation, enableButton } from './app';
 import { sendMusicStatus } from './electronApp';
 import { checkAppInitialized } from './firebaseChecks';
 import { getPlaybackURL, sendTrackToPlayerRevamp } from './playback';

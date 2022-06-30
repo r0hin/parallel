@@ -7,6 +7,8 @@ import { createGroup, joinGroup, openSpecialServer } from './servers';
 
 window.winBrowserWindow = null;
 window.startTime = new Date().getTime();
+window.muteCooldown = false;
+window.deafenCooldown = false;
 window.markAsReadAfterFocus = {
   type: '',
   id: '',
@@ -148,6 +150,34 @@ export function startElectronProcesses() {
       case 'account':
         openSpecialServer('account');
         break;
+      case 'play':
+        if (musicPlaying.id && !activeListeningParty) {
+          $(`#playerPauseButton`).get(0).click();
+        }
+        break;
+      case 'mute':
+        if (!muteCooldown) {
+          muteCooldown = true;
+          window.setTimeout(() => {
+            muteCooldown = false;
+          }, 499);
+          muteSelf();
+        }
+        else {
+          snac("Mute Cooldown", "You must wait a moment before you can mute again.", 'danger');
+        }
+        break;
+      case 'deafen':
+        if (!deafenCooldown) {
+          deafenCooldown = true;
+          window.setTimeout(() => {
+            deafenCooldown = false;
+          }, 499);
+          deafenSelf();
+        }
+        else {
+          snac("Deafen Cooldown", "You must wait a moment before you can deafen again.", 'danger');
+        }
         break;
       default:
         break;

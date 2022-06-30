@@ -1653,8 +1653,7 @@ export async function addIndicator(guildUID, guildID, channelID) {
 
   if ($(`#channelMarkButton${guildUID + guildID + channelID}`).length) {
     $(`#channelMarkButton${guildUID + guildID + channelID}`).addClass('disabled');
-    $(`#channelMarkButton${guildUID + guildID + channelID}`).html(`<i class="bx bx-notification-off"></i>`);
-    $(`#channelMarkButton${guildUID + guildID + channelID}`).get(0)._tippy.setContent('Mark as Read');
+    $(`#channelMarkButton${guildUID + guildID + channelID}`).html(`Mark as Read`);
     window.setTimeout(() => {
       $(`#channelMarkButton${guildUID + guildID + channelID}`).removeClass('disabled');
       $(`#channelMarkButton${guildUID + guildID + channelID}`).get(0).onclick = () => {
@@ -1684,8 +1683,7 @@ export function removeIndicator(guildUID, guildID, channelID) {
   
   if ($(`#channelMarkButton${guildUID + guildID + channelID}`).length) {
     $(`#channelMarkButton${guildUID + guildID + channelID}`).addClass('disabled');
-    $(`#channelMarkButton${guildUID + guildID + channelID}`).html(`<i class="bx bx-notification"></i>`);
-    $(`#channelMarkButton${guildUID + guildID + channelID}`).get(0)._tippy.setContent('Mark as Unread'); 
+    $(`#channelMarkButton${guildUID + guildID + channelID}`).html(`Mark as Unread`);
     window.setTimeout(() => {
       $(`#channelMarkButton${guildUID + guildID + channelID}`).removeClass('disabled');
       $(`#channelMarkButton${guildUID + guildID + channelID}`).get(0).onclick = () => {

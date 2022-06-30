@@ -7,6 +7,7 @@ const link = require('./link');
 const deeplinks = require('./deeplink');
 const discord = require('./discord');
 const host = require('./host');
+const tray = require('./tray');
 const menuBar = require('./menuBar');
 
 autoUpdater.autoDownload = true;
@@ -113,6 +114,8 @@ const createWindow = () => {
 
   // In production:
   host.startServer(win, URLARGUMENTS); 
+
+  return win;
 }
 
 app.on('open-url', function (event, url) {
@@ -127,9 +130,12 @@ app.on('ready', () => {
     app.setAppUserModelId("ParallelInc.Parallel");
   }
 
-  createWindow();
+  const mainWindow = createWindow();
+
   // Create the Application's main menu
   menuBar.initializeMenuBar();
+
+  tray.initializeTray();
 });
 
 app.on('window-all-closed', () => {
