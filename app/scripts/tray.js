@@ -1,11 +1,18 @@
 const { app, Menu, Tray } = require('electron');
+const path = require('path');
 let tray = null;
 
 const link = require('./link');
 
 
 exports.initializeTray = () => {
-  tray = new Tray('./build/IconTemplate.png');
+
+  const trayIcnName = process.platform === 'win32' ? 'IconTemplate@2x.png' : 'IconTemplate.png';
+  // Dev
+  const trayIcnPath = path.join(__dirname, '../public/', trayIcnName);
+  tray = new Tray(trayIcnPath);
+
+
   const contextMenu = Menu.buildFromTemplate([
     {
       type: 'normal',
