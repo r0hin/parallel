@@ -18,7 +18,6 @@
     "appId": "in.r0h.parallel",
     "productName": "Parallel 2",
     "copyright": "Copyright © 2022 Parallel, Inc",
-    "afterSign": "scripts/notarize.js",
     "win": {
       "publish": [
         "github"
