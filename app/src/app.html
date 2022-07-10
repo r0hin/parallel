@@ -225,6 +225,24 @@
     </center>
   </div>
 
+  <div id="modalContent_reviewDraft" class="hidden">
+    <h3>Write Review</h3>
+    <textarea wrap="hard" cols="69" id="reviewDraftTextarea" rows="5"></textarea>
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1" id="confirmReviewPost">Post</button>
+    </center>
+  </div>
+
+  <div id="modalContent_reviewEdit" class="hidden">
+    <h3>Edit Review</h3>
+    <textarea wrap="hard" cols="69" id="reviewEditTextarea" rows="5"></textarea>
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1" id="confirmReviewEdit">Edit</button>
+    </center>
+  </div>
+
   <div id="modalContent_toxicityWarning" class="hidden">
     <h3>Remember the Human</h3>
     <p>You sent a message that may contain toxic content. Please remember the human behind the screen!</p>
@@ -415,8 +433,6 @@
         <li>🕐 hustcc/timeago.js
         <li>💖 gatecrasher777/ytcog
       </ul>
-
-      <br><br>
       ❤️ Thanks to: <a>Fisher</a>, <a target="_blank" href="https://www.youtube.com/channel/UCBeNMJAnkN1R6HMM214LFrQ">Whispurr</a>, <a href="https://github.com/gatecrasher777" target="_blank">Tony Evans</a>.
       <br><br>
       🎧 Music: <a target="_blank" href="https://developer.apple.com/documentation/applemusicapi/">Apple Music</a>, <a target="_blank" href="https://youtube.com/music">YouTube</a>.
@@ -550,6 +566,47 @@
     <center>
       <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
       <button class="btn b-1" id="savePlaylistSharing">Save</button>
+    </center>
+  </div>
+
+  <div id="modalContent_updateReviews" class="hidden">
+    <h3>Playlist Reviews</h3>
+
+    <div class="sharingOptions">
+      <p>Who can write reviews?</p>
+      <div class="pageContentStripContainer">
+        <div class="pageContentStrip">
+          <div class="settingsItem">
+            <p>Everyone</p>
+            <span class="checkbox">
+              <input onchange="reviewsSelectHandler('playlistReviewsCheckOne')" class="reviewsCheckbox" id="playlistReviewsCheckOne" type="checkbox" />
+              <svg> <use xlink:href="#checkbox" class="checkbox"></use> </svg>
+            </span>
+          </div>
+          <div class="settingsItem">
+            <p>Friends only</p>
+            <span class="checkbox">
+              <input onchange="reviewsSelectHandler('playlistReviewsCheckTwo')" class="reviewsCheckbox" id="playlistReviewsCheckTwo" type="checkbox" />
+              <svg> <use xlink:href="#checkbox" class="checkbox"></use> </svg>
+            </span>
+          </div>
+          <div class="settingsItem">
+            <span class="settingsNoOneItemWithSubtext">
+              <p>No one</p>
+              <div class="small">Existing reviews will be hidden.</div>
+            </span>
+            <span class="checkbox">
+              <input onchange="reviewsSelectHandler('playlistReviewsCheckThree')" class="reviewsCheckbox" id="playlistReviewsCheckThree" type="checkbox" />
+              <svg> <use xlink:href="#checkbox" class="checkbox"></use> </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1" id="savePlaylistReviews">Save</button>
     </center>
   </div>
 
@@ -786,6 +843,16 @@
     <center>
       <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
       <button class="btn b-1 dangerButton" id="friendConfirmDelete">Remove</button>
+    </center>
+  </div>
+
+  <div id="modalContent_confirmDeleteReview" class="hidden">
+    <h3>Delete Review</h3>
+    <p>Are you sure you would like to remove your review for this playlist?</p>
+    <br>   
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1 dangerButton" id="reviewConfirmDelete">Remove</button>
     </center>
   </div>
 
@@ -1109,11 +1176,13 @@
         <div id="serverListFolders" class="hidden animated fadeIn"></div>  
         <div id="serverListNonFolders"></div>
       </div>
-      <div class="server animated zoomIn" id="infiniteServer">
-        <i class="bx bx-infinite"></i>
-      </div>
-      <div id="accountDetails">
-        <div id="pfpseudoelement" class="hidden"></div> <!-- PFP inserted here. -->
+      <div id="bottomServerList">
+        <div class="server animated zoomIn slow delay-1s" id="infiniteServer">
+          <div id="infiniteServerGraphic">
+            <i class="bx bx-infinite"></i>
+          </div>
+        </div>
+        <div class="server imageServer animated zoomIn hidden" id="accountServer"></div>
       </div>
     </div>
 
@@ -1129,7 +1198,6 @@
               <button id="settingsTabButton_general" class="sidebarButton accountSidebarButton"><i class="bx bx-cog"></i> <div class="sidebarText">General</div></button>
               <div id="tapGroup_general" class="tabGroup">
                 <button id="settingsTabButton_account" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup accountSidebarButtonInGroupActive"><i class="bx bx-user-pin"></i><div class="sidebarText">Account</div></button>
-                <button id="settingsTabButton_profile" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup "><i class="bx bxs-user-badge"></i><div class="sidebarText">Profile</div></button>
                 <button id="settingsTabButton_appearance" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-sun"></i><div class="sidebarText">Appearance</div></button>
                 <button id="settingsTabButton_notifications" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-bell"></i><div class="sidebarText">Notifications</div></button>
                 <button id="settingsTabButton_storage" class="sidebarButton accountSidebarButton accountSidebarButtonInGroup"><i class="bx bx-hdd"></i><div class="sidebarText">Storage</div></button>  
@@ -1161,83 +1229,62 @@
           <div id="accountContentContent">
             <div class="accountTab" id="musicTab_account">
               <h1 class="settingsHeader">Account</h1>
-              <center>
-                <div class="accountCard">
-                  <div class="card">
-                    <h2>Overview</h2>
-                    <br>
-                    <div class="relative">
-                      <img id="profilephoto1" alt="">
-                      <div id="accountCardSide">
-                        <h3 class="primary" id="username1"></h3>
-                        <p id="email1"></p>
-                      </div>
+              <br>
+              <div class="accountSettingsPill">
+                <div class="relative">
+                  <img id="profilephoto1" alt="">
+                  <div id="accountCardSide">
+                    <h3 class="primary" id="username1"></h3>
+                    <p id="email1"></p>
+                  </div>
+                </div>
+                <div class="accountSettingsPillActions">
+                  <div class="dropdown">
+                    <button id="accountManagementDropdownButton" class="btn b-2 accountManagementButton iconButton dropdownButton"><i class="bx bx-dots-vertical-rounded"></i></button>
+                    <div id="accountManagementDropdown" class="dropdown-content">
+                      <a id="changePFPButton" class="btn">Change Photo</a>
+                      <a id="changeEmailButton" class="btn">Change Email</a>
+                      <a id="changePasswordButton" class="btn">Change Password</a>
                     </div>
-                    <br><hr><br>
-                    <button id="changePFPButton" class="btn b-1">Change Profile Photo</button>
-                    <input type="file" id="NewProfilePhotoInput" accept="image/jpeg, image/jpg, image/png" class="hidden" />
-                    <input type="file" id="NewServerIconInput" accept="image/jpeg, image/jpg, image/png" class="hidden" />
-                    <input type="file" id="NewPlaylistIconInput" accept="image/jpeg, image/jpg, image/png" class="hidden" />
-                    <button id="signOutButton" class="btn b-2">Sign Out</button>
-                    <br><br>
-                    <button id="changeEmailButton" class="btn b-0">Change Email</button>
-                    <button id="changePasswordButton" class="btn b-0">Change Password</button>
                   </div>
-                </div>
-    
-                <div class="accountCard connectionsCard">
-                  <div class="card">
-                    <h2>Connections</h2>
-                    <p>For faster sign-in.</p>
-                    <button id="connectionPasswordButton" class="btn b-3 listButton iconTextButton connectedInactive"> </button> 
-                    <button id="connectionGoogleButton" class="btn b-3 listButton iconTextButton connectedInactive"> </button>
-                    <button id="connectionTwitterButton" class="btn b-3 listButton iconTextButton connectedInactive"> </button>
-                  </div>
-                </div>
-
-                <div class="accountCard">
-                  <div class="card">
-                    <h2>More Options</h2> <br>
-                    <button id="openModalCreditsButton" class="btn b-3 listButton"><i class="bx bx-heart"></i> Credits</button>
-                    <button id="openModalContactButton" class="btn b-3 listButton"><i class="bx bx-briefcase"></i> Contact</button>
-                    <center>
-                      <a class="iconLink" href="https://www.twitter.com/get_on_parallel/" target="_blank"><i class="bx bxl-twitter"></i></a>
-                      <a class="iconLink" href="https://www.instagram.com/parallelsocial/" target="_blank"><i class="bx bxl-instagram"></i></a>
-                      <a class="iconLink" href="https://github.com/r0hin/parallel-live/" target="_blank"><i class="bx bxl-github"></i></a>
-                    </center>
-                  </div>
-                </div>
-
-              </center>
-            </div>
-            <div class="accountTab hidden" id="musicTab_profile">
-              <h1 class="settingsHeader">Profile</h1>
-              <div class="accountCard">
-                <div class="card bioCard">
-                  <h2>Favorite Lyrics</h2>
-                  <code id="lyrics1"></code>
-                  <br><br>
-                  <center>
-                    <button id="newLyricsButton" class="btn b-1 roundedButton"><i class="bx bx-edit"></i></button>
-                    <button id="removeLyricsButton" class="btn b-3 roundedButton"><i class="bx bx-trash"></i></button>
-                  </center>
-                  <div id="ifTrackAdded">
-                    <br>
-                    <p>A track is linked to your profile.</p>
-                    <button id="removeLinkedTrackButton" class="btn b-2">Remove Linked Track</button>
-                  </div>
+                  <button id="signOutButton" class="btn iconButton b-3"><i class="bx bx-exit"></i></button>
                 </div>
               </div>
-              <div class="accountCard">
-                <div class="card">
-                  <h2>Status</h2>
-                  <code id="bio1"></code>
-                  <br><br>
-                  <center>
-                    <button id="newBioButton" class="btn b-1 roundedButton"><i class="bx bx-edit"></i></button>
-                    <button id="removeBioButton" class="btn b-3 roundedButton"><i class="bx bx-trash"></i></button>
-                  </center>
-                </div>
+
+              <input type="file" id="NewProfilePhotoInput" accept="image/jpeg, image/jpg, image/png" class="hidden" />
+              <input type="file" id="NewServerIconInput" accept="image/jpeg, image/jpg, image/png" class="hidden" />
+              <input type="file" id="NewPlaylistIconInput" accept="image/jpeg, image/jpg, image/png" class="hidden" />
+
+              <br>
+              <p class="subtitle">Profile</p>
+
+              <div>
+                <button id="newLyricsButton" class="btn b-4 listButton inline"><i class="bx bx-edit"></i> Edit Favorite Lyrics</button>
+                <button id="removeLyricsButton" class="btn b-4 listButton listButtonRed inline"><i class="bx bx-trash"></i>Remove Favorite Lyrics</button>
+              </div>
+              <div>
+                <div id="ifTrackAdded"><button id="removeLinkedTrackButton" class="btn b-4 listButton"><i class="bx bx-trash"></i> Remove Linked Track</button></div>
+              </div>
+              <div>
+                <button id="newBioButton" class="btn b-4 listButton inline"><i class="bx bx-edit"></i> Edit Status</button>
+                <button id="removeBioButton" class="btn b-4 listButton listButtonRed inline"><i class="bx bx-trash"></i>Clear Status</button>
+              </div>
+
+              <br>
+              <p class="subtitle">Connections</p>
+              <button id="connectionPasswordButton" class="btn b-4 listButton iconTextButton connectedInactive"> </button> 
+              <button id="connectionGoogleButton" class="btn b-4 listButton iconTextButton connectedInactive"> </button>
+              <button id="connectionTwitterButton" class="btn b-4 listButton iconTextButton connectedInactive"> </button>
+              <br>
+              <p class="subtitle">More</p>
+              <button id="openModalCreditsButton" class="btn b-3 listButton"><i class="bx bx-heart"></i> Credits</button>
+              <button id="openModalContactButton" class="btn b-3 listButton"><i class="bx bx-briefcase"></i> Contact</button>
+              
+              <br><br>
+              <div class="settingsBottom">
+                <a class="iconLink" href="https://www.twitter.com/get_on_parallel/" target="_blank"><i class="bx bxl-twitter"></i></a>
+                <a class="iconLink" href="https://www.instagram.com/parallelsocial/" target="_blank"><i class="bx bxl-instagram"></i></a>
+                <a class="iconLink" href="https://github.com/r0hin/parallel-live/" target="_blank"><i class="bx bxl-github"></i></a>
               </div>
             </div>
             <div class="accountTab hidden" id="musicTab_sounds">
@@ -1381,9 +1428,9 @@
             <div class="accountTab hidden" id="musicTab_advanced">
               <h1 class="settingsHeader">Advanced</h1>
               <br>
-              <a id="deleteAccountButton" href="#" class="grey">Delete Account</a>
+              <a id="deleteAccountButton" href="#" class="grey">Delete Account</a> <br>
               <div id="adminPanel" class="hidden"><a href="admin.html">Admin Panel</a></div>
-              <a id="weblink2" href="https://parallelsocial.net/policies.pdf" target="_blank" class="grey">Terms</a>
+              <a id="weblink2" href="https://parallelsocial.net/policies.pdf" target="_blank" class="grey">Terms</a> <br>
             </div>
 
             <div class="accountTab hidden" id="musicTab_storage">
@@ -1510,8 +1557,16 @@
 
             <div class="accountTab hidden" id="musicTab_getStarted">
               <h1 class="settingsHeader">Getting Started</h1>
-              <p>Welcome to Parallel! This guide will help you get setup. <a id="replayIntro">Replay intro</a>.</p>
-              <hr>
+              <p><a id="replayIntro">Replay intro</a></p>
+
+              <br><br><br>
+
+              <center>
+                <h1 class="gradientTitle">Welcome to Parallel</h1>
+              </center>
+
+              <br><br><br>
+
               <p class="subtitle">Setup your profile:</p>
               <div class="gettingStartedRow">
                 <div id="gettingStartedProfilePhoto" class="gettingStartedCard">
@@ -1527,7 +1582,7 @@
                     <i class="bx bxl-spotify"></i>
                   </div>
                   <h3>📩 Import from Spotify</h3>
-                  <p>You can import your playlists from Spotify in <i>More > Transfer</i>, or click here.</p>
+                  <p>You can import playlists from Spotify in <i>Settings > More > Transfer</i>.</p>
                 </div> 
 
                 <div id="gettingStartedAppearance" class="gettingStartedCard">
@@ -1535,7 +1590,7 @@
                     <i class="bx bx-moon"></i>
                   </div>
                   <h3>✨ Appearance Settings</h3>
-                  <p>You can enable light or dark mode in <i>General > Appearance</i>, or click here.</p>
+                  <p>You can enable light/dark mode in <i>Settings > General > Appearance</i>.</p>
                 </div> 
 
                 <div id="gettingStartedInfinite" class="gettingStartedCard">
@@ -1555,7 +1610,7 @@
                     <i class="bx bx-user-plus"></i>
                   </div>
                   <h3>👥 Add Friends</h3>
-                  <p>Add friends by clicking the plus in the friends tab, or click here to go there.</p>
+                  <p>Add friends by clicking the plus in the friends tab.</p>
                 </div> 
 
                 <div id="gettingStartedGroup" class="gettingStartedCard">
@@ -1563,7 +1618,7 @@
                     <i class="bx bx-group"></i>
                   </div>
                   <h3>🛋️ Use Groups</h3>
-                  <p>Create or join a group to hang out in lounges and chat with friends.</p>
+                  <p>Create or join a group to hang out in lounges.</p>
                 </div> 
 
                 <div id="gettingStartedShare" class="gettingStartedCard">
@@ -1584,7 +1639,7 @@
                     <i class="bx bx-music"></i>
                   </div>
                   <h3>🎷 Listen to Music</h3>
-                  <p>Play music by clicking here or the music icon on the left. Make sure to only play public domain content!</p>
+                  <p>Play music by clicking the music icon. Only play public domain content!</p>
                 </div> 
 
                 <div id="gettingStartedLounges" class="gettingStartedCard">
@@ -1603,7 +1658,6 @@
                   <p>If you have any issues, don't hesitate to reach out to support by clicking here.</p>
                 </div> 
               </div>
-              <hr>
               <p class="grey">By using Parallel, you agree to the terms described <a id="weblink3" href="https://parallelsocial.net/policies.pdf" target="_blank">here</a>.</p>
             </div>
 
@@ -1647,10 +1701,10 @@
             <div class="friendsHeader">
               <h2>Home</h2>
               <div class="friendsActions">
-                <button id="keycodesButton" class="btn b-0"><i class="bx bx-help-circle"></i></button>
+                <button id="keycodesButton" class="btn b-0"><i class="bx bx-question-mark"></i></button>
                 <button id="friendSortButton" class="btn b-0"><i class="bx bx-sort"></i><i class="bx bx-time"></i></button>
                 <button id="bookmarksButton" class="btn b-0"><i class="bx bx-bookmarks"></i></button>
-                <button id="newFriendButton" class="btn b-0"><i class="bx bx-plus-circle"></i></button>
+                <button id="newFriendButton" class="btn b-0"><i class="bx bx-plus"></i></button>
               </div>
             </div>
             <div class="friendsHeaderButtons">
@@ -1673,9 +1727,8 @@
                   </div>
                 </div>
               </div>
-              <div id="friendsListfriendsContent" class="hidden animated fadeIn">
-                <div id="activeNonMessage" class="nonMessageCentered animated fadeIn hidden"><i class='bx bx-file-blank'></i><p class="nopadding">No added friends.</p><button id="noFriendsAddFriendButton" class="btn b-1">Add Friend</button></div>
-              </div>
+              <div id="friendsListfriendsContent" class="hidden animated fadeIn"></div>
+              <div id="activeNonMessage" class="nonMessageCentered animated fadeIn hidden"><i class='bx bx-file-blank'></i><p class="nopadding">No added friends.</p><button id="noFriendsAddFriendButton" class="btn b-1">Add Friend</button></div>
               <div id="friendsSearchItem" class="hidden animated faster">
                 <p> <i class="bx bx-search leftIcon"></i> Search Active <i id="cancelFriendsSearchIcon" class="bx bx-x-circle iconButton"></i></p>
               </div>
@@ -1875,12 +1928,18 @@
               <p class="subtitle">Playlists</p>
               <div>
                 <button id="newPlaylistFolderButton" class="btn b-3 roundedButton"> <i class="bx bx-folder-plus"></i> </button>
-                <button id="newPlaylistButton" class="btn b-3 roundedButton"> <i class="bx bx-plus-circle"></i> </button>
+                <button id="newPlaylistButton" class="btn b-3 roundedButton"> <i class="bx bx-plus"></i> </button>
               </div>
             </div>
             <div id="musicSidebarPlaylists">
-              <div id="musicSidebarPlaylistFolders"></div>
-              <div id="musicSidebarPlaylistsPlaylists"></div>
+              <div id="musicSidebarPlaylistFolders" class="hidden"></div>
+              <div id="musicSidebarPlaylistsPlaylists">
+                <div id="noPlaylistsText" class="nonMessageCentered hidden animated fadeIn">
+                  <i class="bx bxs-playlist"></i>
+                  <p class="nopadding">No playlists.</p>
+                  <button id="noPlaylistsAddPlaylistButton" class="btn b-1">New Playlist</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1991,7 +2050,14 @@
             </div>
           </div>
           
-          <div class="musicTab hidden" id="musicTab_playlists"></div>
+          <div class="musicTab hidden" id="musicTab_playlists">
+            <div class="centered">
+              <i class="bx bx-question-mark"></i>
+              <p class="small">What is this place...?</p>
+              <p class="small">I have no idea.</p>  
+              <p class="small">Hmm. <a target="_blank" href="https://youtu.be/4cupki37ymI">Anyways</a>.</p>
+            </div>
+          </div>
           <div class="musicTab hidden" id="musicTab_friends">
             <h3>Active Friends</h3>  
             <div id="activeFriendsMusicNotice" class="notice">No friends are currently listening to music.</div>

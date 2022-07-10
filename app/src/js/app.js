@@ -30,7 +30,7 @@ import { updateApp } from './electronApp';
 import { sendToElectron } from './electron';
 
 window.user;
-window.gitHubVersion = '2.6.1';
+window.gitHubVersion = '2.7.0';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
@@ -102,6 +102,9 @@ onAuthStateChanged(auth, async (user) => {
       }
     }
     else {
+      displayInputEffect();
+      loadOnclicks(); // Need onclicks for functionality.
+      // ^ Will be called again on startup but is fine.
       $('#newUser').removeClass('hidden');
       startSetupAnimation();
     }
@@ -111,6 +114,7 @@ onAuthStateChanged(auth, async (user) => {
 })
 
 export function sendVerify() {
+  console.log('here')
   sendEmailVerification(user).then(function() {
     snac('Verification Email Sent', 'Please check your inbox and follow the instructions in the email we sent you to continue.', 'success');
 
@@ -246,25 +250,26 @@ async function startSetup() {
     await updateDoc(doc(db, `users/${user.uid}`), {tutorialStarted: true});
   }
 
-  $(`#accountServer`).remove();
-  const a = document.createElement('img');
-  a.id = 'accountServer'; a.setAttribute('class', `pfp server voiceIndicator${user.uid} voiceIndicatorAll userContextItem`);
-  a.setAttribute('userID', user.uid);
-  a.setAttribute('userName', cacheUser.username);
-  a.onclick = () => openSpecialServer('account');
-  a.src = await returnProperURL(user.uid);
-  document.getElementById('accountDetails').appendChild(a);
-  displayImageAnimation(`accountServer`);
-
+  $(`#accountServer`).addClass(`voiceIndicator${user.uid}`);
+  $(`#accountServer`).addClass(`voiceIndicatorAll`);
+  $(`#accountServer`).addClass(`userContextItem`);
+  $(`#accountServer`).get(0).setAttribute('userID', user.uid);
+  $(`#accountServer`).get(0).setAttribute('userName', cacheUser.username);
+  $(`#accountServer`).get(0).onclick = () => {openSpecialServer('account')};
+  $(`#accountServer`).get(0).setAttribute('style', `background-image: url("${await returnProperURL(user.uid)}")`);
+  $(`#profilephoto1`).get(0).src = await returnProperURL(user.uid);
+  
   window.setTimeout(async () => {
-    // wait for image to fail or success...
-    $('#profilephoto1').attr('src', await returnProperURL(user.uid));
-
     tippy('#accountServer', {
       content: 'Account / Settings',
     });
 
-  }, 1299);
+    $(`#accountServer`).removeClass('hidden');
+    window.setTimeout(() => {
+    $(`#accountServer`).removeClass('animated');
+    $(`#infiniteServer`).removeClass('animated');
+    }, 999);
+  }, 999);
 
   $('#username1').html(cacheUser.username.capitalize());
   $('#email1').html(user.email);
@@ -341,22 +346,6 @@ async function startSetup() {
 }
 
 function loadDetails() {
-  if (cacheUser.bio) {
-    $(`#bio1`).html(securityConfirmText(cacheUser.bio).replaceAll(`&br`, `<br>`));
-    twemoji.parse($(`#bio1`).get(0));
-  }
-  else {
-    $(`#bio1`).html('No active status.');
-  }
-
-  if (cacheUser.lyrics && cacheUser.lyrics.lyrics) {
-    $(`#lyrics1`).html(securityConfirmText(cacheUser.lyrics.lyrics).replaceAll(`&br`, `<br>`));
-    twemoji.parse($(`#lyrics1`).get(0));
-  }
-  else {
-    $(`#lyrics1`).html('No favorite lyrics.');
-  }
-
   if (cacheUser.track) {
     $(`#ifTrackAdded`).removeClass('hidden');
   }
@@ -1483,8 +1472,6 @@ export function loadDisplay() {
     animation: 'shift-toward',
   });
   
-  $(`#pfpseudoelement`).get(0).onclick = () => openSpecialServer('account');
-  
   tippy('#serverAddButton', {
     content: 'Join a Group',
     placement: 'top',
@@ -1539,6 +1526,11 @@ export function loadDisplay() {
     content: 'Details',
     placement: 'top',
   });
+
+  tippy('#signOutButton', {
+    content: 'Sign Out',
+    placement: 'top',
+  })
   
   tippy('#friendsServer', {
     content: 'Friends',
@@ -1759,6 +1751,10 @@ export async function openModal(id) {
       // Click the primary action button.
       window.primaryActionFunc = () => { $(`#modalContent`).find(`.b-1`).get(0).click(); }
       break;
+    case 'confirmDeleteReview':
+      // Click the primary action button.
+      window.primaryActionFunc = () => { $(`#modalContent`).find(`.b-1`).get(0).click(); }
+      break;
     case 'requestTrack':
       // Click the primary action button.
       window.primaryActionFunc = () => { $(`#modalContent`).find(`.b-1`).get(0).click(); }
@@ -1853,6 +1849,9 @@ export async function openModal(id) {
       break;
     case 'newPlaylist':
       $(`#newPlaylistName`).get(0).focus();
+      break;
+    case 'reviewDraft':
+      $(`#reviewDraftTextarea`).get(0).focus();
       break;
     case 'newPlaylistFolder':
       $(`#newPlaylistFolderName`).get(0).focus();
@@ -3196,11 +3195,10 @@ function loadOnclicks() {
   addOnclickByID('replayIntro', () => {startTutorial()});
   
   addOnclickByID('settingsTabButton_general', () => {expandTab('general')});
-  addOnclickByID('settingsTabButton_profile', () => {settingsTab('profile')});
   addOnclickByID('settingsTabButton_account', () => {settingsTab('account')});
   addOnclickByID('settingsTabButton_appearance', () => {settingsTab('appearance')});
   addOnclickByID('settingsTabButton_notifications', () => {settingsTab('notifications')});
-  addOnclickByID('settingsTabButton_feedback', () => {window.open(`https://docs.google.com/forms/d/18Y82qsZ_eMTsIXu3EpygzUor2LUOen4G_ZAzscFPpsw/`)});
+  addOnclickByID('settingsTabButton_feedback', () => {window.open(`https://github.com/r0hin/parallel/issues`)});
   addOnclickByID('settingsTabButton_getStarted', () => {settingsTab('getStarted')})
   addOnclickByID('settingsTabButton_storage', () => {settingsTab('storage')});
   addOnclickByID('settingsTabButton_advanced', () => {settingsTab('advanced')});
@@ -3243,6 +3241,7 @@ function loadOnclicks() {
   addOnclickByID('friendsTabOutgoingButton', () => {friendsTab('outgoing', $(`#friendsTabOtherButton`).get(0)) });
   addOnclickByID('friendsTabBlockedButton', () => {friendsTab('blocked', $(`#friendsTabOtherButton`).get(0)) });
   addOnclickByID('noFriendsAddFriendButton', () => {openModal('newFriend')});
+  addOnclickByID('noPlaylistsAddPlaylistButton', () => { openNewPlaylistDialog() });
   addOnclickByID('cancelFriendsSearchIcon', () => {cancelFriendsSearch()});
   addOnclickByID('musicTabButton_explore', () => {musicTab('explore')});
   addOnclickByID('musicTabButton_friends', () => {musicTab('friends')});
@@ -3287,4 +3286,5 @@ function loadOnclicks() {
   addOnclickByID('updateServer', () => updateApp()) ;
   addOnclickByID('clearAllUploadsButton', () => prepareDestroyAllFiles() );
   addOnclickByID('musicInfoButton', () => { openModal('musicInfo') });
+  addOnclickByID('accountManagementDropdownButton', () => {openDropdown('accountManagementDropdown');})
 }

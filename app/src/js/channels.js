@@ -180,7 +180,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
         <h3 class="guildChannelViewTitle" id="${scopedActiveChannel}guildChannelViewTitle">${securityConfirmTextIDs(channelName, true)}</h3>
         <div>
           <button onclick="openChannelPinned('${scopedActiveChannel}')" class="btn tabButton roundedButton invisible" id="${scopedActiveChannel}pinnedMessagesButtonCounterpoart"><i class="bx bx-pin"></i></button>
-          <button id="${scopedActiveChannel}TabItemMusic" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton invisibleOpacityAnimated musicButton"><i class='bx bx-music'></i></button>
+          <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Music')" id="${scopedActiveChannel}TabItemMusic" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton invisibleOpacityAnimated musicButton"><i class='bx bx-music'></i></button>
           <div class="dropdown">
             <button onclick="openDropdown('${scopedActiveChannel}SettingsChannelDropdown')" id="${scopedActiveChannel}TabItemSettings" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton dropdownButton"><i class='bx bx-cog'></i></button>
             <div id="${scopedActiveChannel}SettingsChannelDropdown" class="dropdown-content">
@@ -587,30 +587,26 @@ export function updateLoungeTypes(guildUID, guildID, channelID, dataInput) {
   if ($(`#disablePublicView${scopedActiveChannel}`).length) { // It's built.
     if (guildUID == user.uid) {
       if (!data.disablePublicView) { // Public view is on
-        $(`#disablePublicView${scopedActiveChannel}`).html(`<i class="bx bx-lock-open-alt"></i>`);
-        $(`#disablePublicView${scopedActiveChannel}`).get(0)._tippy.setContent(`Restrict to Staff`);
+        $(`#disablePublicView${scopedActiveChannel}`).html(`Restrict to Staff`);
         $(`#disablePublicView${scopedActiveChannel}`).get(0).onclick = () => {
           changeLoungeType(guildUID, guildID, channelID, 'disablePublicView', true);
         }
       }
       else { // Public view is off
-        $(`#disablePublicView${scopedActiveChannel}`).html(`<i class="bx bx-lock-alt"></i>`);
-        $(`#disablePublicView${scopedActiveChannel}`).get(0)._tippy.setContent(`Make Public`);
+        $(`#disablePublicView${scopedActiveChannel}`).html(`Make Public`);
         $(`#disablePublicView${scopedActiveChannel}`).get(0).onclick = () => {
           changeLoungeType(guildUID, guildID, channelID, 'disablePublicView', false);
         }
       }
   
       if (!data.disablePublicEdit) { // Public edit is on
-        $(`#disablePublicEdit${scopedActiveChannel}`).html(`<i class="bx bx-shield-x"></i>`);
-        $(`#disablePublicEdit${scopedActiveChannel}`).get(0)._tippy.setContent(`Disable Messages`);
+        $(`#disablePublicEdit${scopedActiveChannel}`).html(`Disable Messages`);
         $(`#disablePublicEdit${scopedActiveChannel}`).get(0).onclick = () => {
           changeLoungeType(guildUID, guildID, channelID, 'disablePublicEdit', true);
         }
       }
       else { // Public edit is off
-        $(`#disablePublicEdit${scopedActiveChannel}`).html(`<i class="bx bx-check-shield"></i>`);
-        $(`#disablePublicEdit${scopedActiveChannel}`).get(0)._tippy.setContent(`Allow Messages`);
+        $(`#disablePublicEdit${scopedActiveChannel}`).html(`Allow Messages`);
         $(`#disablePublicEdit${scopedActiveChannel}`).get(0).onclick = () => {
           changeLoungeType(guildUID, guildID, channelID, 'disablePublicEdit', false);
         }

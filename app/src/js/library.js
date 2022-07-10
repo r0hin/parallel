@@ -1,8 +1,9 @@
 import { getFirestore, getDoc, setDoc, updateDoc, deleteDoc, doc, onSnapshot, writeBatch, arrayRemove, arrayUnion, serverTimestamp, addDoc, collection, deleteField, runTransaction, increment} from '@firebase/firestore';
+import { getFunctions, httpsCallable } from '@firebase/functions'
 import { getStorage, ref as storageRef, uploadBytesResumable } from '@firebase/storage';
 
 import * as timeago from 'timeago.js';
-import { getCroppedPhoto } from './app';
+import { disableButton, getCroppedPhoto } from './app';
 import { createAlbum, createArtist, createTrack } from './componentse';
 
 import { commonArrayDifference, playlistArrayDifference, openModal, closeModal, timer, showUploadProgress, hideUploadProgress, displayImageAnimation, securityConfirmText, messageHTMLtoText, displayInputEffect, windowSelected } from './app'
@@ -32,6 +33,7 @@ window.editorLastSelected = null;
 checkAppInitialized();
 const db = getFirestore();
 const storage = getStorage();
+const functions = getFunctions();
 
 window.addToLibrary = async (type, contentID) => {
   // Disable button temporarily
@@ -172,7 +174,6 @@ export function albumLibraryListener() {
       while (albumsListForward.length) {
         finalAlbumsArray.push(albumsListForward.splice(0, 250));
       }
-      console.log(finalAlbumsArray)
       for (let i = 0; i < finalAlbumsArray.length; i++) {
         const data = await makeMusicRequest(`albums?ids=${finalAlbumsArray[i].join(',')}`);
         for (let j = 0; j < data.data.length; j++) {
@@ -368,7 +369,6 @@ export function clonePlaylistToLibrary(playlistUID, playlistID) {
 
     const playlistDoc = await getDoc(doc(db, `users/${playlistUID}/playlists/${playlistID}`));
     let playlistData = playlistDoc.data();
-    console.log(playlistData.clone)
     if (playlistData.clone) { // Clone already exists
       playlistData.clonedMultiple = true;
     }
@@ -499,10 +499,24 @@ async function updatePlaylistsOrder() {
 }
 
 export async function loadPlaylists() {
-  if (!cacheUser.playlists) { 
+  if (!cacheUser.playlists.length && !Object.keys(cacheUser.playlistFolders).length) { 
+    cachePlaylists = cacheUser.playlists;
+    $(`#noPlaylistsText`).removeClass('hidden');
     manageDeepLink()
+
+    $(`.playlistItem`).addClass('playlistItemGone');
+    $(`.playlistView`).remove();
+    window.setTimeout(() => {
+      $(`.playlistItem`).remove();
+    }, 500);
+
+    // From no playlist folders:
+    $(`#musicSidebarPlaylistFolders`).addClass("hidden"); 
+    $(`.folderContainer`).addClass('hidden'); 
+    setPlaylistHandlers(); 
     return; 
   }
+  $(`#noPlaylistsText`).addClass('hidden');
   let playlistForward = [];
   let playlistBackward = [];
   
@@ -510,7 +524,7 @@ export async function loadPlaylists() {
     playlistForward = commonArrayDifference(cacheUser.playlists, cachePlaylists)
     playlistBackward = commonArrayDifference(cachePlaylists, cacheUser.playlists)
   }
-  
+
   cachePlaylists = cacheUser.playlists;
 
   if (firstPlaylistLoad) {
@@ -655,8 +669,15 @@ function resetFoldersLayout() {
 }
 
 async function loadPlaylistFolders(playlists, folders) {
-  if (!folders) { $(`.folderContainer`).addClass('hidden'); setPlaylistHandlers(); return } // If folders empty.
+  if (!Object.keys(folders).length) {
+    // If folders empty.
+    $(`#musicSidebarPlaylistFolders`).addClass("hidden"); 
+    $(`.folderContainer`).addClass('hidden'); 
+    setPlaylistHandlers(); 
+    return 
+  }
 
+  $(`#musicSidebarPlaylistFolders`).removeClass("hidden");
   const keys = Object.keys(folders);
   $(`.folderContainer`).addClass('hidden');
 
@@ -896,7 +917,6 @@ function buildPlaylist(playlist) {
     <span class="sidebarText" id="${playlistUID}${playlistID}PlaylistName"><div class="sidebarText">${playlistName}</div></span>
   `
   $(`#musicSidebarPlaylistsPlaylists`).get(0).appendChild(a);
-  // console.log('appended');
   
   twemoji.parse($(`#${playlistUID}${playlistID}PlaylistName`).get(0));
 }
@@ -958,6 +978,7 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
             <button id="playlistDropdownButton${playlistUID}${playlistID}" onclick="openDropdown('${playlistUID}${playlistID}Dropdown')" class="btn b-4 playlistDropdownButton iconButton dropdownButton"><i class="bx bx-dots-vertical-rounded"></i></button>
             <div id="${playlistUID}${playlistID}Dropdown" class="dropdown-content">
               <a id="editorPlaylistButton${playlistUID}${playlistID}" class="btn">Editor</a>
+              <a onclick="openReviews('${playlistUID}', '${playlistID}')" id="reviewsPlaylistButton${playlistUID}${playlistID}" class="btn">Reviews</a>
               <a id="renamePlaylistButton${playlistUID}${playlistID}" class="btn">Rename</a>
               <a id="deletePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Delete</a>
               <div class="dropdownDivider"></div>
@@ -996,6 +1017,27 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
 
         <div id="${playlistUID}${playlistID}playlistTrackSearchResults" class="playlistTrackSearchResults animated fadeIn"></div>
         <p class="playlistSearchNoResults animated fadeIn hidden" id="${playlistUID}${playlistID}SearchResults">No results found.</p>
+
+        <div id="${playlistUID}${playlistID}reviewSection" class="reviewSection animated fadeIn hidden">
+          <div class="reviewSectionHeader">
+            <b>Reviews</b>
+            <div>
+              <button id="${playlistUID}${playlistID}addReviewButton" class="btn b-0"><i class="bx bx-plus"></i></button>
+              <button id="${playlistUID}${playlistID}refreshReviewButton" class="btn b-0"><i class="bx bx-refresh"></i></button>
+              <button id="${playlistUID}${playlistID}sortReviewButton" mode="0" class="btn b-0">
+                <i class="bx bx-sort"></i>
+                <i class="bx bx-time"></i>
+              </button>
+            </div>
+          </div>
+          <div class="reviewSectionContent" id="${playlistUID}${playlistID}reviewSectionContent">
+            <div class="noReviews hidden animated fadeIn" id="${playlistUID}${playlistID}reviewSectionContentNone">
+              <i class="bx bx-file-blank"></i>
+              <p>No reviews yet. Be the first to add one.</p>
+            </div>
+            <div class="reviewSectionContentContent" id="${playlistUID}${playlistID}reviewSectionContentContent"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div></div>
@@ -1052,6 +1094,54 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
   }, false);
 
   // Onclicks
+
+  $(`#${playlistUID}${playlistID}refreshReviewButton`).get(0).onclick = () => {
+    // Disable button
+    disableButton($(`#${playlistUID}${playlistID}refreshReviewButton`));
+    refreshReviews(playlistUID, playlistID);
+    window.setTimeout(() => {
+      enableButton($(`#${playlistUID}${playlistID}refreshReviewButton`), `<i class="bx bx-refresh"></i>`);
+    }, 1999);
+  }
+
+  $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).onclick = () => {
+    const mode = $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).getAttribute('mode');
+
+    if (mode === '0') {
+      $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).setAttribute('mode', '1');
+      $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).innerHTML = `
+        <i class="bx bx-sort"></i>
+        <i class="bx bx-time-five"></i>
+      `;
+
+      // Sort all elements in container
+      $(`#${playlistUID}${playlistID}reviewSectionContentContent`).find('.review').sort(function(a, b) {
+        return +b.getAttribute('ts') - +a.getAttribute('ts');
+      }).appendTo($(`#${playlistUID}${playlistID}reviewSectionContentContent`));
+    }
+    else {
+      $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).setAttribute('mode', '0');
+      $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).innerHTML = `
+        <i class="bx bx-sort"></i>
+        <i class="bx bx-time"></i>
+      `;
+
+      // Sort all elements in container
+      $(`#${playlistUID}${playlistID}reviewSectionContentContent`).find('.review').sort(function(a, b) {
+        return +a.getAttribute('ts') - +b.getAttribute('ts');
+      }).appendTo($(`#${playlistUID}${playlistID}reviewSectionContentContent`));
+    }
+  }
+
+  tippy($(`#${playlistUID}${playlistID}refreshReviewButton`).get(0), {
+    content: 'Refresh',
+    placement: 'top',
+  });
+
+  tippy($(`#${playlistUID}${playlistID}sortReviewButton`).get(0), {
+    content: 'Toggle Sort Direction',
+    placement: 'top',
+  });
 
   tippy($(`#Playlist${playlistUID}${playlistID}Close`).get(0), {
     content: 'Close',
@@ -1227,7 +1317,6 @@ async function addPlaylistListeners(playlistUID, playlistID, fromLibrary) {
   cachePlaylistData[playlistUID + playlistID] = [];
 
   playlistListener = onSnapshot(doc(db, `users/${playlistUID}/playlists/${playlistID}`), async (doc) => {
-    console.log(doc.data())
     if (!doc.exists()) {
       return;
     }
@@ -1304,6 +1393,8 @@ async function addPlaylistListeners(playlistUID, playlistID, fromLibrary) {
     playlistMetaData[playlistUID + playlistID] = doc.data();
     playlistMetaData[playlistUID + playlistID].tracks = []; // No need. Waste of space.
 
+    reviewViewCheck(playlistUID, playlistID);
+
     const tempPlaylistForward = [...arrayPlaylistForward]
 
     if (arrayPlaylistForward.length) {
@@ -1349,7 +1440,174 @@ async function addPlaylistListeners(playlistUID, playlistID, fromLibrary) {
 
     // Don't deal with playlist ORDER.
     $(`#playlistSearch${playlistUID}${playlistID}`).removeClass('hidden');
-  })
+  });
+
+  refreshReviews(playlistUID, playlistID);
+}
+
+export function reviewViewCheck(playlistUID, playlistID) {
+  // Check playlist review settings.
+  $(`#${playlistUID}${playlistID}addReviewButton`).removeClass('disabled');
+  $(`#${playlistUID}${playlistID}reviewSection`).removeClass('hidden');
+
+  if (playlistMetaData[playlistUID + playlistID].reviews == 'none') {
+    $(`#${playlistUID}${playlistID}reviewSection`).addClass('hidden');
+  }
+
+  if (playlistUID !== user.uid) {
+    if (playlistMetaData[playlistUID + playlistID].reviews == 'friends') {
+      if (!(cacheUser.friends.some(e => e.u === playlistUID))) {
+        $(`#${playlistUID}${playlistID}addReviewButton`).addClass('disabled')
+      }
+    }
+  }
+  else { // Cant review self
+    $(`#${playlistUID}${playlistID}addReviewButton`).addClass('disabled')
+  }
+}
+
+export async function loadReviews(playlistUID, playlistID) {
+  getDoc(doc(db, `users/${playlistUID}/playlists/${playlistID}/views/reviews`)).then(async (doc) => {
+    $(`#${playlistUID}${playlistID}reviewSection`).removeClass('hidden');
+    $(`#${playlistUID}${playlistID}reviewSectionContentNone`).addClass('hidden');
+
+    $(`#${playlistUID}${playlistID}addReviewButton`).removeClass('hidden');
+    $(`#${playlistUID}${playlistID}removeReviewButton`).addClass('hidden');
+    $(`#${playlistUID}${playlistID}editReviewButton`).addClass('hidden');
+
+    if (!doc.exists() || !Object.keys(doc.data()).length) {
+      $(`#${playlistUID}${playlistID}reviewSectionContentNone`).removeClass('hidden');
+    }
+    else {
+      if (Object.keys(doc.data()[user.uid]).length) {
+        $(`#${playlistUID}${playlistID}addReviewButton`).addClass('hidden');
+        $(`#${playlistUID}${playlistID}removeReviewButton`).removeClass('hidden');
+        $(`#${playlistUID}${playlistID}editReviewButton`).removeClass('hidden');
+
+        $(`#${playlistUID}${playlistID}editReviewButton`).get(0).onclick = () => {
+          openModal('reviewEdit');
+          $('#reviewEditTextarea').val(doc.data()[user.uid]['text']);
+          $('#confirmReviewEdit').get(0).onclick = async () => {
+            closeModal();
+  
+            const reviewText = $('#reviewEditTextarea').val();
+  
+            if (reviewText.length < 10) {
+              snac('Review Error', 'Reviews must be at least 10 characters long.', 'danger');
+              return;
+            }
+  
+            notifyTiny('Processing review...');
+
+            const editReview = httpsCallable(functions, 'editReview');
+            const result = await editReview({
+              playlistUID: playlistUID,
+              playlistID: playlistID,
+              reviewText: $('#reviewEditTextarea').val(),
+            });
+      
+            if (result.data.data == true) {
+              snac('Review Added', 'Your review was edited successfully.', 'success');
+              $(`#${playlistUID}${playlistID}${user.uid}ReviewText`).html(reviewText);
+            }
+            else {
+              copyToClipboard(reviewText, true);
+              console.log(reviewText);
+              snac('Review Error', `${result.data.data} Your review draft was copied to your clipboard.`, 'danger');
+            }
+          };
+        }
+
+        $(`#${playlistUID}${playlistID}removeReviewButton`).get(0).onclick = () => {
+          removeOwnReview(playlistUID, playlistID);
+        }
+      }
+
+      // Build the reviews now
+      const reviews = Object.keys(doc.data());
+      for (let i = 0; i < reviews.length; i++) {
+        const review = doc.data()[reviews[i]];
+
+        const a = document.createElement('div');
+        a.classList.add('review');
+        a.id = `${playlistUID}${playlistID}Review${review.uid}Container`;
+        a.setAttribute('ts', review.timestamp);
+        a.innerHTML = `
+          <div class="review-header">
+            <div class="review-header-left">
+              <img id="${playlistUID}${playlistID}${review.uid}ReviewPhoto"></img>
+              <div class="review-header-left-text">${review.username.capitalize()}</div>
+            </div>
+            <div class="review-header-right">
+              <div class="review-header-right-text">
+                <div class="review-header-right-text-name">Updated ${timeago.format(new Date(review.timestamp))}.</div>
+              </div>
+              <button id="${playlistUID}${playlistID}${review.uid}ReviewDelete" class="btn b-4 hidden"><i class="bx bx-trash"></i></button>
+            </div>
+          </div>
+          <div class="review-content">
+            <p id="${playlistUID}${playlistID}${review.uid}ReviewText">${review.text}</p>
+          </div>
+        `;
+        $(`#${playlistUID}${playlistID}reviewSectionContentContent`).append(a);
+
+        tippy($(`#${playlistUID}${playlistID}${review.uid}ReviewDelete`).get(0), {
+          content: 'Delete Review',
+          placement: 'top',
+        });
+
+        if (review.uid == user.uid) {
+          $(`#${playlistUID}${playlistID}${review.uid}ReviewDelete`).removeClass('hidden');
+          $(`#${playlistUID}${playlistID}${review.uid}ReviewDelete`).get(0).onclick = () => {
+            removeOwnReview(playlistUID, playlistID);
+          }
+        }
+        else if (playlistUID == user.uid) {
+          $(`#${playlistUID}${playlistID}${review.uid}ReviewDelete`).removeClass('hidden');
+          $(`#${playlistUID}${playlistID}${review.uid}ReviewDelete`).get(0).onclick = () => {
+            removeReview(playlistUID, playlistID, review.uid);
+          }
+        }
+
+        $(`#${playlistUID}${playlistID}${review.uid}ReviewPhoto`).get(0).src = await returnProperURL(review.uid);
+        displayImageAnimation(`${playlistUID}${playlistID}${review.uid}ReviewPhoto`);
+      }
+
+      // Sort all elements in container
+      $(`#${playlistUID}${playlistID}reviewSectionContentContent`).find('.review').sort(function(a, b) {
+        return +a.getAttribute('ts') - +b.getAttribute('ts');
+      }).appendTo($(`#${playlistUID}${playlistID}reviewSectionContentContent`));
+    }
+  });
+}
+
+function removeOwnReview(playlistUID, playlistID) {
+  openModal('confirmDeleteReview');
+  $('#reviewConfirmDelete').get(0).onclick = async () => {
+    closeModal();
+    disableButton($(`#${playlistUID}${playlistID}${user.uid}ReviewDelete`));
+    notifyTiny('Deleting review...');
+
+    const deleteReview = httpsCallable(functions, 'deleteReview');
+    const result = await deleteReview({
+      playlistUID: playlistUID,
+      playlistID: playlistID,
+    });
+
+    if (result.data.data == true) {
+      snac('Review Deleted', 'Your review was deleted successfully.', 'success');
+      $(`#${playlistUID}${playlistID}Review${user.uid}Container`).css('height', $(`#${playlistUID}${playlistID}Review${user.uid}Container`).height());
+      window.setTimeout(() => {
+        $(`#${playlistUID}${playlistID}Review${user.uid}Container`).addClass("reviewGone")
+        window.setTimeout(() => {
+          $(`#${playlistUID}${playlistID}Review${user.uid}Container`).remove();
+        }, 999);
+      }, 99);
+    }
+    else {
+      snac('Review Error', `${result.data.data}`, 'danger');
+    }
+  };
 }
 
 async function updatePlaylistIndexes(playlistID) {
@@ -1388,7 +1646,7 @@ window.addTrackToPlaylist = (playlistID, trackID, skipNotify) => {
     }
 
     const track = await makeMusicRequest(`songs/${trackID}`);
-    console.log(track)
+
     updateDoc(doc(db, `users/${user.uid}/playlists/${playlistID}`), {
         tracks: arrayUnion({
           trackID: `${trackID}`,
@@ -1407,9 +1665,7 @@ window.addTrackToPlaylist = (playlistID, trackID, skipNotify) => {
 }
 
 export async function removeTrackFromPlaylist(playlistID, trackID, randomID) {
-  console.log(playlistID, trackID, randomID);
   const track = await makeMusicRequest(`songs/${trackID}`);
-  console.log(track)
   await updateDoc(doc(db, `users/${user.uid}/playlists/${playlistID}`), {
     tracks: arrayRemove({
       randomID: `${randomID}`,
@@ -1659,6 +1915,56 @@ export function addAlbumToPlaylist(playlistID, albumID) {
   });
 }
 
+window.openReviews = (playlistUID, playlistID) => {
+  openModal('updateReviews');
+
+  switch (playlistMetaData[`${playlistUID}${playlistID}`].reviews) {
+    case 'everyone':
+      $(`#playlistReviewsCheckOne`).get(0).checked = true;
+      break;
+    case 'friends':
+      $(`#playlistReviewsCheckTwo`).get(0).checked = true;
+      break;
+    case 'none':
+      $(`#playlistReviewsCheckThree`).get(0).checked = true;
+      break;
+    default:
+      $(`#playlistReviewsCheckOne`).get(0).checked = true;
+      break;
+  }
+
+  $(`#savePlaylistReviews`).get(0).onclick = async () => {
+    const isEveryone = $(`#playlistReviewsCheckOne`).get(0).checked;
+    const isFriends = $(`#playlistReviewsCheckTwo`).get(0).checked;
+    const isNone = $(`#playlistReviewsCheckThree`).get(0).checked;
+
+    if (!isEveryone && !isFriends && !isNone) {
+      snac('Reviews Error', 'You must select an option.', 'danger');
+      return;
+    }
+
+    closeModal();
+
+    if (isEveryone) {
+      await updateDoc(doc(db, `users/${user.uid}/playlists/${playlistID}`), {
+        reviews: 'everyone'
+      });
+    }
+    else if (isFriends) {
+      await updateDoc(doc(db, `users/${user.uid}/playlists/${playlistID}`), {
+        reviews: 'friends'
+      });
+    }
+    else if (isNone) {
+      await updateDoc(doc(db, `users/${user.uid}/playlists/${playlistID}`), {
+        reviews: 'none'
+      });
+    }
+  
+    snac('Review Policy Updated', 'Your playlist review settings has been updated.', 'success');
+  }
+}
+
 window.openSharing = (playlistUID, playlistID) => {
   openModal('updateSharing');
 
@@ -1740,6 +2046,15 @@ window.sharingSelectHandler = (skip) => {
   });
 }
 
+window.reviewsSelectHandler = (skip) => {
+  $(`.reviewsCheckbox`).each(function(index, element) {
+    if (element.id !== skip) {
+      $(element).get(0).checked = false;
+    }
+  });
+}
+
+
 window.recalculateDetails = async (playlistUID, playlistID) => {
   let duration = 0;
   for (let i = 0; i < cachePlaylistData[`${playlistUID}${playlistID}`].length; i++) {
@@ -1769,6 +2084,7 @@ function openEditorModePlaylist(playlistID) {
   $(`#${user.uid}${playlistID}playlistDetailsOne`).addClass('fadeOut');
   $(`#playlistSearch${user.uid}${playlistID}`).addClass('fadeOut');
   $(`#playlistSearch${user.uid}${playlistID}`).removeClass('fadeIn');
+  $(`#${user.uid}${playlistID}reviewSection`).addClass('hidden');
   $(`#${user.uid}${playlistID}playlistTrackSearchResults`).addClass('fadeOut');
   $(`#${user.uid}${playlistID}playlistTrackSearchResults`).removeClass('fadeIn');
   $(`#${user.uid}${playlistID}SearchResults`).addClass('fadeOut');
@@ -1822,7 +2138,6 @@ function editorSelectTrack(playlistID, trackID, randomID, ev) {
     let low, high;
     const lastIndex = $(`#${user.uid}${playlistID}${editorLastSelected.split('.')[1]}${editorLastSelected.split('.')[0]}`).index() - 1;
     const currentIndex = $(`#${user.uid}${playlistID}${randomID}${trackID}`).index() - 1;
-    console.log(lastIndex, currentIndex);
 
     if (lastIndex < currentIndex) {
       low = lastIndex;
@@ -1961,6 +2276,7 @@ export function exitEditorModePlaylist(playlistID) {
   $(`#${user.uid}${playlistID}playlistTrackSearchResults`).removeClass('hidden');
   $(`#${user.uid}${playlistID}playlistTrackSearchResults`).addClass('fadeIn');
   $(`#${user.uid}${playlistID}SearchResults`).removeClass('fadeOut');
+  $(`#${user.uid}${playlistID}reviewSection`).removeClass('hidden');
   $(`#${user.uid}${playlistID}SearchResults`).removeClass('hidden');
   $(`#${user.uid}${playlistID}SearchResults`).addClass('fadeIn');
   editorModeTimeouts[`${playlistID}2`] = window.setTimeout(() => {
@@ -1984,5 +2300,25 @@ export function exitEditorModePlaylist(playlistID) {
   $(`#editorModeInjection`).html(``);
   updatePlaylistIndexes(playlistID);
   $('.selectedTrack').removeClass('selectedTrack');
+}
 
+export function refreshReviews(playlistUID, playlistID) {
+  $(`#${playlistUID}${playlistID}reviewSectionContentContent`).empty();
+  loadReviews(playlistUID, playlistID);
+}
+
+async function removeReview(playlistUID, playlistID, userID) {
+  // Set height to its height
+  disableButton($(`#${playlistUID}${playlistID}${userID}ReviewDelete`));
+  $(`#${playlistUID}${playlistID}Review${userID}Container`).css('height', $(`#${playlistUID}${playlistID}Review${userID}Container`).height());
+  window.setTimeout(() => {
+    $(`#${playlistUID}${playlistID}Review${userID}Container`).addClass("reviewGone")
+    window.setTimeout(() => {
+      $(`#${playlistUID}${playlistID}Review${userID}Container`).remove();
+    }, 999);
+  }, 99);
+
+  await updateDoc(doc(db, `users/${userID}/playlists/${playlistID}/views/reviews`), {
+    [userID]: deleteField()
+  });
 }

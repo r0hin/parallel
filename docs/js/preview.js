@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js'
 
 const fbApp = initializeApp({
   apiKey: "AIzaSyDusrpo9Bxk7uvnFUCLBJjxrPT8hCb81Z8",
@@ -10,9 +10,8 @@ const fbApp = initializeApp({
   appId: "1:77839003871:web:6ea87ec99c5aa7c5b2396a",
 });
 
-import { getPerformance } from "firebase/performance";
-import { getFirestore, getDoc, doc } from 'firebase/firestore'
-import * as timeago from 'timeago.js';
+import { getPerformance } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-performance.js'
+import { getFirestore, getDoc, doc} from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore.js'
 
 window.snacks = {};
 window.timeoutNotifyTiny = null;
@@ -143,6 +142,7 @@ async function getPlaylist(playlistUID, playlistID) {
           <div class="notice hidden animated fadeIn" id="noTrackNotice">No tracks added to this playlist.</div>
           <div class="tracksContainer" id="playlistViewTracksContainer"></div>
         </div>
+        <p style="color: grey; font-size: 14px; text-align: center; width: 100%;">View reviews for this playlist on Parallel.</p>
       <div>
     `);
 

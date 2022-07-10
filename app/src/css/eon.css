@@ -207,7 +207,6 @@ a:active, a:active i, a:active * {
   color: grey !important
 }
 
-
 /* width */
 ::-webkit-scrollbar {
   width: 0.4em;
@@ -357,4 +356,13 @@ a:active, a:active i, a:active * {
 
 .notyf {
   padding: 48px 24px 0px 0px;
+}
+
+.iconButton {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.inline {
+  display: inline-block !important;
 }

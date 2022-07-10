@@ -1,4 +1,4 @@
-const { ipcMain, Notification, BrowserWindow, dialog, app } = require('electron');
+const { ipcMain, Notification, BrowserWindow, dialog, app, desktopCapturer, systemPreferences } = require('electron');
 const { autoUpdater } = require("electron-updater");
 const music = require('./music');
 const discord = require('./discord');
@@ -100,6 +100,23 @@ exports.listenFunctions = (win) => {
         break;
     }
   });
+}
+
+exports.listenMedia = (win) => {
+  ipcMain.handle(
+    'DESKTOP_CAPTURER_GET_SOURCES',
+    (event, opts) => {
+      // check permissions for sources 
+      return new Promise(async (resolve, reject) => {
+        if (["denied", "restricted"].includes(systemPreferences.getMediaAccessStatus('screen'))) {
+          resolve(false)
+        }
+        const sources = await desktopCapturer.getSources(opts);
+        resolve(sources);
+      })
+
+    }
+  )
 }
 
 exports.listenMusic = (win) => {

@@ -200,6 +200,14 @@ export function startElectronProcesses() {
   });
 }
 
+export function getSources(opts) {
+  return new Promise(async (resolve, reject) => {
+    electron.ipcRenderer.invoke('DESKTOP_CAPTURER_GET_SOURCES', opts).then((sources) => {
+      resolve(sources);
+    });
+  });
+}
+
 export function updateApp() {
   $(`#updateServer`).addClass('serverGone');
   jsConfetti.addConfetti({
@@ -211,7 +219,6 @@ export function updateApp() {
     electron.ipcRenderer.send('functions', 'update');
   }, 1500);
 }
-
 
 export function manageDeepLink() {
   const url = new URL(window.location.href);

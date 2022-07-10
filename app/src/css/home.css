@@ -101,14 +101,19 @@ div.form div {
   background-color: var(--bg1);
   position: fixed;
   top: 0px; left: 0px;
-  width: 80px; height: 100%;
-  padding: 64px 12px 0px 12px;
+  width: 64px; height: calc(100% - 48px);
+  padding: 48px 12px 0px 12px;
   z-index: 3;
   text-align: center; 
 }
 
 #serverList {
-  height: calc(100% - 412px);
+  height: calc(100% - 334px);
+  margin-bottom: 12px;
+  overflow-y: auto; 
+}
+
+#bottomServerList {
   overflow-y: auto; 
 }
 
@@ -121,8 +126,8 @@ div.form div {
   position: fixed; 
   padding: 24px 24px 24px 24px;
   border-radius: 12px 0px 0px 0px;
-  top: 24px; left: 104px;
-  width: calc(100% - 152px);
+  top: 24px; left: 84px;
+  width: calc(100% - 132px);
   height: calc(100% - 48px - 24px);
   overflow-y: auto;
   overflow-x: hidden;
@@ -219,26 +224,6 @@ div.form div {
   background-size: cover;
 }
 
-#pfpseudoelement {
-  position: absolute;
-  background-color: var(--primary);
-  bottom: 9px; left: -12px;
-  width: 7px; height: 35px;
-  border-radius: 24px;
-}
-
-#accountDetails {
-  position: absolute;
-  bottom: 92px; left: 50%;
-  height: 55px; 
-  transform: translate(-50%, 0);
-}
-
-#accountDetails .server {
-  margin-bottom: 42px;
-  background-color: transparent;
-}
-
 .accountCard {
   margin: 12px 18px 12px 18px;
   display: inline-block;
@@ -254,8 +239,7 @@ div.form div {
 }
 
 #profilephoto1 {
-  width: 80px; height: 80px;
-  border-radius: 18px;
+  width: 48px; height: 48px;
   position: relative;
   display: inline-block;
   vertical-align: middle;
@@ -302,7 +286,7 @@ svg.defs {
   text-transform: uppercase;
   letter-spacing: 0.05rem;
   font-size: 0.8rem;
-  margin: 12px 16px 12px 16px;
+  margin: 12px 16px 12px 8px;
   color: var(--fg3)
 }
 
@@ -366,7 +350,7 @@ svg.defs {
 
 .guildChannelViewTitle {
   margin: 0px; text-align: center;
-  color: var(--primary);
+  color: var(--fg1);
 }
 
 .tabButton {
@@ -410,11 +394,10 @@ svg.defs {
   border-radius: 12px;
   position: absolute;
   top: 24px;
-  height: calc(100% - 116px);
-  width: calc(76px);
+  height: calc(100% - 108px);
+  width: calc(84px);
   background-color: var(--bg2);
   display: inline-block;
-  border: 4px solid transparent;
   padding-top: 60px;
   vertical-align: top;
   transition: all 1.5s;
@@ -422,8 +405,7 @@ svg.defs {
 }
 
 .channelSecondaryGrid.vcActive {
-  border: 4px solid var(--afg1);
-  top: 20px; 
+  top: 24px; 
   height: calc(100% - 110px);
 }
 
@@ -435,8 +417,8 @@ svg.defs {
 
 .voiceSectionHeader {
   position: absolute;
-  top: -4px; left: -4px;
-  width: calc(100% + 8px);
+  top: 0px; left: 0px;
+  width: calc(100%);
   background-color: var(--bg1);
   border-radius: 12px 12px 0px 0px;
   height: 60px; display: flex;
@@ -858,10 +840,6 @@ svg.defs {
   font-size: 16px;
 }
 
-.settingsChannelView h1 {
-  padding-left: 12px;
-}
-
 .homeChannelView {
   position: relative
 }
@@ -888,13 +866,13 @@ svg.defs {
 .settingsSectionOne {
   padding: 4px 0px 24px;
   text-align: center;
-  right: 0px; width: calc(100% - 290px - 48px);
+  right: 0px; width: calc(100% - 290px - 24px);
   position: absolute;
 }
 
 .cardSection {
   position: absolute;
-  left: 12px;
+  left: 0px;
   width: 290px;
   padding: 28px 0px 24px;
   text-align: center;
@@ -970,7 +948,6 @@ svg.defs {
 }
 
 .guildInviteCard, .guildRequests {
-  width: calc(100% - 48px);
   background-color: var(--bg2);
   box-shadow: 0px 1px 14px -3px rgb(0 0 0 / 5%);
   padding: 18px; border-radius: 12px;
@@ -1047,7 +1024,7 @@ svg.defs {
   pointer-events: none;
 }
 
-#aboutMeBio, #lyricsField, #lyricsAuthorField {
+#aboutMeBio, #lyricsField, #lyricsAuthorField, #reviewDraftTextarea, #reviewEditTextarea {
   resize: none;
   background-color: var(--bg3);
   color: var(--fg1);
@@ -1282,7 +1259,7 @@ span.yourProfile {
   bottom: 25px;
   height: calc(138px - 32px) !important;
   padding: 16px;
-  left: 128px;
+  left: 108px;
   width: calc(350px - 32px);
   transition: all 1.5s;
 }
@@ -1889,7 +1866,7 @@ img.bonusContentAttachmentImage:hover {
   display: flex;
   flex-direction: column;
   align-items: center; justify-content: center;
-  height: calc(100% - 26px);
+  height: calc(100% - 32px);
   overflow-y: auto;
 }
 
@@ -1920,7 +1897,7 @@ img.bonusContentAttachmentImage:hover {
 
 .voiceChatSidebarLeft {
   position: fixed;
-  bottom: 26px; left: 104px;
+  bottom: 26px; left: 84px;
   height: calc(138px - 20px) !important;
   width: calc(270px - 14px); padding: 12px 0px 12px 12px;
   transition: all 1s; z-index: 2;
@@ -2099,12 +2076,10 @@ img.bonusContentAttachmentImage:hover {
 }
 
 .listButton {
-  min-width: 260px;
   padding-left: 36px;
   text-align: left;
   display: block;
   position: relative;
-  margin-bottom: 12px;
 }
 
 .listButton i {
@@ -2112,6 +2087,10 @@ img.bonusContentAttachmentImage:hover {
   top: 54%; left: 12px;
   transform: translate(0, -50%);
   color: var(--secondary);
+}
+
+.listButtonRed i {
+  color: red;
 }
 
 #acknowledgmenets {
@@ -2132,7 +2111,7 @@ img.bonusContentAttachmentImage:hover {
 }
 
 #musicSidebar, #accountSidebar {
-  left: calc(104px + 24px); top: 48px;
+  left: calc(104px + 4px); top: 48px;
   height: calc(100% - 48px - 24px);
   width: calc(270px - 8px);
   padding: 0px 4px 0px 4px;
@@ -2146,13 +2125,20 @@ img.bonusContentAttachmentImage:hover {
 }
 
 #accountSidebar .bottomButtonsAccount {
-  padding-bottom: 12px;
+  padding-bottom: 0px;
 }
 
-#musicSidebarContent, #accountSidebarContent {
+#musicSidebarContent {
   margin-top: 17px;
   margin-bottom: 17px;
   height: calc(100% - 34px);
+  overflow-y: auto;
+}
+
+#accountSidebarContent {
+  margin-top: 17px;
+  margin-bottom: 5px;
+  height: calc(100% - 22px);
   overflow-y: auto;
 }
 
@@ -2199,9 +2185,9 @@ img.bonusContentAttachmentImage:hover {
 
 .musicContent, #accountContent {
   position: fixed;
-  left: calc(104px + 24px + 270px + 24px);
+  left: calc(104px + 4px + 270px + 24px);
   top: 48px; padding: 18px; 
-  width: calc(100% - 482px);
+  width: calc(100% - 462px);
   height: calc(100% - 36px - 60px - 12px);
   background-color: var(--bg2);
   border-radius: 12px;
@@ -2226,6 +2212,7 @@ img.bonusContentAttachmentImage:hover {
   flex-direction: row;
   align-items: center;
   border-radius: 0px;
+  transition: all 0.8s;
   width: 100%;
   background-color: var(--bg2);
 }
@@ -2239,6 +2226,7 @@ img.bonusContentAttachmentImage:hover {
   background-color: var(--bg1);
   padding: 4px 16px 4px 16px;
   border-radius: 12px 12px 0px 0px;
+  transition: all 0.8s;
 }
 
 .musicSearchBox .musicSearchBoxContainer .form div input {
@@ -2458,17 +2446,6 @@ h1 * {
   opacity: 0.75;
 }
 
-.guildMemberIncomingContainer .btnAccept {
-  position: absolute;
-  right: 12px; padding: 0px;
-  height: 32px; width: 32px;
-  top: 4px;
-  margin: 2px 0px 0px 0px;
-  font-size: 16px;
-  background-color: var(--bg1);
-  color: lime;
-}
-
 .guildRequestsContainer {
   margin-top: 12px;
   position: relative;
@@ -2490,7 +2467,7 @@ h1 * {
   top: 50%; left: 62px;
   text-align: left;
   transform: translate(0, -50%);
-  width: calc(100% - 168px);
+  width: calc(100% - 142px);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2505,12 +2482,23 @@ h1 * {
 .guildMemberIncomingContainer .btnReject {
   position: absolute;
   margin: 2px 0px 0px 0px;
-  right: 58px; padding: 0px;
-  height: 32px; width: 32px;
+  right: 42px; padding: 0px;
+  height: 28px; width: 28px;
   top: 4px;
   font-size: 16px;
   background-color: var(--bg1);
   color: red;
+}
+
+.guildMemberIncomingContainer .btnAccept {
+  position: absolute;
+  right: 7px; padding: 0px;
+  height: 28px; width: 28px;
+  top: 4px;
+  margin: 2px 0px 0px 0px;
+  font-size: 16px;
+  background-color: var(--bg1);
+  color: lime;
 }
 
 @keyframes leaveServerSpin {
@@ -2668,7 +2656,6 @@ a.grey:hover {
   color: var(--fg1) !important;
 }
 
-
 .btnDanger:hover {
   color: red;
 }
@@ -2811,6 +2798,16 @@ div.pill.danger {
   position: relative;
 }
 
+.gradientTitle {
+  text-align: center;
+  background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  font-weight: 700; 
+  position: relative;
+}
+
 .staffContent:hover {
   background: -webkit-linear-gradient(90deg, var(--fg1), var(--primary));
   -webkit-background-clip: text;
@@ -2853,31 +2850,22 @@ div.pill.danger {
 
 .server {
   margin: 0 auto;
-  border-radius: 18px;
+  border-radius: 10px;
   padding: 0px;
-  width: 55px; height: 55px;
+  width: 50px; height: 50px;
   background-color: var(--bg2);
   display: flex; justify-content: center;
   align-items: center; font-size: 22px; 
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   cursor: var(--defaultByPointer);
   box-shadow: none;
   transition: all 0.2s;
   position: relative;
+  transform:  translateX(0px);
 }
 
 .guildFolderContent .server {
-  margin-top: 18px;
-  margin-bottom: 18px;
-}
-
-.server::after {
-  content: "";
-  position: absolute;
-  top: -5px; left: -5px;
-  width: calc(100% + 10px); 
-  height: calc(100% + 10px);
-  opacity: 0.5;
+  margin-bottom: 12px;
 }
 
 .server:active {
@@ -2904,28 +2892,52 @@ div.pill.danger {
 }
 
 .serverActive {
-  background-color: var(--primary);
+  background-color: var(--bg4);
   border-radius: 12px;
   color: white;
   position: relative;
   clip-path: none;
+  transform: translateX(4px);
+}
+
+.serverActive:hover {
+  background-color: var(--bg4) !important;
 }
 
 .serverActive::before {
   position: absolute;
   content: '';
-  background-color: var(--secondary);
-  top: 50%; left: -14px;
+  background-color: var(--primary);
+  top: 50%; left: -15px;
   transform: translate(0, -50%);
-  width: 7px; height: 35px;
+  width: 7px; height: 18px;
   border-radius: 24px;
   transition: all 1.5s;
+}
+
+.server::after {
+  position: absolute;
+  content: '';
+  background-color: var(--bg1);
+  top: 50%; left: -16px;
+  transform: translate(0, -50%);
+  width: 16px; height: 18px;
+}
+
+.serverActive::after {
+  position: absolute;
+  content: '';
+  background-color: var(--bg1);
+  top: 50%; left: -27px;
+  transform: translate(0, -50%);
+  width: 16px; height: 18px;
+  transition: all 0.5s;
 }
 
 .sidebarLeft {
   background-color: var(--bg2);
   position: fixed;
-  top: 24px; left: 104px;
+  top: 24px; left: 84px;
   border-radius: 12px 0px 0px 0px;
   width: 270px; height: calc(100% - 36px); 
   transition: all 1s;
@@ -2947,7 +2959,7 @@ div.pill.danger {
 }
 
 .channelLeftGridBackground {
-  left: 104px; top: 24px; 
+  left: 84px; top: 24px; 
   border-radius: 12px 0px 0px 0px;
   background-color: var(--bg3);
   width: 100%; height: 200px;
@@ -2976,7 +2988,7 @@ div.pill.danger {
   padding: 24px;
   position: fixed; 
   top: 24px; right: 0px;
-  width: calc(100% - 424px); height: calc(100% - 74px);
+  width: calc(100% - 404px); height: calc(100% - 74px);
 }
 
 .guildTop {
@@ -3805,13 +3817,9 @@ div.pill.danger {
   color: var(--secondary);
 }
 
-#infiniteServer {
-  cursor: var(--defaultByPointer);
-  position: absolute;
+#infiniteServerGraphic {
   background-color: transparent;
-  bottom: 132px; left: 50%;
-  transform: translate(-50%, 0);
-  width: 48px; height: 42px;
+  height: 32px;
   background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
@@ -4523,12 +4531,13 @@ h3 {
 
 .guildFolderContent {
   transition: all 0.4s;
+  overflow-x: hidden;
   margin-bottom: 0px;
 }
 
 .guildFolderContentActive {
-  padding-bottom: 6px;
-  margin-bottom: 12px;
+  padding-bottom: 0px;
+  margin-bottom: 5px;
 }
 
 .folderFolderIconActive {
@@ -4910,6 +4919,10 @@ img.emoji {
   position: relative;
   margin-right: 16px;
   transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .gettingStartedCard:hover {
@@ -5086,7 +5099,12 @@ img.emoji {
   transition: all 0.3s;
   bottom: -12px; left: -8px;
   border-radius: 12px;
-  transition: all 2.5s;
+}
+
+.videoIcon:hover, .screenIcon:hover {
+  cursor: var(--defaultByPointer);
+  opacity: 0.7 !important;
+  transition: all 0.3s;
 }
 
 .channelSecondaryJoinedMedia .videoIcon, .channelSecondaryJoinedMedia .screenIcon {
@@ -5118,7 +5136,7 @@ img.emoji {
 .channelSecondaryGrid.channelSecondaryJoinedMedia {
   right: calc(100% + 4px);
   width: 238px;
-  height: calc(100% - 276px)
+  height: calc(100% - 272px)
 }
 
 .channelMediaContainer {
@@ -5537,6 +5555,12 @@ img.emoji {
   width: 100%;
 }
 
+.viewOnlyGuildChannel .dropdown-content {
+  /* Settings button in read only channels  */
+  right: 0px;
+}
+
+
 .viewOnlyGuildChannel .channelSecondaryGrid {
   right: -108px;
 }
@@ -5636,7 +5660,7 @@ img.emoji {
 #email1 {
   filter: blur(3px);
   text-decoration: line-through;
-  color: var(afg1);
+  color: var(--afg2);
   transition: all 0.1s;
 }
 
@@ -5931,13 +5955,13 @@ img.emoji {
 
 .guildFolder {
   margin: 0 auto;
-  border-radius: 18px;
+  border-radius: 10px;
   padding: 0px;
-  width: 55px; height: 55px;
+  width: 50px; height: 50px;
   background-color: var(--bg2);
   display: flex; justify-content: center;
   align-items: center; font-size: 22px; 
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   cursor: var(--defaultByPointer);
   box-shadow: none;
   position: relative;
@@ -5958,7 +5982,7 @@ img.emoji {
 }
 
 .guildFolderActive {
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 }
 
 .guildFolder:hover, #addServer:hover, #friendsServer:hover, #musicServer:hover {
@@ -5977,8 +6001,8 @@ img.emoji {
 
 #serverListFolders {
   position: relative;
-  padding: 20px 0px 2px 0px;
-  margin-bottom: 16px;
+  padding: 16px 0px 4px 0px;
+  margin-bottom: 12px;
 }
 
 #serverListFolders::after {
@@ -6026,7 +6050,7 @@ img.emoji {
 }
 
 .guildFolderActive .folderCount {
-  bottom: 8px;
+  bottom: 6px;
   opacity: 1;
 }
 
@@ -6219,6 +6243,14 @@ img.emoji {
   justify-content: center;
 }
 
+
+.channelSecondaryJoinedMedia .voiceChatButtonsContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .listenConnectedUser {
   display: inline-flex;
   flex-direction: column;
@@ -6344,5 +6376,54 @@ img.emoji {
   list-style-type: none;
   max-height: calc(100vh - 560px);
   overflow-y: auto;
+}
 
+#noPlaylistsText {
+  top: 280px;
+  width: 100%;
+  transform: translate(-50%, 0);
+}
+
+.accountSettingsPill {
+  padding: 4px 16px 4px 16px;
+  border-radius: 12px;
+  background-color: var(--bg1);
+  position: relative;
+}
+
+.accountSettingsPillActions {
+  position: absolute;
+  top: 50%; right: 24px;
+  transform: translate(0, -50%)
+}
+
+#signOutButton {
+  font-size: 16px;
+  margin: 0px;
+}
+.accountSettingsPill .dropdownButton {
+  font-size: 16px !important;
+  margin: 0px;
+  padding: 8px 10px !important;
+  margin-right: 16px;
+}
+
+#accountManagementDropdown {
+  left: -42px;
+}
+
+.settingsBottom {
+  text-align: center;
+  position: absolute;
+  bottom: 12px; left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.settingsNoOneItemWithSubtext p {
+  padding-bottom: 0px;
+  margin-bottom: 4px;
+}
+
+.settingsNoOneItemWithSubtext .small {
+  padding-bottom: 12px;
 }

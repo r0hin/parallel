@@ -517,9 +517,9 @@
 /* MUSIC VIEWS */
 .musicView {
   position: fixed;
-  left: calc(104px + 24px + 270px + 24px);
+  left: calc(104px + 4px + 270px + 24px);
   top: 48px;
-  width: calc(100% - 446px);
+  width: calc(100% - 426px);
   overflow-y: auto;
   height: calc(100% - var(--musicContentSpaceNeeded) - 72px );
   background-color: var(--bg2);
@@ -901,7 +901,7 @@
   padding-bottom: 18px;
   border-bottom: 2px solid var(--afg1);
   overflow-y: auto;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .albumView .musicViewContent .hr {
@@ -1284,7 +1284,7 @@
 }
 
 .artistSectionTitle {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .albumSectionTitle {
@@ -1431,4 +1431,107 @@
   padding: 4px 12px 4px 12px;
   border-radius: 12px;
   display: flex;
+}
+
+.reviewSection {
+  border-top: 2px solid var(--afg1);
+  padding-top: 12px;
+  margin-top: 18px;
+}
+
+.reviewSectionHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reviewSectionOther {
+  border: none;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+.reviewSectionHeader button {
+  padding: 10px 12px;
+  margin-right: 0px;
+}
+
+.noReviews {
+  margin-top: 24px;
+  text-align: center; 
+}
+
+.noReviews i {
+  font-size: 24px;
+}
+
+.reviewSectionContent {
+  padding-top: 0px;
+}
+
+.review {
+  background-color: var(--bg3);
+  margin: 8px 0px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.review .review-content {
+  padding: 0px 18px 4px 18px;
+  color: var(--fg2);
+}
+
+.review .review-header {
+  background-color: var(--bg1);
+  padding: 8px;
+  border-radius: 12px 12px 0px 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-header-left, .review-header-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.review-header-left .review-header-left-text {
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+.review-header-right-text {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--fg3);
+  margin-right: 8px;
+}
+
+.review-header .btn {
+  background-color: var(--bg2);
+  color: red;
+  padding: 10px 12px;
+}
+
+.review .review-header .review-header-left img {
+  width: 36px; height: 36px;
+  margin-left: 6px;
+  clip-path: url(#squircle);
+}
+
+.reviewGone {
+  height: 0px !important;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  background-color: red;
+  transition: all 1s;
+}
+
+.reviewSection .reviewSectionHeader b {
+  font-size: 22px;
 }

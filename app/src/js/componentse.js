@@ -66,12 +66,9 @@ export async function createArtist(artist, targetElementID, customID) {
   const a = document.createElement('div');
   a.setAttribute('class', 'music-artist invisible animated fadeIn faster');
   a.id = temporaryArtistID;
-  a.onclick = () => {
-    openArtist(artist.id);
-  }
   a.innerHTML = `
-    <img draggable="false" id="${temporaryArtistID}Photo" class="${temporaryArtistID}Photo invisible animated"/>
-    <p class="music-artist-name" title="${artist.attributes.name}">${artist.attributes.name}</p>
+    <img onclick="openArtist('${artist.id}')" draggable="false" id="${temporaryArtistID}Photo" class="${temporaryArtistID}Photo invisible animated"/>
+    <p onclick="openArtist('${artist.id}')" class="music-artist-name" title="${artist.attributes.name}">${artist.attributes.name}</p>
     ${likeSnippet}
   `
   $(`#${targetElementID}`).append(a);

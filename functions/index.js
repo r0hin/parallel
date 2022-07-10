@@ -20,6 +20,9 @@ exports.payments = misc.payments;
 exports.startPayment = misc.startPayment;
 exports.customerPortal = misc.customerPortal;
 exports.getArtistProfilePhoto = misc.getArtistProfilePhoto;
+exports.addReviewToPlaylist = misc.addReviewToPlaylist
+exports.editReview = misc.editReview
+exports.deleteReview = misc.deleteReview
 
 exports.createAccount = misc.createAccount;
 exports.updateTrackURL = misc.updateTrackURL;

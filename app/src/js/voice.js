@@ -6,6 +6,7 @@ import { retrieveSetting, returnActiveDeviceID, returnActiveDeviceIDOutput } fro
 import { endCallDM } from './friends';
 import { playDeafen, playMute, playRingtone } from './sounds';
 import { checkAppInitialized } from './firebaseChecks';
+import { getSources } from './electronApp';
 
 checkAppInitialized();
 const db = getFirestore();
@@ -809,8 +810,24 @@ export async function manageVoiceChatDisplay(guildUID, guildID, channelIDInput, 
     `;
 
     $(`#${guildUID}${guildID}${channelID}VoiceList`).get(0).appendChild(a);
+
     window.setTimeout(() => {
       $(`#${userStatus.uid}${guildUID}${guildID}${channelID}CallItemContainer`).removeClass('callItemContainerGone');
+
+      tippy($(`#${userStatus.uid}${guildUID}${guildID}${channelID}CallItemVideo`).get(0), {
+        content: 'Watch Stream',
+        placement: 'top',
+      });
+  
+      tippy($(`#${userStatus.uid}${guildUID}${guildID}${channelID}CallItemScreen`).get(0), {
+        content: 'Watch Stream',
+        placement: 'top',
+      });
+  
+      tippy($(`#${userStatus.uid}${guildUID}${guildID}${channelID}CallItem`).get(0), {
+        content: userStatus.username,
+        placement: 'top',
+      });
     }, 99);
     $(`#${userStatus.uid}${guildUID}${guildID}${channelID}CallItem`).get(0).src = await returnProperURL(userStatus.uid);
     displayImageAnimation(`${userStatus.uid}${guildUID}${guildID}${channelID}CallItem`);
@@ -1465,8 +1482,17 @@ async function unShareVideoDM(uID) {
 }
 
 window.joinScreen = async (serverUID, serverID, channelID, userID, username) => {
-  if (userID == user.uid || currentCall !== `${serverUID}${serverID}/${channelID}` || connectedToVideo == userID) {
+  if (currentCall !== `${serverUID}${serverID}/${channelID}`) {
+    snac('Stream Viewing Error', "Unable to join this stream.", 'danger');
     return;
+  }
+
+  if (user.uid == userID) {
+    snac('Stream Viewing Error', "You cannot view your own stream", 'danger');
+  }
+
+  if (connectedToVideo == userID) {
+    snac('Stream Viewing Error', "You are already watching this stream.", 'danger');
   }
 
   if (connectedToVideo) {
@@ -1543,8 +1569,17 @@ window.joinScreen = async (serverUID, serverID, channelID, userID, username) => 
 }
 
 window.joinVideo = async (serverUID, serverID, channelID, userID, username) => {
-  if (userID == user.uid || currentCall !== `${serverUID}${serverID}/${channelID}` || connectedToVideo == userID) {
+  if (currentCall !== `${serverUID}${serverID}/${channelID}`) {
+    snac('Stream Viewing Error', "Unable to join this stream.", 'danger');
     return;
+  }
+
+  if (user.uid == userID) {
+    snac('Stream Viewing Error', "You cannot view your own stream", 'danger');
+  }
+
+  if (connectedToVideo == userID) {
+    snac('Stream Viewing Error', "You are already watching this stream.", 'danger');
   }
 
   if (connectedToVideo) {
@@ -1621,8 +1656,17 @@ window.joinVideo = async (serverUID, serverID, channelID, userID, username) => {
 }
 
 export async function joinVideoDM(userID, username) {
-  if (userID == user.uid || currentCall !== dmKEYify(user.uid, userID) || connectedToVideo == userID) {
+  if (currentCall !== dmKEYify(user.uid, userID)) {
+    snac('Stream Viewing Error', "Unable to join this stream.", 'danger');
     return;
+  }
+
+  if (user.uid == userID) {
+    snac('Stream Viewing Error', "You cannot view your own stream", 'danger');
+  }
+
+  if (connectedToVideo == userID) {
+    snac('Stream Viewing Error', "You are already watching this stream.", 'danger');
   }
 
   if (connectedToVideo) {
@@ -1676,8 +1720,17 @@ export async function joinVideoDM(userID, username) {
 }
 
 export async function joinScreenDM(userID, username) {
-  if (userID == user.uid || currentCall !== dmKEYify(user.uid, userID) || connectedToVideo == userID) {
+  if (currentCall !== dmKEYify(user.uid, userID)) {
+    snac('Stream Viewing Error', "Unable to join this stream.", 'danger');
     return;
+  }
+
+  if (user.uid == userID) {
+    snac('Stream Viewing Error', "You cannot view your own stream", 'danger');
+  }
+
+  if (connectedToVideo == userID) {
+    snac('Stream Viewing Error', "You are already watching this stream.", 'danger');
   }
 
   if (connectedToVideo) {
@@ -1848,22 +1901,24 @@ function hideMediaViewVoiceChannel(serverUID, serverID, channelID) {
   }
 }
 
-window.testHandleScreenShare = () => {
-  handleScreenShare();
+window.testHandleScreenShare = async () => {
+  console.log(await handleScreenShare());
 }
 
 function handleScreenShare() {
   return new Promise(async (resolve, reject) => {
-    const { desktopCapturer, systemPreferences } = require('electron'); // Electron is defined because returnIsElection() is true.
+    const sources = await getSources({ types: ['window', 'screen'] });
+    if (!sources) {
+      resolve(false);
+      return;
+    }
 
-    if (systemPreferences && systemPreferences.getMediaAccessStatus() && ["denied", "restricted"].includes(systemPreferences.getMediaAccessStatus()));
+    console.log(sources)
 
     showScreenShareWindow();
-    const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
 
     $(`#screenScreens`).empty();
     $(`#screenWindows`).empty();
-
 
     $(`#screenSharingWallpaper`).get(0).onclick = () => {
       resolve(false);
@@ -1884,29 +1939,72 @@ function handleScreenShare() {
         <img src="${source.thumbnail.toDataURL()}"></img>
         <div class="screenSourceTitle">${source.name}</div>
       `;
-      a.onclick = async () => {
-        hideScreenShareWindow();
-        try {
-          videoMediaStream = await navigator.mediaDevices.getUserMedia({
-            audio: retrieveSetting('streamAudio', true),
-            video: {
-              mandatory: {
-                chromeMediaSource: 'desktop',
-                chromeMediaSourceId: source.id,
+      // If its a screen
+      if (source.id.includes('screen:')) {
+        a.onclick = async () => {
+          hideScreenShareWindow();
+          try {
+            videoMediaStream = await navigator.mediaDevices.getUserMedia({
+              audio: retrieveSetting('streamAudio', true) ? {
+                mandatory: {
+                  chromeMediaSource: 'desktop'
+                }
+              } : false,
+              video: {
+                mandatory: {
+                  chromeMediaSource: 'desktop',
+                }
+              }
+            }); 
+          } catch (error) {
+            if (`${error}`.includes("Could not start audio")) {
+              snac('Stream Error', "System audio is unavailable. Proceeding without audio...", "danger");
+              try {
+                videoMediaStream = await navigator.mediaDevices.getUserMedia({
+                  audio: false,
+                  video: {
+                    mandatory: {
+                      chromeMediaSource: 'desktop',
+                    }
+                  }
+                });
+
+                resolve(true);
+              }
+              catch (error) {
+                console.log(error);
+                resolve(false);
+                return;
               }
             }
-          }); 
-        } catch (error) {
-          console.log(error);
-          resolve(false);
-          return;
+            console.log(error);
+            resolve(false);
+            return;
+          }
+          resolve(true);
         }
-        resolve(true);
-      }
-      if (source.name.includes('Screen')) {
         $(`#screenScreens`).append(a);
       }
       else {
+        a.onclick = async () => {
+          hideScreenShareWindow();
+          try {
+            videoMediaStream = await navigator.mediaDevices.getUserMedia({
+              audio: false,
+              video: {
+                mandatory: {
+                  chromeMediaSource: 'desktop',
+                  chromeMediaSourceId: source.id,
+                }
+              }
+            }); 
+          } catch (error) {
+            console.log(error);
+            resolve(false);
+            return;
+          }
+          resolve(true);
+        }
         $(`#screenWindows`).append(a);
       }
     }

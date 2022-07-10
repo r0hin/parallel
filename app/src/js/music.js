@@ -7,7 +7,7 @@ const db = getFirestore();
 const functions = getFunctions();
 
 import { closeModal, disableButton, displayImageAnimation, enableButton, hidePlaybackView, openModal, playlistArrayDifference, securityConfirmText, setNoTrackUI, setTrackUI, shuffleArray, timer } from './app';
-import { addPlaylistToLibrary, albumLibraryListener, artistLibraryListener, clonePlaylistToLibrary, createPlaylist, createPlaylistFolder, openPlaylist, removePlaylistFromLibrary, trackLibraryListener, prepareRemovePlaylistFromLibrary } from './library';
+import { addPlaylistToLibrary, albumLibraryListener, artistLibraryListener, clonePlaylistToLibrary, createPlaylist, createPlaylistFolder, openPlaylist, removePlaylistFromLibrary, trackLibraryListener, prepareRemovePlaylistFromLibrary, reviewViewCheck, refreshReviews } from './library';
 import { sendTrackToPlayerRevamp } from './playback';
 import { setMusicStatus, updatePresenceForUser } from './presence';
 import { openSpecialServer } from './servers';
@@ -627,8 +627,7 @@ export async function searchMusicButton() {
   
   const search = await makeMusicRequest(`search?term=${encodeURIComponent(searchQuery)}&types=albums,artists,songs,playlists&limit=12`);
 
-  console.log(search)
-  
+
   $(`#parallelSearchResultsTracks`).empty();
   $('#musicSearchResultsTracks').empty();
   $('#musicSearchResultsArtists').empty();
@@ -793,8 +792,10 @@ window.openArtist = async (artistID) => {
             <div class="artistAppears" id="Artist${artistID}Appearances"></div>
           </div>
 
-          <h3 class="artistSectionTitle">Similar Artists</h3>
-          <div class="artistArtists" id="Artist${artistID}Artists"></div>
+          <div class="hidden" id="Artist${artistID}ArtistsContainer">
+            <h3 class="artistSectionTitle">Similar Artists</h3>
+            <div class="artistArtists" id="Artist${artistID}Artists"></div>
+          </div>
         </div>
         <div id="Artist${artistID}Discography" class="musicViewContent hidden">
           <h3 class="artistSectionTitle">Discography</h3>
@@ -858,10 +859,15 @@ window.openArtist = async (artistID) => {
   }
 
   const fullAlbums = artistData.views['full-albums'].data;
-  for (let i = 0; i < fullAlbums.length; i++) {
-    if (latestReleaseID === fullAlbums[i].id) { continue } // No duplicates
-    const album = fullAlbums[i];
-    createAlbum(album, `Artist${artistID}Albums`);
+  if (fullAlbums.length) {
+    for (let i = 0; i < fullAlbums.length; i++) {
+      if (latestReleaseID === fullAlbums[i].id) { continue } // No duplicates
+      const album = fullAlbums[i];
+      createAlbum(album, `Artist${artistID}Albums`);
+    }
+  }
+  else {
+    $(`#Artist${artistID}Albums`).addClass('hidden');
   }
 
   artist = await makeMusicRequest(`artists/${artistID}?views=singles`);
@@ -890,11 +896,14 @@ window.openArtist = async (artistID) => {
   artistData = artist.data[0];
 
   const similar = artistData.views['similar-artists'].data;
-  for (let i = 0; i < similar.length; i++) {
-    const artist = similar[i];
-    createArtist(artist, `Artist${artistID}Artists`);
+  if (similar.length) {
+    $(`#Artist${artistID}ArtistsContainer`).removeClass('hidden');
+    for (let i = 0; i < similar.length; i++) {
+      const artist = similar[i];
+      createArtist(artist, `Artist${artistID}Artists`);
+    }
   }
-
+  
   const appears = artistData.views['appears-on-albums'].data;
   if (appears.length) {
     $(`#Artist${artistID}AppearancesContainer`).removeClass('hidden');
@@ -1084,8 +1093,29 @@ export async function openOtherPlaylist(playlistUID, playlistID, playlistNameInp
         <div class="tracksContainer" id="${playlistUID}${playlistID}playlistViewTracksContainer">
           <div class="notice fetchingTracksNotice animated fadeIn hidden" id="${playlistUID}${playlistID}waitingNotice">Fetching tracks...</div>
         </div>
+        <div id="${playlistUID}${playlistID}reviewSection" class="reviewSection reviewSectionOther animated fadeIn hidden">
+          <div class="reviewSectionHeader">
+            <b>Reviews</b>
+            <div>
+              <button id="${playlistUID}${playlistID}addReviewButton" class="btn b-0 hidden"><i class="bx bx-plus"></i></button>
+              <button id="${playlistUID}${playlistID}editReviewButton" class="btn b-0 hidden"><i class="bx bx-pencil"></i></button>
+              <button id="${playlistUID}${playlistID}removeReviewButton" class="btn b-0 hidden"><i class="bx bx-trash"></i></button>
+              <button id="${playlistUID}${playlistID}refreshReviewButton" class="btn b-0"><i class="bx bx-refresh"></i></button>
+              <button id="${playlistUID}${playlistID}sortReviewButton" mode="0" class="btn b-0">
+                <i class="bx bx-sort"></i>
+                <i class="bx bx-time"></i>
+              </button>
+            </div>
+          </div>
+          <div class="reviewSectionContent" id="${playlistUID}${playlistID}reviewSectionContent">
+            <div class="noReviews hidden animated fadeIn" id="${playlistUID}${playlistID}reviewSectionContentNone">
+              <i class="bx bx-file-blank"></i>
+              <p>No reviews yet. Be the first to add one.</p>
+            </div>
+            <div class="reviewSectionContentContent" id="${playlistUID}${playlistID}reviewSectionContentContent"></div>
+          </div>
+        </div>
       </div>
-      <div></div>
     </div>
   `
   
@@ -1137,6 +1167,102 @@ function addOtherPlaylistListeners(playlistUID, playlistID, inputPlaylistName, f
       }
   
       // Onclicks
+      $(`#${playlistUID}${playlistID}addReviewButton`).get(0).onclick = () => {
+        openModal('reviewDraft');
+    
+        $('#confirmReviewPost').get(0).onclick = async () => {
+          closeModal();
+
+          const reviewText = $('#reviewDraftTextarea').val();
+
+          if (reviewText.length < 10) {
+            snac('Review Error', 'Reviews must be at least 10 characters long.', 'danger');
+            return;
+          }
+
+          notifyTiny('Processing review...');
+          const addReviewToPlaylist = httpsCallable(functions, 'addReviewToPlaylist');
+          const result = await addReviewToPlaylist({
+            playlistUID: playlistUID,
+            playlistID: playlistID,
+            reviewText: $('#reviewDraftTextarea').val(),
+          });
+    
+          if (result.data.data == true) {
+            snac('Review Added', 'Your review was added to the playlist.', 'success');
+            refreshReviews(playlistUID, playlistID);
+          }
+          else {
+            copyToClipboard(reviewText, true);
+            console.log(reviewText);
+            snac('Review Error', `${result.data.data} Your review draft was copied to your clipboard.`, 'danger');
+          }
+        };
+      }
+    
+      $(`#${playlistUID}${playlistID}refreshReviewButton`).get(0).onclick = () => {
+        // Disable button
+        disableButton($(`#${playlistUID}${playlistID}refreshReviewButton`));
+        refreshReviews(playlistUID, playlistID);
+        window.setTimeout(() => {
+          enableButton($(`#${playlistUID}${playlistID}refreshReviewButton`), `<i class="bx bx-refresh"></i>`);
+        }, 1999);
+      }
+    
+      $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).onclick = () => {
+        const mode = $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).getAttribute('mode');
+
+        if (mode === '0') {
+          $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).setAttribute('mode', '1');
+          $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).innerHTML = `
+            <i class="bx bx-sort"></i>
+            <i class="bx bx-time-five"></i>
+          `;
+    
+          // Sort all elements in container
+          $(`#${playlistUID}${playlistID}reviewSectionContentContent`).find('.review').sort(function(a, b) {
+            return +b.getAttribute('ts') - +a.getAttribute('ts');
+          }).appendTo($(`#${playlistUID}${playlistID}reviewSectionContentContent`));
+        }
+        else {
+          $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).setAttribute('mode', '0');
+          $(`#${playlistUID}${playlistID}sortReviewButton`).get(0).innerHTML = `
+            <i class="bx bx-sort"></i>
+            <i class="bx bx-time"></i>
+          `;
+    
+          // Sort all elements in container
+          $(`#${playlistUID}${playlistID}reviewSectionContentContent`).find('.review').sort(function(a, b) {
+            return +a.getAttribute('ts') - +b.getAttribute('ts');
+          }).appendTo($(`#${playlistUID}${playlistID}reviewSectionContentContent`));
+        }
+      }
+    
+      tippy($(`#${playlistUID}${playlistID}addReviewButton`).get(0), {
+        content: 'Add Review',
+        placement: 'top',
+      });
+    
+      tippy($(`#${playlistUID}${playlistID}editReviewButton`).get(0), {
+        content: 'Edit Review',
+        placement: 'top',
+      });
+
+      tippy($(`#${playlistUID}${playlistID}removeReviewButton`).get(0), {
+        content: 'Delete Review',
+        placement: 'top',
+      });
+
+      tippy($(`#${playlistUID}${playlistID}refreshReviewButton`).get(0), {
+        content: 'Refresh',
+        placement: 'top',
+      });
+    
+      tippy($(`#${playlistUID}${playlistID}sortReviewButton`).get(0), {
+        content: 'Toggle Sort Direction',
+        placement: 'top',
+      });
+
       if ($(`#deletePlaylistButton${playlistUID}${playlistID}`).length) {
         $(`#deletePlaylistButton${playlistUID}${playlistID}`).get(0).onclick = () => { prepareRemovePlaylistFromLibrary(playlistUID, playlistID, inputPlaylistName, folderContext) };
       }
@@ -1270,6 +1396,8 @@ function addOtherPlaylistListeners(playlistUID, playlistID, inputPlaylistName, f
       playlistMetaData[playlistUID + playlistID] = doc.data();
       playlistMetaData[playlistUID + playlistID].tracks = []; // No need. Waste of space.
   
+      reviewViewCheck(playlistUID, playlistID);
+
       const tempPlaylistForward = [...arrayPlaylistForward]
   
       if (arrayPlaylistForward.length) {
@@ -1291,9 +1419,7 @@ function addOtherPlaylistListeners(playlistUID, playlistID, inputPlaylistName, f
         }
       }
   
-      console.log(arrayPlaylistForward)
       for (let i = 0; i < arrayPlaylistForward.length; i++) {
-        console.log(i)
         createTrack(musicCatalogue[arrayPlaylistForward[i].trackID], `${playlistUID}${playlistID}playlistViewTracksContainer`, i, `${playlistUID}${playlistID}${arrayPlaylistForward[i].randomID}${arrayPlaylistForward[i].trackID}`, ["playlistUID", playlistUID, "playlistID", playlistID, "playlistRandomID", arrayPlaylistForward[i].randomID], false, false, arrayPlaylistForward[i].trackID);
       }
   
@@ -1324,6 +1450,8 @@ function addOtherPlaylistListeners(playlistUID, playlistID, inputPlaylistName, f
         resolve(false);
       }
     });
+
+    refreshReviews(playlistUID, playlistID);
   });
 }
 
@@ -1366,7 +1494,6 @@ window.openGenre = async (genreID) => {
   $(`#${genreID}genreTitle`).attr('title', genreData.data[0].attributes.name);
 
   const charts = await makeMusicRequest(`charts?genre=${genreID}&types=albums,songs,playlists`);
-  console.log(charts)
   
   const albums = charts.results.albums[0].data;
   for (let i = 0; i < albums.length; i++) {
@@ -1683,7 +1810,6 @@ window.openAlbum = async (albumIDInput, trackID) => {
   $(`#Album${albumID}LikeContainer`).html(likeSnippet);
 
   const album = await makeMusicRequest(`albums/${albumID}?views=related-albums,other-versions`);
-  console.log(album)
   const albumData = album.data[0];
 
   if (albumData.attributes.editorialNotes && albumData.attributes.editorialNotes.short)
@@ -1811,7 +1937,6 @@ export async function initalizePlayback(trackID) {
 
   setNoTrackUI();
 
-  console.log(trackID)
   const trackDetails = await makeMusicRequest(`songs/${trackID}?include=artists`);  
 
   musicPlaying = trackDetails.data[0];
@@ -1945,7 +2070,6 @@ export function updateQueue(operationType, track, prependInstead, removeNthInsta
       }
       else {
         // Find the special ID with track ID and nth index.
-        console.log(track)
         $(`#queueItems`).children(`.music-track-${track}`).eq(removeNthInstance).remove();
         redoQueueIndexes();
       }
@@ -1968,7 +2092,6 @@ export function updateQueue(operationType, track, prependInstead, removeNthInsta
       $('#nowPlaying').empty();
       if (track) {
         $('#nowPlayingText').html('Now Playing');
-        console.log(track)
         createTrack(track, `nowPlaying`, true, true, false, false, false, false, false, false);
         $(`.trackTitle${track.id}`).addClass('nowPlayingTitle');
       }
@@ -2384,7 +2507,6 @@ export async function spotifyPlaylistLookup() {
 
 window.playTrack = async (trackID, containerID, index, shuffle) => {
   musicBack = [];
-  console.log(trackID, containerID, index);
   if (containerID && typeof(index) == 'number') {
     let childrenList = $(`#${containerID}`).children('.music-track');
     let stuffToBack = [...childrenList];

@@ -351,6 +351,11 @@ exports.getArtistProfilePhoto = functions.https.onCall(async (data, context) => 
 });
 
 exports.deleteUser = functions.https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
   const uid = context.auth.uid;
   const db = admin.firestore();
 
@@ -378,6 +383,162 @@ exports.deleteUser = functions.https.onCall(async (data, context) => {
   await db.collection('users').doc(uid).collection("sensitive").doc('bookmarks').delete();
   await db.collection('users').doc(uid).collection("sensitive").doc('storage').delete();
   await db.collection('users').doc(uid).delete();
+
+  return {data: true};
+});
+
+exports.addReviewToPlaylist = functions.https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
+  const db = admin.firestore();
+  const uid = context.auth.uid;
+  const playlistUID = data.playlistUID;
+  const playlistID = data.playlistID;
+  const reviewText = data.reviewText;
+
+  const doc = await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).get();
+
+  if (!doc.exists) {
+    return {data: "This playlist does not exist."};
+  }
+
+  if (doc.data().reviews && doc.data().reviews == "none") {
+    return {data: "This playlist does not allow reviews."};
+  }
+
+  if (doc.data().reviews && doc.data().reviews == "friends") {
+    // Check if friends
+    const userDoc = await db.collection('users').doc(playlistUID).get();
+    let friends = false;
+    for (let i = 0; i < userDoc.data().friends.length; i++) {
+      const friend = userDoc.data().friends[i];
+      if (friend["u"] == uid) {
+        friends = true;
+        break;
+      }
+    }
+    if (!friends) {
+      return {data: "You must be friends with the playlist owner to review it."};
+    }
+  }
+
+  // Should be good to go
+  // Sanitize review text
+  const sanitizedReviewText = reviewText.replace(/<[^>]*>/g, '');
+  const sanitizedReviewTextTrimmed = sanitizedReviewText.trim();
+  if (sanitizedReviewTextTrimmed.length < 10) {
+    return {data: "Review must be at least 10 characters."};
+  }
+
+  // Get user's username
+  const userDoc = await db.collection('users').doc(uid).get();
+  const username = userDoc.data().username;
+
+  // Add review
+  await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).collection('views').doc('reviews').set({
+    [uid]: {
+      username: username,
+      uid: uid,
+      text: sanitizedReviewTextTrimmed,
+      timestamp: new Date().getTime()
+    }
+  }, {merge: true});
+
+  return {data: true};
+});
+
+exports.editReview = functions.https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
+  const db = admin.firestore();
+  const uid = context.auth.uid;
+  const playlistUID = data.playlistUID;
+  const playlistID = data.playlistID;
+  const reviewText = data.reviewText;
+
+  const doc = await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).get();
+
+  if (!doc.exists) {
+    return {data: "This playlist does not exist."};
+  }
+
+  // Check if user review already exists
+  let exists = false;
+  const reviewDoc = await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).collection('views').doc('reviews').get();
+  if (reviewDoc.exists) {
+    if (Object.keys(reviewDoc.data()[uid]).length) {
+      exists = true;
+    }
+  }
+
+  if (!exists) {
+    return {data: "You do not have a review for this playlist."};
+  }
+
+  // Sanitize review text
+  const sanitizedReviewText = reviewText.replace(/<[^>]*>/g, '');
+  const sanitizedReviewTextTrimmed = sanitizedReviewText.trim();
+  if (sanitizedReviewTextTrimmed.length < 10) {
+    return {data: "Review must be at least 10 characters."};
+  }
+
+  // Get user's username
+  const userDoc = await db.collection('users').doc(uid).get();
+  const username = userDoc.data().username;
+
+  // Add review
+  await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).collection('views').doc('reviews').set({
+    [uid]: {
+      username: username,
+      uid: uid,
+      text: sanitizedReviewTextTrimmed,
+      timestamp: new Date().getTime()
+    }
+  }, {merge: true});
+
+  return {data: true};
+});
+
+exports.deleteReview = functions.https.onCall(async (data, context) => {
+  // App check
+  if (enforceAppCheck) {
+    if (context.app == undefined) { throw new functions.https.HttpsError('failed-precondition', 'The function must be called from an App Check verified app.')};
+  }
+
+  const db = admin.firestore();
+  const uid = context.auth.uid;
+  const playlistUID = data.playlistUID;
+  const playlistID = data.playlistID;
+
+  const doc = await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).get();
+
+  if (!doc.exists) {
+    return {data: "This playlist does not exist."};
+  }
+
+  // Check if user review exists
+  let exists = false;
+  const reviewDoc = await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).collection('views').doc('reviews').get();
+  if (reviewDoc.exists) {
+    if (Object.keys(reviewDoc.data()[uid]).length) {
+      exists = true;
+    }
+  }
+
+  if (!exists) {
+    return {data: "You do not have a review for this playlist."};
+  }
+
+  // Delete review
+  await db.collection('users').doc(playlistUID).collection('playlists').doc(playlistID).collection('views').doc('reviews').update({
+    [uid]: admin.firestore.FieldValue.delete()
+  });
 
   return {data: true};
 });

@@ -334,7 +334,7 @@ export function expandGuildFolder(folderID) {
     const naturalHeight = $(`#guildFolderContent${folderID}`).height();
     $(`#guildFolderContent${folderID}`).addClass('zeroHeight');
     $(`#guildFolderContent${folderID}`).addClass('guildFolderContentActive');
-    $(`#guildFolderContent${folderID}`).css(`height`, `${naturalHeight + 18}px`);
+    $(`#guildFolderContent${folderID}`).css(`height`, `${naturalHeight - 5}px`);
     $(`#chevron${folderID}`).removeClass('bx-chevron-down');
     $(`#chevron${folderID}`).addClass('bx-chevron-up');
     $(`#folder${folderID}`).addClass('folderFolderIconActive');
@@ -447,11 +447,6 @@ export function openSpecialServer(id) {
   $(`.serverActive`).removeClass('serverActive');
   $(`#${id}Server`).addClass('serverActive');
 
-  $('#pfpseudoelement').addClass('hidden');
-  if (id === 'account') {
-    $('#pfpseudoelement').removeClass('hidden'); // Fix display bug
-  }
-  
   if (id === 'music') {
     loadMusic();
     hidePlaybackButton();
@@ -508,7 +503,6 @@ async function openServer(guildUID, guildID) {
   $(`#${guildUID + guildID}Server`).addClass('serverActive');
   $('#specialFullViewContent').addClass('hidden');
   $('#nonSpecialContent').removeClass('hidden');
-  $('#pfpseudoelement').addClass('hidden');
   $('.serverView').addClass('hidden');
 
   if ($(`#${guildUID + guildID}View`).length) {
@@ -1306,7 +1300,8 @@ export async function loadOutgoingServerRequests() {
 }
 
 window.cancelOutgoingGuildRequest = async (targetUID, targetID, targetName) => {
-  disableButton($(`#cancelRequestButton${targetID}`));
+  $(`#cancelRequestButton${targetID}`).addClass('disabled');
+  $(`#cancelRequestButton${targetID}`).html(`<i style="font-size: 15px;" class='bx bx-time'></i>`);
 
   const cancelRequestJoinGuild = httpsCallable(functions, "cancelRequestJoinGuild");
   const result = await cancelRequestJoinGuild({ targetUID: targetUID, targetGuild: targetID, targetName: targetName});

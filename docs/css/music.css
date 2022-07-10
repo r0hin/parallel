@@ -517,7 +517,7 @@
 /* MUSIC VIEWS */
 .musicView {
   position: fixed;
-  left: calc(104px + 24px + 270px + 24px);
+  left: calc(84px + 24px + 270px + 24px);
   top: 48px;
   width: calc(100% - 446px);
   overflow-y: auto;

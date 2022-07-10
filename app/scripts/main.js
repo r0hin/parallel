@@ -101,6 +101,7 @@ const createWindow = () => {
   link.listenNotifications(win);
   link.listenFunctions(win);
   link.listenMusic(win);
+  link.listenMedia(win);
   deeplinks.singleInstanceMode(win);
   discord.startDiscord();
 
