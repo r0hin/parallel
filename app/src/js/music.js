@@ -1059,6 +1059,8 @@ export async function openOtherPlaylist(playlistUID, playlistID, playlistNameInp
         <div class="playlistDetails">
           <h2 id="${playlistUID}${playlistID}playlistTitle" class="playlistTitle animated fadeInUp"></h2>
           <p id="${playlistUID}${playlistID}playlistDetailsLine" class="playlistDetailsLine animated fadeIn"></p>
+          <button id="${playlistUID}${playlistID}PlayTrackButton" class="btn b-1 playButton2"><i class='bx bx-play'></i></button> 
+          <button id="${playlistUID}${playlistID}ShuffleTrackButton" onclick="playTrack(null, '${playlistUID}${playlistID}playlistViewTracksContainer', 0, true)" class="btn b-2 playButton"><i class='bx bx-shuffle'></i></button>     
           ${fromLibrary ? `
             <div class="dropdown">
               <button id="playlistDropdownButton${playlistUID}${playlistID}" onclick="openDropdown('${playlistUID}${playlistID}Dropdown')" class="btn b-4 playlistDropdownButton iconButton dropdownButton"><i class="bx bx-dots-vertical-rounded"></i></button>
@@ -1082,8 +1084,6 @@ export async function openOtherPlaylist(playlistUID, playlistID, playlistNameInp
               </div>
             </div>
           `}
-          <button id="${playlistUID}${playlistID}PlayTrackButton" class="btn b-1 playButton"><i class='bx bx-play'></i> play</button> 
-          <button id="${playlistUID}${playlistID}ShuffleTrackButton"  onclick="playTrack(null, '${playlistUID}${playlistID}playlistViewTracksContainer', 0, true)" class="btn b-1 playButton"><i class='bx bx-shuffle'></i> shuffle</button>     
           <p id="${playlistUID}${playlistID}contentEditable" class="playlistDescription" spellcheck="false" contenteditable="false"></p>
         </div>
       </div>
@@ -1237,6 +1237,16 @@ function addOtherPlaylistListeners(playlistUID, playlistID, inputPlaylistName, f
           }).appendTo($(`#${playlistUID}${playlistID}reviewSectionContentContent`));
         }
       }
+
+      tippy($(`#${playlistUID}${playlistID}PlayTrackButton`).get(0), {
+        content: 'Play',
+        placement: 'top',
+      });
+    
+      tippy($(`#${playlistUID}${playlistID}ShuffleTrackButton`).get(0), {
+        content: 'Shuffle',
+        placement: 'top',
+      });
     
       tippy($(`#${playlistUID}${playlistID}addReviewButton`).get(0), {
         content: 'Add Review',
@@ -1753,8 +1763,8 @@ window.openAlbum = async (albumIDInput, trackID) => {
           <p id="${albumID}albumDetailsLine" class="albumDetailsLine animated fadeIn"></p>
           <div class="albumFlexRow">
             <div>
-              <button id="Album${albumID}PlayButton" class="btn b-1 playButton"><i class='bx bx-play'></i> play</button> 
-              <button id="Album${albumID}ShuffleButton" class="btn b-2 playButton"><i class='bx bx-shuffle'></i> shuffle</button>
+              <button id="Album${albumID}PlayButton" class="btn b-1 playButton2"><i class='bx bx-play'></i></button> 
+              <button id="Album${albumID}ShuffleButton" class="btn b-2 playButton2"><i class='bx bx-shuffle'></i></button>
               <div class="dropdown">
                 <button id="albumDropdownButton${albumID}" onclick="openDropdown('${albumID}AlbumDropdown')" class="btn b-4 playlistDropdownButton iconButton dropdownButton"><i class="bx bx-dots-vertical-rounded"></i></button>
                 <div id="${albumID}AlbumDropdown" class="dropdown-content">
@@ -1828,6 +1838,16 @@ window.openAlbum = async (albumIDInput, trackID) => {
 
   tippy($(`#Album${albumID}Close`).get(0), {
     content: 'Close',
+    placement: 'top',
+  });
+
+  tippy($(`#Album${albumID}PlayButton`).get(0), {
+    content: 'Play',
+    placement: 'top',
+  });
+
+  tippy($(`#Album${albumID}ShuffleButton`).get(0), {
+    content: 'Shuffle',
     placement: 'top',
   });
 

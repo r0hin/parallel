@@ -704,23 +704,12 @@
   text-overflow: ellipsis;
 }
 
-.albumView .albumDetails button:not(.dropdownButton, .favButton) i, .playlistView .playlistDetails button:not(.dropdownButton, .favButton) i {
-  position: absolute;
-  top: 51%; left: 22px;
-  transform: translate(0, -50%);
-}
-
-.albumView .albumDetails button:not(.favButton), .playlistView .playlistDetails button {
-  position: relative;
-  font-size: 16px;
-  margin-right: 12px;
-  margin-top: 8px;
-  margin-left: 0px;
-  padding: 8px 22px 8px 46px; 
-}
-
-.playlistDetails .playButton.b-3 {
-  background-color: var(--bg4);
+.playlistView .playlistDetails button, .albumView .albumDetails button:not(.favButton) {
+  width: 42px;
+  height: 42px;
+  padding: 0px !important;
+  margin: 0px 12px 0px 0px;
+  font-size: 16px !important;
 }
 
 .albumView .albumDetails .albumDetailsLine {
@@ -772,7 +761,7 @@
 }
 
 .playlistView .playlistTopLevel {
-  padding: 24px;
+  padding: 12px 24px 24px 24px;
   width: calc(100% - 48px); 
 }
 
@@ -924,9 +913,9 @@
 
 #musicPlayback {
   position: fixed;
-  left: calc(422px);
+  left: calc(402px);
   bottom: 24px; padding: 12px; 
-  width: calc(100% - 470px);
+  width: calc(100% - 450px);
   height: calc(42px);
   background-color: var(--bg1);
   border-radius: 12px;
@@ -1032,7 +1021,7 @@
 
 .musicPopoutButton {
   position: fixed;
-  bottom: 24px; left: 128px;
+  bottom: 24px; left: 108px;
   height: 64px; width: 64px;
   border-radius: 12px;
   background-color: var(--bg0);
@@ -1058,7 +1047,7 @@
 }
 
 .musicPopoutExpanded {
-  width: 216px;
+  width: 242px;
   padding-left: 4px;
   text-align: center; 
 }
@@ -1085,19 +1074,23 @@
   text-overflow: ellipsis;
 }
 
-.musicPopoutExpanded #musicPopoutHidden div p, .musicPopoutExpanded #musicPopoutHidden div b {
-  width: 130px;
-  font-size: 12px;
+.musicPopoutExpanded #musicPopoutHidden .playbackControls {
+  margin-left: 11px;
 }
 
 .collpaseMiniButton {
   position: absolute !important;
   border-radius: 0px 12px 12px 0px;
-  right: -29px; top: -17px;
+  right: -46px; top: -17px;
   width: 26px; height: 64px;
   padding: 0px; font-size: 10px;
   background-color: var(--bg1);
   color: white !important;
+}
+
+.musicPopoutExpanded #musicPopoutHidden div p, .musicPopoutExpanded #musicPopoutHidden div b {
+  width: 130px;
+  font-size: 12px;
 }
 
 .collpaseMiniButton:active {

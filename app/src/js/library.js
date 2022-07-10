@@ -599,6 +599,7 @@ function sortNonFolderPlaylists() {
 export async function addPlaylistToFolder(folderID, folderName, playlistUID, playlistID, unHide) {
   // ANIMATE OUT MAIN AREA. Since its moving in into playlist
   $(`#playlistButton${playlistUID}${playlistID}`).addClass('playlistItemGone');
+  $(`#playlistButton${playlistUID}${playlistID}`).addClass('playlistButtonExpandIn');
   await timer(500);
   $(`#playlistButton${playlistUID}${playlistID}`).get(0).setAttribute('inFolder', `${folderName}<${folderID}`);
 
@@ -606,22 +607,13 @@ export async function addPlaylistToFolder(folderID, folderName, playlistUID, pla
     [`playlistFolders.${folderName}<${folderID}`]: arrayUnion(`${playlistUID}.${playlistID}`)
   });
 
-  if (unHide) {
-    $(`#playlistButton${playlistUID}${playlistID}`).removeClass('hidden');
-  }
-
-  $(`#playlistButton${playlistUID}${playlistID}`).removeClass('playlistItemGone');
-
-  if (!$(`#playlistFolderContent${folderID}`).hasClass('playlistFolderContentActive')) {
-    expandPlaylistFolder(folderID);
-  }
-  else {
-    const oldHeight = $(`#playlistFolderContent${folderID}`).css('height').split('px')[0]; 
-    $(`#playlistFolderContent${folderID}`).css('height', `${parseInt(oldHeight) + 48}px`);
-  }
-
   // Sort now.
-  await updatePlaylistsOrder()
+  await updatePlaylistsOrder();
+
+  if ($(`#playlistFolderContent${folderID}`).hasClass('playlistFolderContentActive')) {
+    const oldHeight = $(`#playlistFolderContent${folderID}`).css('height').split('px')[0]; 
+    $(`#playlistFolderContent${folderID}`).css('height', `${parseInt(oldHeight) + 38}px`);
+  }
 }
 
 export function removePlaylistFromFolder(folderKey, playlistUID, playlistID, hide) {
@@ -630,7 +622,7 @@ export function removePlaylistFromFolder(folderKey, playlistUID, playlistID, hid
   
     if ($(`#playlistFolderContent${folderID}`).hasClass('playlistFolderContentActive')) {
       const oldHeight = $(`#playlistFolderContent${folderID}`).css('height').split('px')[0]; 
-      $(`#playlistFolderContent${folderID}`).css('height', `${parseInt(oldHeight) - 48}px`);
+      $(`#playlistFolderContent${folderID}`).css('height', `${parseInt(oldHeight) - 38}px`);
     }
   
     window.setTimeout(async () => {
@@ -796,6 +788,9 @@ async function loadPlaylistFolders(playlists, folders) {
     $(`#musicSidebarPlaylistFolders`).append(sorted);
   }
 
+  $(`.playlistButtonExpandIn`).removeClass('hidden');
+  $(`.playlistButtonExpandIn`).removeClass('playlistItemGone');
+
   setPlaylistHandlers(); // For non-folders
 }
 
@@ -836,23 +831,27 @@ function setPlaylistHandlers() {
   }
 }
 
-export async function deletePlaylistFolder(folderID, folderName, skipNotify, keepSort) {
-  if (keepSort) {
-    await updateDoc(doc(db, `users/${user.uid}`), {
-      [`playlistFolders.${folderName}<${folderID}`]: deleteField(),
-    });
-  }
-  else {
-    await updateDoc(doc(db, `users/${user.uid}`), {
-      [`playlistFolders.${folderName}<${folderID}`]: deleteField(),
-      playlistFoldersSort: arrayRemove(folderID)
-    });
-  }
+export function deletePlaylistFolder(folderID, folderName, skipNotify, keepSort) {
+  return new Promise(async (resolve, reject) => {
+    if (keepSort) {
+      await updateDoc(doc(db, `users/${user.uid}`), {
+        [`playlistFolders.${folderName}<${folderID}`]: deleteField(),
+      });
+    }
+    else {
+      await updateDoc(doc(db, `users/${user.uid}`), {
+        [`playlistFolders.${folderName}<${folderID}`]: deleteField(),
+        playlistFoldersSort: arrayRemove(folderID)
+      });
+    }
+    
   
+    if (!skipNotify) {
+      snac('Folder Deleted', '', 'success');
+    }
 
-  if (!skipNotify) {
-    snac('Folder Deleted', '', 'success');
-  }
+    resolve(true);
+  })
 }
 
 window.expandPlaylistFolder = (folderID) => {
@@ -974,11 +973,15 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
         <div id="${playlistUID}${playlistID}playlistDetailsOne" class="playlistDetails">
           <h2 id="${playlistUID}${playlistID}playlistTitle" class="playlistTitle myPlaylistTitle animated fadeInUp"></h2>
           <p id="${playlistUID}${playlistID}playlistDetailsLine" class="playlistDetailsLine animated fadeIn"></p>
+          <button id="${playlistUID}${playlistID}PlayTrackButton" class="btn b-1 playButton2"><i class='bx bx-play'></i></button> 
+          <button id="${playlistUID}${playlistID}ShuffleTrackButton" onclick="playTrack(null, '${playlistUID}${playlistID}playlistViewTracksContainer', 0, true)" class="btn b-2 playButton2"><i class='bx bx-shuffle'></i></button>
           <div class="dropdown">
             <button id="playlistDropdownButton${playlistUID}${playlistID}" onclick="openDropdown('${playlistUID}${playlistID}Dropdown')" class="btn b-4 playlistDropdownButton iconButton dropdownButton"><i class="bx bx-dots-vertical-rounded"></i></button>
             <div id="${playlistUID}${playlistID}Dropdown" class="dropdown-content">
               <a id="editorPlaylistButton${playlistUID}${playlistID}" class="btn">Editor</a>
               <a onclick="openReviews('${playlistUID}', '${playlistID}')" id="reviewsPlaylistButton${playlistUID}${playlistID}" class="btn">Reviews</a>
+              <a onclick="openSharing('${playlistUID}', '${playlistID}')" class="btn">Sharing</a>
+              <div class="dropdownDivider"></div>
               <a id="renamePlaylistButton${playlistUID}${playlistID}" class="btn">Rename</a>
               <a id="deletePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Delete</a>
               <div class="dropdownDivider"></div>
@@ -987,9 +990,6 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
               <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
             </div>
           </div>
-          <button id="${playlistUID}${playlistID}PlayTrackButton" class="btn b-1 playButton"><i class='bx bx-play'></i> play</button> 
-          <button id="${playlistUID}${playlistID}ShuffleTrackButton"  onclick="playTrack(null, '${playlistUID}${playlistID}playlistViewTracksContainer', 0, true)" class="btn b-1 playButton"><i class='bx bx-shuffle'></i> shuffle</button>
-          <button onclick="openSharing('${playlistUID}', '${playlistID}')" class="btn b-2 playButton"><i class='bx bx-planet'></i> share</button>
           <p id="${playlistUID}${playlistID}contentEditable" class="playlistDescription" spellcheck="false" contenteditable="plaintext-only"></p>
         </div>
         <div id="${playlistUID}${playlistID}playlistDetailsTwo" class="playlistDetails playlistDetailsTwo hidden">
@@ -1132,6 +1132,16 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
       }).appendTo($(`#${playlistUID}${playlistID}reviewSectionContentContent`));
     }
   }
+
+  tippy($(`#${playlistUID}${playlistID}PlayTrackButton`).get(0), {
+    content: 'Play',
+    placement: 'top',
+  });
+
+  tippy($(`#${playlistUID}${playlistID}ShuffleTrackButton`).get(0), {
+    content: 'Shuffle',
+    placement: 'top',
+  });
 
   tippy($(`#${playlistUID}${playlistID}refreshReviewButton`).get(0), {
     content: 'Refresh',
@@ -1720,14 +1730,24 @@ async function renameFolderConfirm(folderID, folderName) {
   // Cache data in the folder
   const cacheFolderData = cacheUser.playlistFolders[`${folderName}<${folderID}`];
 
-  deletePlaylistFolder(folderID, folderName, true);
+  await deletePlaylistFolder(folderID, folderName, true);
 
   await updateDoc(doc(db, `users/${user.uid}`), {
     [`playlistFolders.${newFolderName}<${folderID}`]: cacheFolderData
   });
+
+  window.setTimeout(() => {
+    if ($(`#playlistFolderContent${folderID}`).hasClass('playlistFolderContentActive')) {
+      $(`#chevron${folderID}`).removeClass('bx-chevron-down');
+      $(`#chevron${folderID}`).addClass('bx-chevron-up');
+      $(`#folder${folderID}`).addClass('folderFolderIconActive');
+      $(`#folder${folderID}`).removeClass('bx-folder');
+      $(`#folder${folderID}`).addClass('bx-folder-open');
+    }
+  }, 499);
 }
 
-async function  renamePlaylistConfirm(playlistID) {
+async function renamePlaylistConfirm(playlistID) {
   const playlistName = securityConfirmTextIDs($('#renamePlaylistName').val(), true).trim();
   
   if (playlistName.length > 48) {

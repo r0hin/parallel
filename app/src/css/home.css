@@ -2904,6 +2904,17 @@ div.pill.danger {
   background-color: var(--bg4) !important;
 }
 
+.server::before {
+  position: absolute;
+  content: '';
+  background-color: var(--primary);
+  top: 50%; left: -15px;
+  transform: translate(0, -50%);
+  width: 7px; height: 18px;
+  border-radius: 24px;
+  transition: all 1.5s;
+}
+
 .serverActive::before {
   position: absolute;
   content: '';
@@ -2921,7 +2932,12 @@ div.pill.danger {
   background-color: var(--bg1);
   top: 50%; left: -16px;
   transform: translate(0, -50%);
+  transition: all 1.5s;
   width: 16px; height: 18px;
+}
+
+.inCallServer::after {
+  top: 50%; left: -20px;
 }
 
 .serverActive::after {
@@ -2930,6 +2946,7 @@ div.pill.danger {
   background-color: var(--bg1);
   top: 50%; left: -27px;
   transform: translate(0, -50%);
+  transition: all 1.5s;
   width: 16px; height: 18px;
   transition: all 0.5s;
 }
@@ -2937,7 +2954,7 @@ div.pill.danger {
 .sidebarLeft {
   background-color: var(--bg2);
   position: fixed;
-  top: 24px; left: 84px;
+  top: 24px; left: 88px;
   border-radius: 12px 0px 0px 0px;
   width: 270px; height: calc(100% - 36px); 
   transition: all 1s;
@@ -2973,6 +2990,10 @@ div.pill.danger {
   margin-bottom: 17px;
   height: calc(100% - 163px); 
   margin-right: 4px;
+}
+
+.sidebarLeftContent .subtitle {
+  margin-left: 16px;
 }
 
 .sidebarLeftInCall .sidebarLeftContent {
@@ -3490,11 +3511,6 @@ div.pill.danger {
   width: calc(55px - 8px);
   height: calc(55px - 8px);
   clip-path: none;
-}
-
-.inCallServer::before {
-  width: 4px;
-  transition: all 0.5s;
 }
 
 .incomingGuildRequestDone {
@@ -4165,6 +4181,7 @@ div.pill.danger {
   text-align: center;
   vertical-align: top; border-radius: 12px;
   position: relative; display: inline-block;
+  box-shadow: 0px 5px 24px -3px rgb(0 0 0 / 22%);
 }
 
 .friendPlaylist .friendPlaylistCover:active {
@@ -4175,11 +4192,10 @@ div.pill.danger {
   width: 150px; height: 108px;
   object-fit: cover;
   position: relative;
-  border-radius: 8px;
+  border-radius: 4px;
   object-fit: cover;
   vertical-align: middle;
   background-color: var(--bg3);
-  box-shadow: 0px 5px 24px -3px rgb(0 0 0 / 22%);
   transition: all 0.2s;
 }
 
@@ -4207,6 +4223,7 @@ div.pill.danger {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: var(--fg2)
 }
 
 .friendPlaylist p:hover, .friendPlaylistHeader span:hover {
