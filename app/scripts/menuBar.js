@@ -6,20 +6,20 @@ const link = require('./link');
 let updateStatusNotify = false;
 let menuBar = null;
 
-exports.initializeMenuBar = function() {
+exports.initializeMenuBar = function(win) {
   const menuBarDefault = defaultMenu(app, shell);
   menuBar = [...menuBarDefault];
   menuBar[0].submenu.splice(0, 1, {
     label: "About Parallel",
     click: () => {
-      link.menuBarFunctions('about');
+      link.menuBarFunctions(win, 'about');
     },
   });
 
   menuBar[0].submenu.splice(1, 1, {
     label: "Preferences",
     click: () => {
-      link.menuBarFunctions('preferences');
+      link.menuBarFunctions(win, 'preferences');
     },
     accelerator: 'CmdOrCtrl+,'
   })
@@ -48,14 +48,14 @@ exports.initializeMenuBar = function() {
       {
         label: "New Playlist",
         click: () => {
-          link.menuBarFunctions('newPlaylist');
+          link.menuBarFunctions(win, 'newPlaylist');
         },
         accelerator: 'CmdOrCtrl+N'
       },
       {
         label: "New Playlist Folder",
         click: () => {
-          link.menuBarFunctions('newPlaylistFolder');
+          link.menuBarFunctions(win, 'newPlaylistFolder');
         },
         accelerator: 'CmdOrCtrl+Shift+N'
       },
@@ -66,13 +66,13 @@ exports.initializeMenuBar = function() {
           {
             label: "Create",
             click: () => {
-              link.menuBarFunctions('newGroup');
+              link.menuBarFunctions(win, 'newGroup');
             }
           },
           {
             label: "Join",
             click: () => {
-              link.menuBarFunctions('joinGroup');
+              link.menuBarFunctions(win, 'joinGroup');
             }
           }
         ],
@@ -86,7 +86,7 @@ exports.initializeMenuBar = function() {
       {
         label: "Seek Forward",
         click: () => {
-          link.menuBarFunctions('forward');
+          link.menuBarFunctions(win, 'forward');
         },
         accelerator: 'CmdOrCtrl+Right',
         enabled: false
@@ -94,7 +94,7 @@ exports.initializeMenuBar = function() {
       {
         label: "Seek Backward",
         click: () => {
-          link.menuBarFunctions('previous');
+          link.menuBarFunctions(win, 'previous');
         },
         accelerator: 'CmdOrCtrl+Left',
         enabled: false
@@ -102,7 +102,7 @@ exports.initializeMenuBar = function() {
       {
         label: "Skip Forward",
         click: () => {
-          link.menuBarFunctions('skip');
+          link.menuBarFunctions(win, 'skip');
         },
         accelerator: 'CmdOrCtrl+Shift+Right',
         enabled: false
@@ -110,7 +110,7 @@ exports.initializeMenuBar = function() {
       {
         label: "Skip Backward",
         click: () => {
-          link.menuBarFunctions('skipBackward');
+          link.menuBarFunctions(win, 'skipBackward');
         },
         accelerator: 'CmdOrCtrl+Shift+Left',
         enabled: false
@@ -121,7 +121,7 @@ exports.initializeMenuBar = function() {
       {
         label: "Volume Up",
         click: () => {
-          link.menuBarFunctions('volumeUp');
+          link.menuBarFunctions(win, 'volumeUp');
         },
         accelerator: 'CmdOrCtrl+Up',
         enabled: false
@@ -129,7 +129,7 @@ exports.initializeMenuBar = function() {
       {
         label: "Volume Down",
         click: () => {
-          link.menuBarFunctions('volumeDown');
+          link.menuBarFunctions(win, 'volumeDown');
         },
         accelerator: 'CmdOrCtrl+Down',
         enabled: false
@@ -140,7 +140,7 @@ exports.initializeMenuBar = function() {
   menuBar[4].submenu.splice(0, 0, {
     label: "Open Friends",
     click: () => {
-      link.menuBarFunctions('friends');
+      link.menuBarFunctions(win, 'friends');
     },
     accelerator: 'CmdOrCtrl+1',
     enabled: true
@@ -149,7 +149,7 @@ exports.initializeMenuBar = function() {
   menuBar[4].submenu.splice(1, 0, {
     label: "Open Music",
     click: () => {
-      link.menuBarFunctions('music');
+      link.menuBarFunctions(win, 'music');
     },
     accelerator: 'CmdOrCtrl+2',
     enabled: true
@@ -158,7 +158,7 @@ exports.initializeMenuBar = function() {
   menuBar[4].submenu.splice(2, 0, {
     label: "Open Groups",
     click: () => {
-      link.menuBarFunctions('servers');
+      link.menuBarFunctions(win, 'servers');
     },
     accelerator: 'CmdOrCtrl+3',
     enabled: true
@@ -167,7 +167,7 @@ exports.initializeMenuBar = function() {
   menuBar[4].submenu.splice(3, 0, {
     label: "Open Infinite",
     click: () => {
-      link.menuBarFunctions('infinite');
+      link.menuBarFunctions(win, 'infinite');
     },
     accelerator: 'CmdOrCtrl+4',
     enabled: true
@@ -176,7 +176,7 @@ exports.initializeMenuBar = function() {
   menuBar[4].submenu.splice(4, 0, {
     label: "Open Settings",
     click: () => {
-      link.menuBarFunctions('account');
+      link.menuBarFunctions(win, 'account');
     },
     accelerator: 'CmdOrCtrl+5',
     enabled: true

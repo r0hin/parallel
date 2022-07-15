@@ -1068,7 +1068,7 @@ export async function openOtherPlaylist(playlistUID, playlistID, playlistNameInp
               <a id="deletePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Remove from Library</a>
               <a id="clonePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Clone Playlist</a>
                 <div class="dropdownDivider"></div>
-                <a onclick="copyToClipboard('${window.location.origin}/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
+                <a onclick="copyToClipboard('https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
                 <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
               </div>
             </div>
@@ -1079,7 +1079,7 @@ export async function openOtherPlaylist(playlistUID, playlistID, playlistNameInp
                 <a id="${playlistUID}${playlistID}AddButton" class="btn">Add to Library</a>
                 <a id="${playlistUID}${playlistID}CloneButton" class="btn">Clone Playlist</a>
                 <div class="dropdownDivider"></div>
-                <a onclick="copyToClipboard('${window.location.origin}/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
+                <a onclick="copyToClipboard('https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
                 <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
               </div>
             </div>
@@ -1177,6 +1177,12 @@ function addOtherPlaylistListeners(playlistUID, playlistID, inputPlaylistName, f
 
           if (reviewText.length < 10) {
             snac('Review Error', 'Reviews must be at least 10 characters long.', 'danger');
+            return;
+          }
+
+          if (reviewText.length > 3000) {
+            copyToClipboard(reviewText, true);
+            snac('Review Error', 'Reviews cannot be longer than 3000 characters. Your review draft was copied to your clipboard.', 'danger');
             return;
           }
 
@@ -1575,6 +1581,8 @@ window.openApplePlaylist = async (playlistID, playlistName, fromLibrary, folderC
       <div class="playlistDetails">
         <h2 id="${playlistID}playlistTitle" class="playlistTitle animated fadeInUp"></h2>
         <p id="${playlistID}playlistDetailsLine" class="playlistDetailsLine animated fadeIn"></p>
+        <button id="${playlistID}PlayTrackButton" class="btn b-1 playButton"><i class='bx bx-play'></i></button> 
+        <button id="${playlistID}ShuffleTrackButton"  onclick="playTrack(null, '${playlistID}playlistViewTracksContainer', 0, true)" class="btn b-2 playButton"><i class='bx bx-shuffle'></i></button>     
         <div class="dropdown">
           <button id="playlistDropdownButton${playlistID}" onclick="openDropdown('${playlistID}Dropdown')" class="btn b-4 playlistDropdownButton iconButton dropdownButton"><i class="bx bx-dots-vertical-rounded"></i></button>
           <div id="${playlistID}Dropdown" class="dropdown-content">
@@ -1586,8 +1594,6 @@ window.openApplePlaylist = async (playlistID, playlistName, fromLibrary, folderC
             <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
           </div>
         </div>
-        <button id="${playlistID}PlayTrackButton" class="btn b-1 playButton"><i class='bx bx-play'></i> play</button> 
-        <button id="${playlistID}ShuffleTrackButton"  onclick="playTrack(null, '${playlistID}playlistViewTracksContainer', 0, true)" class="btn b-1 playButton"><i class='bx bx-shuffle'></i> shuffle</button>     
         <p id="${playlistID}contentEditable" class="playlistDescription" spellcheck="false" contenteditable="false"></p>
       </div>
     </div>
@@ -1770,7 +1776,7 @@ window.openAlbum = async (albumIDInput, trackID) => {
                 <div id="${albumID}AlbumDropdown" class="dropdown-content">
                   <a id="${albumID}AddButton" class="btn playlistButtonContext acceptLeftClick">Add to Playlist</a>
                   <div class="dropdownDivider"></div>
-                  <a onclick="copyToClipboard('${window.location.origin}/preview?albumID=${albumID}')" class="btn">Copy Link</a>
+                  <a onclick="copyToClipboard('https://parallelsocial.net/preview?albumID=${albumID}')" class="btn">Copy Link</a>
                   <a onclick="copyToClipboard('${albumID}')" class="btn">Copy ID</a>
                 </div>
               </div>
@@ -2224,7 +2230,7 @@ window.stateKey = 'spotify_auth_state';
 
 export async function loginSpotify() {
   const clientID = 'b2b0e41d0a3e4464b12eba666a1de36d';
-  const redirectURL = window.location.href;
+  const redirectURL = window.location.href + "app.html";
 
   var state = generateRandomString(16);
 

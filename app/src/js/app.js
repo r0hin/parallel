@@ -6,6 +6,7 @@ import { getFunctions, httpsCallable } from '@firebase/functions';
 
 import * as timeago from 'timeago.js';
 import { Picker } from 'emoji-picker-element';
+import Croppr from 'croppr';
 
 import { openSpecialServer, loadMuted, loadServers, unreadIndicators, loadOutgoingServerRequests, updateServersOrder, leaveServer } from './servers';
 import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends';
@@ -30,7 +31,7 @@ import { updateApp } from './electronApp';
 import { sendToElectron } from './electron';
 
 window.user;
-window.gitHubVersion = '2.7.1';
+window.gitHubVersion = '2.7.2';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);

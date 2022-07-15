@@ -134,9 +134,9 @@ app.on('ready', () => {
   const mainWindow = createWindow();
 
   // Create the Application's main menu
-  menuBar.initializeMenuBar();
+  menuBar.initializeMenuBar(mainWindow);
 
-  tray.initializeTray();
+  tray.initializeTray(mainWindow);
 });
 
 app.on('window-all-closed', () => {

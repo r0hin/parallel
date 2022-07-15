@@ -432,6 +432,9 @@ exports.addReviewToPlaylist = functions.https.onCall(async (data, context) => {
   if (sanitizedReviewTextTrimmed.length < 10) {
     return {data: "Review must be at least 10 characters."};
   }
+  if (sanitizedReviewTextTrimmed.length > 3000) { 
+    return {data: "Review must be less than 3000 characters."};
+  }
 
   // Get user's username
   const userDoc = await db.collection('users').doc(uid).get();
@@ -486,6 +489,9 @@ exports.editReview = functions.https.onCall(async (data, context) => {
   const sanitizedReviewTextTrimmed = sanitizedReviewText.trim();
   if (sanitizedReviewTextTrimmed.length < 10) {
     return {data: "Review must be at least 10 characters."};
+  }
+  if (sanitizedReviewTextTrimmed.length > 3000) { 
+    return {data: "Review must be less than 3000 characters."};
   }
 
   // Get user's username

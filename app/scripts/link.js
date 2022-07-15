@@ -162,7 +162,6 @@ exports.sendDeepLink = (win, data) => {
   win.webContents.send('deeplink', data);
 }
 
-exports.menuBarFunctions = (data) => {
-  const win = BrowserWindow.getFocusedWindow();
+exports.menuBarFunctions = (win, data) => {
   win.webContents.send('menuBar', data);
 }

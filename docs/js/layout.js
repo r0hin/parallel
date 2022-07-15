@@ -1,4 +1,4 @@
-const version = "2.7.1";
+const version = "2.7.2";
 
 const footer = `
   <div>
@@ -27,25 +27,25 @@ document.getElementById('footer').innerHTML = footer;
 if (navigator.platform.toLowerCase().includes('mac')) {
   document.getElementById('joinButton1').innerHTML = `<i class="bx bxl-apple"></i> Download (Intel)`;
   document.getElementById('joinButton1').onclick = () => {
-    window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-2-${version}.dmg`);
+    window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-${version}.dmg`);
   }
 
   document.getElementById('joinButton2').classList.remove('hidden');
   document.getElementById('joinButton2').innerHTML = `<i class="bx bxl-apple"></i> Download (Apple Silicon)`;
   document.getElementById('joinButton2').onclick = () => {
-    window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-2-${version}-arm64.dmg`);
+    window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-${version}-arm64.dmg`);
   }
 
   try {
     document.getElementById('joinButton3').innerHTML = `<i class="bx bxl-apple"></i> Download (Intel)`;
     document.getElementById('joinButton3').onclick = () => {
-      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-2-${version}.dmg`);
+      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-${version}.dmg`);
     }
     
     document.getElementById('joinButton4').classList.remove('hidden');
     document.getElementById('joinButton4').innerHTML = `<i class="bx bxl-apple"></i> Download (Apple Silicon)`;
     document.getElementById('joinButton4').onclick = () => {
-      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-2-${version}-arm64.dmg`);
+      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-${version}-arm64.dmg`);
     }
   } catch (error) {
     
@@ -55,13 +55,13 @@ if (navigator.platform.toLowerCase().includes('mac')) {
 else if (navigator.platform.toLowerCase().includes('win')) {
   document.getElementById('joinButton1').innerHTML = `<i class="bx bxl-windows"></i> Download`;
   document.getElementById('joinButton1').onclick = () => {
-    window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-2-Setup-${version}.exe`);
+    window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-Setup-${version}.exe`);
   }
 
   try {
-    document.getElementById('joinButton3').innerHTML = `<i class="bx bxl-apple"></i> Download`;
+    document.getElementById('joinButton3').innerHTML = `<i class="bx bxl-windows"></i> Download`;
     document.getElementById('joinButton3').onclick = () => {
-      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-2-Setup-${version}.exe`);
+      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-Setup-${version}.exe`);
     }
   } catch (error) {
     

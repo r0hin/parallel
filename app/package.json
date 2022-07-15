@@ -1,6 +1,6 @@
 {
   "name": "parallel",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "",
   "main": "scripts/main.js",
   "repository": {
@@ -16,7 +16,7 @@
   },
   "build": {
     "appId": "in.r0h.parallel",
-    "productName": "Parallel 2",
+    "productName": "Parallel",
     "copyright": "Copyright © 2022 Parallel, Inc",
     "win": {
       "publish": [

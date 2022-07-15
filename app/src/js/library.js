@@ -24,7 +24,6 @@ window.playlistListener = null;
 window.cachePlaylistData = {};
 window.playlistMetaData = {};
 window.playlistDataImages = {};
-window.animatedFolderTrackOut = [];
 window.editorModeTimeouts = {};
 window.editorModePlaylist = null;
 window.editorModeTracks = new Set();
@@ -570,8 +569,16 @@ export async function loadPlaylists() {
     }
     
     $(`#${playlistUID}${playlistID}PlaylistName`).html(playlistName);
+    $(`#playlistButton${playlistUID}${playlistID}`).removeClass("hidden"); // From moving playlists around.
     $(`#playlistButton${playlistUID}${playlistID}`).get(0).setAttribute('playlistName', playlistName);
     twemoji.parse($(`#${playlistUID}${playlistID}PlaylistName`).get(0));
+
+    $(`#playlistButton${playlistUID}${playlistID}`).get(0).ondragstart = (ev) => {
+      // No folder by default. 
+      ev.dataTransfer.setData("targetPlaylistUID", playlistUID);
+      ev.dataTransfer.setData("targetPlaylistID", playlistID);
+      ev.dataTransfer.setData("targetFolderKey", ``);
+    }
   }
 
   resetFoldersLayout();
@@ -596,13 +603,9 @@ function sortNonFolderPlaylists() {
   $(`#musicSidebarPlaylistsPlaylists`).append(sorted);
 }
 
-export async function addPlaylistToFolder(folderID, folderName, playlistUID, playlistID, unHide) {
-  // ANIMATE OUT MAIN AREA. Since its moving in into playlist
-  $(`#playlistButton${playlistUID}${playlistID}`).addClass('playlistItemGone');
-  $(`#playlistButton${playlistUID}${playlistID}`).addClass('playlistButtonExpandIn');
-  await timer(500);
+export async function addPlaylistToFolder(folderID, folderName, playlistUID, playlistID) {
+  $(`#playlistButton${playlistUID}${playlistID}`).addClass("hidden");
   $(`#playlistButton${playlistUID}${playlistID}`).get(0).setAttribute('inFolder', `${folderName}<${folderID}`);
-
   await updateDoc(doc(db, `users/${user.uid}`), {
     [`playlistFolders.${folderName}<${folderID}`]: arrayUnion(`${playlistUID}.${playlistID}`)
   });
@@ -611,31 +614,32 @@ export async function addPlaylistToFolder(folderID, folderName, playlistUID, pla
   await updatePlaylistsOrder();
 
   if ($(`#playlistFolderContent${folderID}`).hasClass('playlistFolderContentActive')) {
+    $(`#playlistFolderContent${folderID}`).addClass('instantAnimations');
     const oldHeight = $(`#playlistFolderContent${folderID}`).css('height').split('px')[0]; 
     $(`#playlistFolderContent${folderID}`).css('height', `${parseInt(oldHeight) + 38}px`);
+    window.setTimeout(() => {
+      $(`#playlistFolderContent${folderID}`).removeClass('instantAnimations');
+    }, 99);
   }
 }
 
 export function removePlaylistFromFolder(folderKey, playlistUID, playlistID, hide) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const folderID = folderKey.split('<')[1];
   
-    if ($(`#playlistFolderContent${folderID}`).hasClass('playlistFolderContentActive')) {
-      const oldHeight = $(`#playlistFolderContent${folderID}`).css('height').split('px')[0]; 
-      $(`#playlistFolderContent${folderID}`).css('height', `${parseInt(oldHeight) - 38}px`);
-    }
-  
-    window.setTimeout(async () => {
-      if (hide) {
-        $(`#playlistButton${playlistUID}${playlistID}`).addClass('hidden');
-      }
-      animatedFolderTrackOut.push(playlistID);
-      await updateDoc(doc(db, `users/${user.uid}`), {
-        [`playlistFolders.${folderKey}`]: arrayRemove(`${playlistUID}.${playlistID}`, `${playlistID}`)
-      });
+    $(`#playlistButton${playlistUID}${playlistID}`).addClass("hidden")
+    $(`#playlistFolderContent${folderID}`).addClass('instantAnimations');
+    const oldHeight = $(`#playlistFolderContent${folderID}`).css('height').split('px')[0]; 
+    $(`#playlistFolderContent${folderID}`).css('height', `${parseInt(oldHeight) - 38}px`);
+    window.setTimeout(() => {
+      $(`#playlistFolderContent${folderID}`).removeClass('instantAnimations');
+    }, 99);
 
-      resolve(true);
-    }, 399);
+    await updateDoc(doc(db, `users/${user.uid}`), {
+      [`playlistFolders.${folderKey}`]: arrayRemove(`${playlistUID}.${playlistID}`, `${playlistID}`)
+    });
+
+    resolve(true);
   });
 }
 
@@ -644,17 +648,6 @@ function resetFoldersLayout() {
   $(`.playlistFolderContent`).children().each((index, element) => {
     $(element).appendTo(`#musicSidebarPlaylistsPlaylists`);
     $(element).get(0).removeAttribute('inFolder');
-
-    if (animatedFolderTrackOut.includes($(element).get(0).getAttribute('playlistID'))) { // LEAVING PLAYLIST FOLDER.
-      animatedFolderTrackOut.splice(animatedFolderTrackOut.indexOf($(element).get(0).getAttribute('playlistID')), 1);
-      // Animate in MAIN AREA. Since, its moving OUT a playlist folder.
-      $(element).addClass('instantTransitions');
-      $(element).addClass('playlistItemGone');
-      $(element).removeClass('instantTransitions');
-      window.setTimeout(() => {
-        $(element).removeClass('playlistItemGone');
-      }, 99)
-    }
   });
   
   sortNonFolderPlaylists();
@@ -787,9 +780,6 @@ async function loadPlaylistFolders(playlists, folders) {
   
     $(`#musicSidebarPlaylistFolders`).append(sorted);
   }
-
-  $(`.playlistButtonExpandIn`).removeClass('hidden');
-  $(`.playlistButtonExpandIn`).removeClass('playlistItemGone');
 
   setPlaylistHandlers(); // For non-folders
 }
@@ -986,7 +976,7 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
               <a id="deletePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Delete</a>
               <div class="dropdownDivider"></div>
               <a onclick="recalculateDetails('${playlistUID}', '${playlistID}')" class="btn">Reclculate Metadata</a>
-              <a onclick="copyToClipboard('${window.location.origin}/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
+              <a onclick="copyToClipboard('https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
               <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
             </div>
           </div>
@@ -1506,6 +1496,12 @@ export async function loadReviews(playlistUID, playlistID) {
               snac('Review Error', 'Reviews must be at least 10 characters long.', 'danger');
               return;
             }
+
+            if (reviewText.length > 3000) {
+              copyToClipboard(reviewText, true);
+              snac('Review Error', 'Reviews cannot be longer than 3000 characters. Your review draft was copied to your clipboard.', 'danger');
+              return;
+            }
   
             notifyTiny('Processing review...');
 
@@ -1517,7 +1513,7 @@ export async function loadReviews(playlistUID, playlistID) {
             });
       
             if (result.data.data == true) {
-              snac('Review Added', 'Your review was edited successfully.', 'success');
+              snac('Review Updated', 'Your review was edited successfully.', 'success');
               $(`#${playlistUID}${playlistID}${user.uid}ReviewText`).html(reviewText);
             }
             else {
@@ -1880,16 +1876,25 @@ function playlistsDrop(ev, playlistID) {
 }
 
 async function foldersDrop(ev, folderID, folderName) {
+  console.log("Folders drop:", ev, folderID, folderName);
   const playlistUID = ev.dataTransfer.getData("targetPlaylistUID");
   const playlistID = ev.dataTransfer.getData("targetPlaylistID");
   const folderKey = ev.dataTransfer.getData("targetFolderKey");
   if (!playlistUID || !playlistID) { return }
 
-  if (folderKey) {
-    await removePlaylistFromFolder(folderKey, playlistUID, playlistID, true);
+  console.log(folderKey, `${folderName}<${folderID}`);
+
+  if (folderKey == `${folderName}<${folderID}`) {
+    // Dropping playlist item onto same folder.
+    // Probably only a sort.
+    return;
   }
 
-  addPlaylistToFolder(folderID, folderName, playlistUID, playlistID, true);
+  if (folderKey) {
+    await removePlaylistFromFolder(folderKey, playlistUID, playlistID);
+  }
+
+  addPlaylistToFolder(folderID, folderName, playlistUID, playlistID);
 }
 
 $(`#musicSidebarPlaylistsPlaylists`).get(0).ondrop = async (ev) => {
@@ -1989,7 +1994,7 @@ window.openSharing = (playlistUID, playlistID) => {
   openModal('updateSharing');
 
   $(`#copyLinkPlaylistButton`).get(0).onclick = () => {
-    copyToClipboard(`${window.location.origin}/preview?playlistUID=${playlistUID}&playlistID=${playlistID}`);
+    copyToClipboard(`https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}`);
   }
 
   $(`#ifEveryone`).addClass('hidden');

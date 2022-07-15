@@ -2850,7 +2850,7 @@ div.pill.danger {
 
 .server {
   margin: 0 auto;
-  border-radius: 10px;
+  border-radius: 14px;
   padding: 0px;
   width: 50px; height: 50px;
   background-color: var(--bg2);
@@ -2892,8 +2892,8 @@ div.pill.danger {
 }
 
 .serverActive {
-  background-color: var(--bg4);
-  border-radius: 12px;
+  background-color: var(--primary);
+  border-radius: 8px;
   color: white;
   position: relative;
   clip-path: none;
@@ -2901,7 +2901,7 @@ div.pill.danger {
 }
 
 .serverActive:hover {
-  background-color: var(--bg4) !important;
+  background-color: var(--primary) !important;
 }
 
 .server::before {
@@ -3125,7 +3125,7 @@ div.pill.danger {
 }
 
 .musicSidebarButton, .accountSidebarButton {
-  width: calc(100% - 38px);
+  width: calc(100% - 32px);
   margin-bottom: 6px !important;
   height: 32px;
 }
@@ -3751,6 +3751,7 @@ div.pill.danger {
   width: 9px; height: 9px;
   border-radius: 6px;
   transition: all 0.3s;
+  z-index: 2;
 }
 
 .unReadItem .presenceIndicator {
@@ -3841,6 +3842,13 @@ div.pill.danger {
   background-clip: text;
   font-size: 32px;
   -webkit-text-fill-color: transparent; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#infiniteServerGraphic i {
+  /* width: 0px; */
 }
 
 #infiniteServer:hover {
@@ -5649,25 +5657,25 @@ img.emoji {
 }
 
 #imageContainer {
-  height: calc(100vh - 196px);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-top: 32px;
+  margin-bottom: 32px;
 }
 
 .croppr {
-  max-height: 100%;
+  /* max-height: 100%; */
 }
 
 .croppr-image {
-  height: calc(100vh - 196px);
+  /* height: calc(100vh - 196px); */
 }
 
 .croppr img {
-  height: calc(100vh - 196px);
+  /* height: calc(100vh - 196px); */
 }
 
 .instantTransitions {
@@ -6443,4 +6451,8 @@ img.emoji {
 
 .settingsNoOneItemWithSubtext .small {
   padding-bottom: 12px;
+}
+
+.instantAnimations {
+  transition: all 0s !important;
 }

@@ -5,7 +5,7 @@ let tray = null;
 const link = require('./link');
 
 
-exports.initializeTray = () => {
+exports.initializeTray = (win) => {
 
   const trayIcnName = process.platform === 'win32' ? 'IconTemplate@2x.png' : 'IconTemplate.png';
   // Dev
@@ -18,7 +18,7 @@ exports.initializeTray = () => {
       type: 'normal',
       label: "Toggle Play",
       click: () => {
-        link.menuBarFunctions('play');
+        link.menuBarFunctions(win, 'play');
       }
     },
     {
@@ -27,14 +27,14 @@ exports.initializeTray = () => {
     {
       label: "Toggle Mute",
       click: () => {
-        link.menuBarFunctions('mute');
+        link.menuBarFunctions(win, 'mute');
       },
       accelerator: "Alt+m"
     },
     {
       label: "Toggle Deafen",
       click: () => {
-        link.menuBarFunctions('deafen');
+        link.menuBarFunctions(win, 'deafen');
       },
       accelerator: "Alt+D"
     },
@@ -49,6 +49,6 @@ exports.initializeTray = () => {
     }
   ]);
 
-  tray.setToolTip('This is my application.');
+  tray.setToolTip('Parallel Control Panel');
   tray.setContextMenu(contextMenu);
 }
