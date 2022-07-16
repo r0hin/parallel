@@ -1497,6 +1497,11 @@
   font-weight: 500;
 }
 
+.review-header-left .review-header-left-text:hover {
+  cursor: var(--defaultByPointer);
+  color: var(--primary);
+}
+
 .review-header-right-text {
   font-weight: 400;
   font-size: 14px;
@@ -1514,6 +1519,16 @@
   width: 36px; height: 36px;
   margin-left: 6px;
   clip-path: url(#squircle);
+  transition: all 0.3s;
+}
+
+.review .review-header .review-header-left img:hover {
+  cursor: var(--defaultByPointer);
+  opacity: 0.8;
+}
+
+.review .review-header .review-header-left img:hover:active {
+  transform: scale(0.9);
 }
 
 .reviewGone {

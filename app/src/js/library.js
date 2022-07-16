@@ -1541,8 +1541,8 @@ export async function loadReviews(playlistUID, playlistID) {
         a.innerHTML = `
           <div class="review-header">
             <div class="review-header-left">
-              <img id="${playlistUID}${playlistID}${review.uid}ReviewPhoto"></img>
-              <div class="review-header-left-text">${review.username.capitalize()}</div>
+              <img onclick="openUserCard('${review.uid}')" id="${playlistUID}${playlistID}${review.uid}ReviewPhoto"></img>
+              <div onclick="openUserCard('${review.uid}')" class="review-header-left-text">${review.username.capitalize()}</div>
             </div>
             <div class="review-header-right">
               <div class="review-header-right-text">

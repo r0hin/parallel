@@ -1,4 +1,4 @@
-import { hideBookmarks } from "./app";
+import { hideBookmarks, showQuickSearch } from "./app";
 import { prepareEditMessage } from "./channels";
 import { closeEmojiPicker, closeGifPicker, closeModal, fadeOutFullscreenImage } from "./app";
 import { resetZoom, zoomIn, zoomOut } from "./electron";
@@ -25,6 +25,9 @@ export function listenKeystrokes() {
           break;
         case "Digit0":
           resetZoom();
+          break;
+        case "KeyK":
+          showQuickSearch();
           break;
         default:
           break;
@@ -111,6 +114,9 @@ export function listenKeystrokes() {
           else if (document.activeElement.classList.contains('playlistDescription')) {
             document.activeElement.blur();
           }
+          else if (!$('#quickSearch').hasClass('hidden')) {
+            showQuickSearch();
+          }
           break;
         case 'ArrowUp':
           if (currentServer == 'friends') {
@@ -118,7 +124,7 @@ export function listenKeystrokes() {
               prepareDMEditMessage(currentChannel, $(`#DMMessages${currentChannel}`).children('.selfChatMessage').last().children('.topLevelMessageContentTwo').last().children('.relative').last().children('.messageContentContentContainer').last().attr('messageID'));
             }
           }
-          else if (currentChannel) {
+          else if (currentChannel && currentServer !== 'music') {
             const scopedActiveChannel = `${currentServerUser}${currentServer}${currentChannel}`;
             prepareEditMessage(scopedActiveChannel, $(`#${scopedActiveChannel}ChatMessages`).children('.selfChatMessage').last().children('.topLevelMessageContentTwo').last().children('.relative').last().children('.messageContentContentContainer').last().attr('messageID'));
           }

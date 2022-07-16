@@ -8,15 +8,15 @@ import * as timeago from 'timeago.js';
 import { Picker } from 'emoji-picker-element';
 import Croppr from 'croppr';
 
-import { openSpecialServer, loadMuted, loadServers, unreadIndicators, loadOutgoingServerRequests, updateServersOrder, leaveServer } from './servers';
-import { loadFriends, processDMAttachments, unreadIndicatorsDM } from './friends';
+import { openSpecialServer, loadMuted, loadServers, unreadIndicators, loadOutgoingServerRequests, updateServersOrder, leaveServer, openServer } from './servers';
+import { loadFriends, openFriendsDM, processDMAttachments, unreadIndicatorsDM } from './friends';
 import { listenCalls } from './voice';
 import { loadPlaylists } from './library';
 import { loadDefaultValues, settingsTab, expandTab, refreshInputDevices, refreshOutputDevices, retrieveSetting } from './settings';
 import { loadIdle, selfPresence, clearMusicStatus } from './presence';
 import { checkValidSubscription, loadSubscription, manageSubscription } from './stripe';
 import { loadRecentSearches, manageSpotify } from './music';
-import { processAttachment } from './channels';
+import { openGuildChannel, processAttachment } from './channels';
 import { checkAppInitialized } from './firebaseChecks';
 import { startElectronProcesses } from './electronApp';
 import { startMainElectronProcesses } from './electron';
@@ -56,7 +56,8 @@ window.cropping = false;
 window.passwording = false;
 window.windowResizeTimeout = null;
 window.storageClearAllTimeout = null;
-
+window.toOpenChannelWhenReady = null;
+window.directories = [];
 window.noTrackTimeout = null;
 window.modalOpen = false;
 window.closeOnEnter = false;
@@ -72,6 +73,7 @@ window.uploadProgressTimeout = null;
 window.gifsPickerSearchTimeout = null;
 window.gifsPickerSearchTyping = false;
 window.searchTimeout = null;
+window.quickSearchIndex = 0;
 
 const placeholderAlbumImage = 'https://firebasestorage.googleapis.com/v0/b/parallel-by-wop.appspot.com/o/app%2FdefaultAlbum.png?alt=media';
 
@@ -115,7 +117,6 @@ onAuthStateChanged(auth, async (user) => {
 })
 
 export function sendVerify() {
-  console.log('here')
   sendEmailVerification(user).then(function() {
     snac('Verification Email Sent', 'Please check your inbox and follow the instructions in the email we sent you to continue.', 'success');
 
@@ -184,8 +185,6 @@ export async function completeProfile() {
 
   const createAccount = httpsCallable(functions, 'createAccount');
   const result = await createAccount({username: username});
-
-  console.log(result);
 
   if (result.data.data === false) {
     snac('Invalid Username', 'This username is taken already. Please try using a different one.')
@@ -1671,6 +1670,10 @@ export function loadDisplay() {
     }
   })
 
+  $(`#quickSearchInput`).get(0).addEventListener('keyup', (event) => {
+    quickSearchKey(event.keyCode);
+  });
+  
   loadOnclicks();
 
   // Emojis
@@ -2893,8 +2896,6 @@ export async function searchGifs(ID, fast) {
 
     $(`#${ID}gifsPickerGifsContainerSearch`).empty();
 
-    console.log(autocompleteResult);
-
     autocompleteResult.results.map((result, index) => {
       const a = document.createElement('div');
       a.setAttribute('class', 'gifSearch gifPicker');
@@ -3287,5 +3288,171 @@ function loadOnclicks() {
   addOnclickByID('updateServer', () => updateApp()) ;
   addOnclickByID('clearAllUploadsButton', () => prepareDestroyAllFiles() );
   addOnclickByID('musicInfoButton', () => { openModal('musicInfo') });
-  addOnclickByID('accountManagementDropdownButton', () => {openDropdown('accountManagementDropdown');})
+  addOnclickByID('accountManagementDropdownButton', () => {openDropdown('accountManagementDropdown') });
+  addOnclickByID('quickSearchBackground', () => {showQuickSearch() });
+}
+
+export function showQuickSearch() {
+  if ($('#quickSearch').hasClass('hidden')) {
+    $('#quickSearchBackground').removeClass('hidden');
+    $('#quickSearch').removeClass('hidden');
+    $('#quickSearchInput').focus();
+    $(`#quickSearchResults`).empty();
+
+    // Gather list of directories.
+    directories = [{ name: 'Friends', type: "server", id: "friends" }, { name: 'Music', type: "server", id: "music" }, { name: 'Infinite', type: "server", id: "infinite" }, { name: "Settings", type: "server", id: "account" }];
+
+    for (let i = 0; i < cacheUser.guilds.length; i++) {
+      const guildKeyOriginal = cacheUser.guilds[i];
+      const guildKey = cacheUser.guilds[i].replace('.', '')
+      directories.push({
+        name: serverData[guildKey].name,
+        type: "group",
+        id: guildKeyOriginal
+      });
+
+      for (let i = 0; i < serverData[guildKey].channels.length; i++) {
+        const channel = serverData[guildKey].channels[i];
+        directories.push({
+          name: channel.split('.')[1],
+          type: "lounge",
+          serverName: serverData[guildKey].name,
+          server: guildKeyOriginal,
+          id: channel
+        });
+      }
+    }
+
+    for (let i = 0; i < cacheUser.friends.length; i++) {
+      directories.push({
+        name: cacheUser.friends[i].n,
+        id: cacheUser.friends[i].u,
+        type: "friend"
+      });
+    }
+    return;
+  }
+  $('#quickSearch').addClass('hidden');
+  $('#quickSearchBackground').addClass('hidden');
+  $('#quickSearchInput').val('');
+  $(`#quickSearchResults`).empty();
+}
+
+function quickSearchKey(keyCode) {
+  // Keep track of arrow up, down, and enter to navigate through the list.
+  if (keyCode == 38) { // Up
+    if (quickSearchIndex > 0) {
+      quickSearchIndex--;
+
+      // Highlight the current item.
+      $('.quickSearchHighlighted').removeClass('quickSearchHighlighted');
+      $(`#quickSearchResults`).children().eq(quickSearchIndex).addClass('quickSearchHighlighted');
+      return;
+    }
+  } else if (keyCode == 40) { // Down
+    if (quickSearchIndex < $(`#quickSearchResults`).children().length - 1) {
+      quickSearchIndex++;
+
+      // Highlight the current item.
+      $('.quickSearchHighlighted').removeClass('quickSearchHighlighted');
+      $(`#quickSearchResults`).children().eq(quickSearchIndex).addClass('quickSearchHighlighted');
+      return;
+    }
+  } else if (keyCode == 13) { // Enter
+    $('.quickSearchHighlighted').click();
+    return;
+  }
+
+  // Get value and match against directories list. 
+  const value = $('#quickSearchInput').val();
+  $(`#quickSearchResults`).empty();
+
+  if (!value.length) {
+    return;
+  }
+
+  for (let i = 0; i < directories.length; i++) {
+    const directory = directories[i];
+    if (directory.name.toLowerCase().includes(value.toLowerCase())) {
+      const a = document.createElement('div');
+      a.className = 'quickSearchResult';
+      
+      switch (directory.type) {
+        case "server":
+          a.innerHTML = `
+            <div class="quickSearchIcon">
+              <i class="bx bx-planet"></i>
+            </div>
+            <div class="quickSearchText">
+              ${directory.name}
+            </div>
+          `;
+          a.onclick = () => {
+            showQuickSearch();
+            openSpecialServer(directory.id);
+          }
+          break;
+        case "group":
+          a.innerHTML = `
+            <div class="quickSearchIcon">
+              <i class="bx bx-group"></i>
+            </div>
+            <div class="quickSearchText">
+              ${directory.name}
+            </div>
+          `;
+          a.onclick = () => {
+            showQuickSearch();
+            openServer(directory.id.split('.')[0], directory.id.split('.')[1]);
+          }
+          break;
+        case "lounge":
+          a.innerHTML = `
+            <div class="quickSearchIcon">
+              <i class="bx bx-hash"></i>
+            </div>
+            <div class="quickSearchText">
+              ${directory.name}
+              <div class="quickSearchSubtext"> ${directory.serverName} </div>
+            </div>
+          `;
+
+          a.onclick = () => {
+            showQuickSearch();
+            openServer(directory.server.split('.')[0], directory.server.split('.')[1]);
+            if ($(`#${directory.server.split('.')[0]}${directory.server.split('.')[1]}${directory.id.split('.')[0]}guildChannelElement`).length) {
+              $(`#${directory.server.split('.')[0]}${directory.server.split('.')[1]}${directory.id.split('.')[0]}guildChannelElement`).click();
+            }
+            else {
+              window.toOpenChannelWhenReady = directory.id.split('.')[0];
+            }
+          }
+          break;
+        case "friend":
+          a.innerHTML = `
+            <div class="quickSearchIcon">
+              <i class="bx bx-user"></i>
+            </div>
+            <div class="quickSearchText">
+              ${directory.name.capitalize()}
+            </div>
+          `;
+          a.onclick = () => {
+            showQuickSearch();
+            openFriendsDM(directory.id, directory.name);
+          }
+          break;
+        default:
+          break;
+      }
+
+      $(`#quickSearchResults`).append(a);
+    }
+  }
+
+  if ( $(`#quickSearchResults`).children().length > 0 ) {
+    quickSearchIndex = 0;
+    $('.quickSearchHighlighted').removeClass('quickSearchHighlighted');
+    $(`#quickSearchResults`).children().eq(quickSearchIndex).addClass('quickSearchHighlighted');
+  }
 }

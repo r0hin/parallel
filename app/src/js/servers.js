@@ -482,7 +482,7 @@ export function openSpecialServer(id) {
   currentServer = id;
 }
 
-async function openServer(guildUID, guildID) {
+export async function openServer(guildUID, guildID) {
   if (currentServer == guildID && currentServerUser == guildUID) {
     return;
   } 
@@ -1145,6 +1145,10 @@ function buildGuildChannel(guildUID, guildID, channelID, channelName) { // Redon
   }
 
   checkIndicator(guildUID, guildID, channelID);
+
+  if (toOpenChannelWhenReady == channelID) {
+    openGuildChannel(guildUID, guildID, channelID, channelName);
+  }
 }
 
 window.updateGuildPrivacy = async (guildUID, guildID) => {
