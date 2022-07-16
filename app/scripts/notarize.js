@@ -20,7 +20,7 @@ async function run() {
     const value = await notarize({
       tool: "notarytool",
       // appPath: `${appOutDir}/${context.packager.appInfo.productFilename}.app`,
-      appPath: './dist/mac-arm64/Parallel 2.app',
+      appPath: './dist/mac-arm64/Parallel.app',
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.APPLE_TEAM_ID,
@@ -39,7 +39,7 @@ async function run() {
     const value = await notarize({
       tool: "notarytool",
       // appPath: `${appOutDir}/${context.packager.appInfo.productFilename}.app`,
-      appPath: './dist/mac/Parallel 2.app',
+      appPath: './dist/mac/Parallel.app',
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.APPLE_TEAM_ID,
