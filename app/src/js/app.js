@@ -16,7 +16,7 @@ import { loadDefaultValues, settingsTab, expandTab, refreshInputDevices, refresh
 import { loadIdle, selfPresence, clearMusicStatus } from './presence';
 import { checkValidSubscription, loadSubscription, manageSubscription } from './stripe';
 import { loadRecentSearches, manageSpotify } from './music';
-import { openGuildChannel, processAttachment } from './channels';
+import { processAttachment } from './channels';
 import { checkAppInitialized } from './firebaseChecks';
 import { startElectronProcesses } from './electronApp';
 import { startMainElectronProcesses } from './electron';
@@ -31,7 +31,7 @@ import { updateApp } from './electronApp';
 import { sendToElectron } from './electron';
 
 window.user;
-window.gitHubVersion = '2.7.3';
+window.gitHubVersion = '2.7.4';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);

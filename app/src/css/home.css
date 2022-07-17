@@ -1097,7 +1097,11 @@ span.yourProfile {
   border-left: 2px solid transparent;
 }
 
-.messageContentItemForContext.loneEmoji2 img.emoji, .messageContentItemForContext.loneEmoji1 img.emoji {
+.messageContentItemForContext.loneEmoji2 {
+  height: 42px;
+}
+
+.messageContentItemForContext.loneEmoji2matchtrue img.emoji, .messageContentItemForContext.loneEmoji1matchtrue img.emoji {
   width: 42px;
   height: 42px;
 }
@@ -2901,8 +2905,17 @@ div.pill.danger {
   transform: translateX(4px);
 }
 
+#infiniteServer.serverActive {
+  background-color: var(--bg3);
+}
+
 .serverActive:hover {
   background-color: var(--primary) !important;
+  color: white !important;
+}
+
+#infiniteServer.serverActive:hover {
+  background-color: var(--bg3) !important;
 }
 
 .server::before {

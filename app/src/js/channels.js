@@ -1269,7 +1269,7 @@ function buildMessage(guildUID, guildID, channelID, messageItem, messageID, targ
     let innerMessageContent = `
       <div class="relative" id="messageContentContainerOfID${messageID}">
         ${bonusContent.pings}
-        <div class="messageContentContentContainer messageContentItemForContext loneEmoji${messageContent.length} acceptLeftClick ${bonusContent.edited ? 'editedMessage' : ''} ${bonusContent.classes}" guildUID="${guildUID}" guildID="${guildID}" channelType="${channelType}" messageID="${messageID}" messageSenderName="${messageItem.author}" messageSender="${messageItem.uid}" messageType="Channel" channelID="${scopedActiveChannel}" messageChannelQAAnswered="${messageItem.answer}" id="messageContentOfID${messageID}">
+        <div class="messageContentContentContainer messageContentItemForContext loneEmoji${messageContent.length}match${/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi.test(messageContent)} acceptLeftClick ${bonusContent.edited ? 'editedMessage' : ''} ${bonusContent.classes}" guildUID="${guildUID}" guildID="${guildID}" channelType="${channelType}" messageID="${messageID}" messageSenderName="${messageItem.author}" messageSender="${messageItem.uid}" messageType="Channel" channelID="${scopedActiveChannel}" messageChannelQAAnswered="${messageItem.answer}" id="messageContentOfID${messageID}">
           ${messageContent}
         </div>
         ${(channelType == "qa") ? `${messageItem.answered ? ` 

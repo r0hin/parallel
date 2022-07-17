@@ -1403,7 +1403,7 @@ function buildDMMessage(messageItem, uID, messageID, targetDirectoryInput) {
     let innerMessageContent = `
       <div class="relative" id="messageContentContainerOfID${messageID}">
         <div id="DMMessageOfID${messageID}" messageID="${messageID}" class="messageContentContentContainer ${bonusContent.classes}">
-          <div class="messageContentItemForContext loneEmoji${messageContent.length} acceptLeftClick ${bonusContent.edited ? 'editedMessage' : ''} " messageID="${messageID}" messageSenderName="${messageItem.author}" messageSender="${messageItem.uid}" messageType="DM" channelID="${uID}" id="DMMessageContentOfID${messageID}">${messageContent}</div>
+          <div class="messageContentItemForContext loneEmoji${messageContent.length}match${/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi.test(messageContent)} acceptLeftClick ${bonusContent.edited ? 'editedMessage' : ''} " messageID="${messageID}" messageSenderName="${messageItem.author}" messageSender="${messageItem.uid}" messageType="DM" channelID="${uID}" id="DMMessageContentOfID${messageID}">${messageContent}</div>
         </div>
         <div id="DMEditedMessageOfID${messageID}" class="editedMessageIcon ${bonusContent.edited ? '' : 'hidden'} animated zoomIn">
           <i id="DMEditedMessageIconOfID${messageID}" class="bx bx-pencil"></i>
