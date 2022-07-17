@@ -56,18 +56,59 @@ window.newGuildChannel = (guildUID, guildID) => {
   $('#newGuildChannelCreateButton').get(0).onclick = () => newGuildChannelConfirm(`${guildUID}`, `${guildID}`);
 }
 
-async function newGuildChannelConfirm(guildUID, guildID) {
-  // Add channel.
-  const channelName = securityConfirmTextIDs($('#newChannelName').val(), true);
+window.newGuildQAChannel = (guildUID, guildID) => {
+  // Create a dialog with input.
+  openModal('newChannelQA');
+
+  $('#newChannelQAName').val('')
+  $('#newChannelQAName').get(0).addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) { event.preventDefault(); $('#newGuildChannelQACreateButton').get(0).click(); }
+  });
+
+  $(`#newGuildChannelQACreateButton`).get(0).onclick = () => {
+    newGuildChannelQAConfirm(`${guildUID}`, `${guildID}`);
+  }
+}
+
+async function newGuildChannelQAConfirm(guildUID, guildID) {
+  const channelName = securityConfirmTextIDs($('#newChannelQAName').val(), true);
+
+  if (channelName.length > 25) {
+    snac('Invalid Lounge Name', 'Your channel name cannot be more than 25 characters.', 'danger');
+    return;
+  }
+  
   closeModal();
+
+  const channelID = `${new Date().getTime()}`; // Switch to current date.
+
+  await updateDoc(doc(db, `users/${guildUID}/servers/${guildID}`), {
+    channels: arrayUnion(`${channelID}.${channelName}.qa`),
+    [`channelData.${channelID}`]: {
+      disablePublicView: false,
+      disablePublicEdit: false,
+    }
+  });
+
+  await update(ref(rtdb, `servers/${guildUID}${guildID}/channelData/${channelID}`), {
+    disablePublicView: false,
+    disablePublicEdit: false,
+  });
+  
+  await update(ref(rtdb, `servers/${guildUID}${guildID}`), {
+    [channelID]: null
+  });
+}
+
+async function newGuildChannelConfirm(guildUID, guildID) {
+  const channelName = securityConfirmTextIDs($('#newChannelName').val(), true);
 
   if (channelName.length > 25) {
     snac('Invalid Lounge Name', 'Your lounge name cannot be more than 25 characters.', 'danger');
-    window.setTimeout(() => {
-      newGuildChannel(id)
-    }, 1500)
     return;
   }
+  
+  closeModal();
 
   const channelID = `${new Date().getTime()}`; // Switch to current date.
 
@@ -128,7 +169,7 @@ window.openServerSettings = ((guildUID, guildID) => {
   $(`#${guildUID}${guildID}Settings`).addClass(`${guildUID}${guildID}guildChannelViewActive`);
 });
 
-export async function openGuildChannel(guildUID, guildID, channelID, channelName) {
+export async function openGuildChannel(guildUID, guildID, channelID, channelName, channelType) {
   if (currentChannel == channelID) {
     return;
   }
@@ -152,7 +193,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
   if (channelID.toLowerCase().includes('settings')) { resolve(false); return; } // Ignore settings channel.
 
   if ($(`#${scopedActiveChannel}guildChannel`).children().length) {
-    addChannelListeners(guildUID, guildID, channelID, true);
+    addChannelListeners(guildUID, guildID, channelID, true, channelType);
     manageVoiceChatDisplay(guildUID, guildID, channelID, undefined);
     $(`#${scopedActiveChannel}ChatMessageInput`).get(0).focus();
     reevaluatePermissionsChannel(guildUID, guildID, channelID);
@@ -164,23 +205,23 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
   // Not built.
   channelTabLibrary[scopedActiveChannel] = 'Chat';
 
-  $(`#${scopedActiveChannel}guildChannel`).html(`
-    <div class="channelPrimaryGrid ${scopedActiveChannel}Grid" id="${scopedActiveChannel}PrimaryGrid">
+  if (channelType == "qa") {
+    $(`#${scopedActiveChannel}guildChannel`).html(`
+      <div class="channelPrimaryGrid ${scopedActiveChannel}Grid channelPrimaryGridQa" id="${scopedActiveChannel}PrimaryGrid">
       <div id="${scopedActiveChannel}DropTarget" class="dropTarget animated fadeIn faster">
         <button onclick="$('#${scopedActiveChannel}DropTarget').css('display', '')" class="btn b-1 dropTargetButton"><i class="bx bx-x"></i></button>
       </div>
-
       <div class="channelTabListBanner">
         <div>
           <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Chat')" id="${scopedActiveChannel}TabItemChat" class="btn tabButton tabButtonActive ${scopedActiveChannel}TabItem roundedButton"><i class='bx bx-chat'></i></button>
           <div id="${scopedActiveChannel}channelTabIndicator" class="channelTabIndicator animated invisible"></div>
-          <button onclick="loadMoreChannelMessages('${guildUID}', '${guildID}', '${channelID}')" class="btn tabButton roundedButton" id="${scopedActiveChannel}LoadMoreMessagesButton"><i class="bx bx-up-arrow-alt"></i></button>
+          <button onclick="loadMoreChannelMessages('${guildUID}', '${guildID}', '${channelID}', '${channelType}')" class="btn tabButton roundedButton" id="${scopedActiveChannel}LoadMoreMessagesButton"><i class="bx bx-up-arrow-alt"></i></button>
           <button onclick="openChannelPinned('${scopedActiveChannel}')" class="btn tabButton roundedButton pinnedButton" id="${scopedActiveChannel}pinnedMessagesButton"><i class="bx bx-pin"></i></button>
         </div>
         <h3 class="guildChannelViewTitle" id="${scopedActiveChannel}guildChannelViewTitle">${securityConfirmTextIDs(channelName, true)}</h3>
         <div>
           <button onclick="openChannelPinned('${scopedActiveChannel}')" class="btn tabButton roundedButton invisible" id="${scopedActiveChannel}pinnedMessagesButtonCounterpoart"><i class="bx bx-pin"></i></button>
-          <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Music')" id="${scopedActiveChannel}TabItemMusic" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton invisibleOpacityAnimated musicButton"><i class='bx bx-music'></i></button>
+          <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Music')" id="${scopedActiveChannel}TabItemMusic" class="btn hidden tabButton ${scopedActiveChannel}TabItem roundedButton invisibleOpacityAnimated musicButton"><i class='bx bx-music'></i></button>
           <div class="dropdown">
             <button onclick="openDropdown('${scopedActiveChannel}SettingsChannelDropdown')" id="${scopedActiveChannel}TabItemSettings" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton dropdownButton"><i class='bx bx-cog'></i></button>
             <div id="${scopedActiveChannel}SettingsChannelDropdown" class="dropdown-content">
@@ -207,7 +248,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
         </div>
         <div id="${scopedActiveChannel}PaginationPreview" class="hidden"></div>
         <div id="${scopedActiveChannel}ChatMessages" class="${scopedActiveChannel}ChatMessages chatMessageContainer">
-          <div class="emptyChannel animated fadeIn hidden" id="emptyChannel${scopedActiveChannel}"><i class='bx bx-file-blank animated pulse infinite fast' ></i><br><b>No Messages</b><p>Be the first to send a message!</p></div>
+          <div class="emptyChannel animated fadeIn hidden" id="emptyChannel${scopedActiveChannel}"><i class='bx bx-file-blank animated pulse infinite fast' ></i><br><b>No Questions</b><p>Be the first to ask a question!</p></div>
         </div>
         <center id="${scopedActiveChannel}CenterElement">
           <div id="${scopedActiveChannel}PingAutocomplete" class="pingautocomplete animated fadeInUp faster hidden"></div>
@@ -249,13 +290,13 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
         </center>
         <div class="chatMessageBar channelChatMessageBar" id="${scopedActiveChannel}ChatMessageBar">
           <div class="form"><div>
-            <label for="${scopedActiveChannel}ChatMessageInput" id="messageLabel${scopedActiveChannel}">Send a message:</label>
+            <label for="${scopedActiveChannel}ChatMessageInput" id="messageLabel${scopedActiveChannel}">Ask a question:</label>
             <input autocomplete="off" text="text" id="${scopedActiveChannel}ChatMessageInput"> </input>
           </div></div>
           <div class="quickActions">
             <button class="btn b-0 roundedButton gifPicker" id="gifsButton${scopedActiveChannel}" onclick="openGifPicker('${scopedActiveChannel}')"><i class="bx bx-search-alt gifPicker"></i></button>
             <button class="btn b-0 roundedButton emojiButton" id="emojiButton${scopedActiveChannel}" onclick="openEmojiPicker('${scopedActiveChannel}')">😺</button>
-            <button class="btn b-0 roundedButton" id="${scopedActiveChannel}AttachmentButton" onclick="addAttachment('${scopedActiveChannel}')"><i class='bx bxs-file-plus'></i></button>
+            <button class="btn b-0 roundedButton" id="${scopedActiveChannel}AttachmentButton" onclick="addAttachment('${scopedActiveChannel}', '${channelType}')"><i class='bx bxs-file-plus'></i></button>
             <button class="btn b-1 roundedButton" id="${scopedActiveChannel}SendMessageButton" onclick="sendChannelChatMessage('${guildUID}','${guildID}', '${channelID}')"><i class='bx bx-send bx-rotate-270'></i></button>
           </div>
         </div>
@@ -288,8 +329,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
         </div>
       </div>
     </div>
-
-    <div class="channelSecondaryGrid" id="channelSecondaryGrid${scopedActiveChannel}">
+    <div class="channelSecondaryGrid hidden" id="channelSecondaryGrid${scopedActiveChannel}">
       <div class="voiceSectionHeader">
         <h3 class="guildChannelViewTitle">Voice</h3>
       </div>
@@ -303,7 +343,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
       </div>
     </div>
 
-    <div class="channelMediaContainer" id="${scopedActiveChannel}channelMediaContainer">
+    <div class="channelMediaContainer hidden" id="${scopedActiveChannel}channelMediaContainer">
       <div class="channelMediaHeader">
         <h3 class="guildChannelViewTitle" id="mediaGuildChannelViewTitle${scopedActiveChannel}"></h3>
       </div>
@@ -316,7 +356,162 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
         <div id="${scopedActiveChannel}MediaWatching" class="numWatchingText"></div>
       </div>
     </div>
-  `);
+    `);
+  }
+  else { // Chat channel.
+    $(`#${scopedActiveChannel}guildChannel`).html(`
+      <div class="channelPrimaryGrid ${scopedActiveChannel}Grid" id="${scopedActiveChannel}PrimaryGrid">
+        <div id="${scopedActiveChannel}DropTarget" class="dropTarget animated fadeIn faster">
+          <button onclick="$('#${scopedActiveChannel}DropTarget').css('display', '')" class="btn b-1 dropTargetButton"><i class="bx bx-x"></i></button>
+        </div>
+        <div class="channelTabListBanner">
+          <div>
+            <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Chat')" id="${scopedActiveChannel}TabItemChat" class="btn tabButton tabButtonActive ${scopedActiveChannel}TabItem roundedButton"><i class='bx bx-chat'></i></button>
+            <div id="${scopedActiveChannel}channelTabIndicator" class="channelTabIndicator animated invisible"></div>
+            <button onclick="loadMoreChannelMessages('${guildUID}', '${guildID}', '${channelID}', '${channelType}')" class="btn tabButton roundedButton" id="${scopedActiveChannel}LoadMoreMessagesButton"><i class="bx bx-up-arrow-alt"></i></button>
+            <button onclick="openChannelPinned('${scopedActiveChannel}')" class="btn tabButton roundedButton pinnedButton" id="${scopedActiveChannel}pinnedMessagesButton"><i class="bx bx-pin"></i></button>
+          </div>
+          <h3 class="guildChannelViewTitle" id="${scopedActiveChannel}guildChannelViewTitle">${securityConfirmTextIDs(channelName, true)}</h3>
+          <div>
+            <button onclick="openChannelPinned('${scopedActiveChannel}')" class="btn tabButton roundedButton invisible" id="${scopedActiveChannel}pinnedMessagesButtonCounterpoart"><i class="bx bx-pin"></i></button>
+            <button onclick="modifyChannelTab('${guildUID}', '${guildID}', '${channelID}', 'Music')" id="${scopedActiveChannel}TabItemMusic" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton invisibleOpacityAnimated musicButton"><i class='bx bx-music'></i></button>
+            <div class="dropdown">
+              <button onclick="openDropdown('${scopedActiveChannel}SettingsChannelDropdown')" id="${scopedActiveChannel}TabItemSettings" class="btn tabButton ${scopedActiveChannel}TabItem roundedButton dropdownButton"><i class='bx bx-cog'></i></button>
+              <div id="${scopedActiveChannel}SettingsChannelDropdown" class="dropdown-content">
+                <a id="channelMarkButton${scopedActiveChannel}" class="btn"></a>
+                <a id="${scopedActiveChannel}channelMuteButton" class="btn"></a>
+                <div id="${scopedActiveChannel}channelSettingsDivider1" class="dropdownDivider"></div>
+                <a id="channelRenameButton${scopedActiveChannel}" class="btn">Rename Lounge</a>
+                <a id="channelDeleteButton${scopedActiveChannel}" class="btn">Delete Lounge</a>
+                <div id="${scopedActiveChannel}channelSettingsDivider2" class="dropdownDivider"></div>
+                <a id="disablePublicView${scopedActiveChannel}" class="btn"></a>
+                <a id="disablePublicEdit${scopedActiveChannel}" class="btn"></a>
+              </div>
+            </div>
+          </div>
+        </div>  
+        <div id="${scopedActiveChannel}TabViewChat" class="${scopedActiveChannel}TabView ${scopedActiveChannel}TabView messagesContainerTabView">
+          <div id="${scopedActiveChannel}PingSelect" class="pingselect faster animated hidden">
+          <button onclick="closePingSelector('${scopedActiveChannel}')" class="btn b-2 closePingButton animated zoomIn"><i class="bx bx-x"></i></button>
+            <div class="form formLabelFix"><div>
+              <label for="${scopedActiveChannel}ChatMessageInputAutocomplete">Username:</label>
+              <input autocomplete="off" text="text" id="${scopedActiveChannel}ChatMessageInputAutocomplete"> </input>
+            </div></div>
+            <div id="${scopedActiveChannel}AutoCompleteResults" class="autocompleteResults"></div>
+          </div>
+          <div id="${scopedActiveChannel}PaginationPreview" class="hidden"></div>
+          <div id="${scopedActiveChannel}ChatMessages" class="${scopedActiveChannel}ChatMessages chatMessageContainer">
+            <div class="emptyChannel animated fadeIn hidden" id="emptyChannel${scopedActiveChannel}"><i class='bx bx-file-blank animated pulse infinite fast' ></i><br><b>No Messages</b><p>Be the first to send a message!</p></div>
+          </div>
+          <center id="${scopedActiveChannel}CenterElement">
+            <div id="${scopedActiveChannel}PingAutocomplete" class="pingautocomplete animated fadeInUp faster hidden"></div>
+            <div class="AttachmentManager hidden" id="${scopedActiveChannel}AttachmentManager">
+              <div class="AttachmentManagerContent hidden animated faster" id="${scopedActiveChannel}AttachmentManagerContent"> </div>
+            </div>
+            <div class="gifsPickerContainer gifPicker preStandardAnimationBottom hidden" id="${scopedActiveChannel}gifsPickerContainer">
+              <div class="gifsPickerContainerHeader gifPicker">
+                <div class="gifsHeaderTitle gifPicker">GIFs</div>
+                <button id="closeGifsButton${scopedActiveChannel}" class="btn b-3 roundedButton"><i class="bx bx-x"></i></button>
+              </div>
+              
+              <div class="gifsPickerContent">
+                <!-- Search Box -->
+                <div class="gifsPickerSearchContainer gifPicker">
+                  <input autocomplete="off" type="text" id="gifsPickerSearchBox${scopedActiveChannel}" class="gifsPickerSearchBoxInput gifPicker" placeholder="Search GIFs">
+                  <i class="bx bx-search"></i>
+                </div>
+        
+                <!-- GIFs -->
+                <div class="gifsPickerGifsContainer gifPicker">
+                  <div id="${scopedActiveChannel}gifsPickerGifsContainerTrending" class="gifsPickerGifsContainerTrending gifPicker hidden"> </div>
+                  <div id="${scopedActiveChannel}gifsPickerGifsContainerSearch" class="gifsPickerGifsContainerSearch gifPicker"> </div>
+                  <p class="poweredByTenor">Powered by Tenor.</p>
+                </div>
+              </div>
+            </div>
+            <div class="emojiPickerContainer preStandardAnimationBottom hidden" id="${scopedActiveChannel}emojiPickerContainer"></div>
+            <div class="pinnedMessagesContainer preStandardAnimation hidden" id="${scopedActiveChannel}pinnedMessagesContainer">
+              <div class="pinnedHeader">
+                <div class="pinnedHeaderTitle">Pinned Messages</div>
+                <div>
+                  <button id="closePinnedButton${scopedActiveChannel}" class="btn b-3 roundedButton"><i class="bx bx-x"></i></button>
+                </div>
+              </div>
+              <div class="pinnedMessages" id="${scopedActiveChannel}pinnedMessages"></div>
+              <div id="emptyPinned${scopedActiveChannel}" class="noPinned"><h2><i class="bx bx-pin"></i></h2>No pinned messages.</div>
+            </div>
+          </center>
+          <div class="chatMessageBar channelChatMessageBar" id="${scopedActiveChannel}ChatMessageBar">
+            <div class="form"><div>
+              <label for="${scopedActiveChannel}ChatMessageInput" id="messageLabel${scopedActiveChannel}">Send a message:</label>
+              <input autocomplete="off" text="text" id="${scopedActiveChannel}ChatMessageInput"> </input>
+            </div></div>
+            <div class="quickActions">
+              <button class="btn b-0 roundedButton gifPicker" id="gifsButton${scopedActiveChannel}" onclick="openGifPicker('${scopedActiveChannel}')"><i class="bx bx-search-alt gifPicker"></i></button>
+              <button class="btn b-0 roundedButton emojiButton" id="emojiButton${scopedActiveChannel}" onclick="openEmojiPicker('${scopedActiveChannel}')">😺</button>
+              <button class="btn b-0 roundedButton" id="${scopedActiveChannel}AttachmentButton" onclick="addAttachment('${scopedActiveChannel}, '${channelType}')"><i class='bx bxs-file-plus'></i></button>
+              <button class="btn b-1 roundedButton" id="${scopedActiveChannel}SendMessageButton" onclick="sendChannelChatMessage('${guildUID}','${guildID}', '${channelID}')"><i class='bx bx-send bx-rotate-270'></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="${scopedActiveChannel}TabViewMusic" class="hidden ${scopedActiveChannel}TabView musicContainerTabView musicContainerTabViewNonChat">
+          <div id="channelMusicQueue${scopedActiveChannel}" class="channelMusicQueue">
+            <audio class="channelMusicAudio" id="channelMusicAudio${scopedActiveChannel}"></audio>
+            <h3 id="connectedUsersText${scopedActiveChannel}">Connected Users</h3>
+            <div class="connectedUsersContainer" id="connectedUsersContainer${scopedActiveChannel}"></div>
+            <h3>Music Volume</h3>
+            <input type="range" min="0" max="100" value="100" class="slider" oninput="updateVolumeFromSlider('${scopedActiveChannel}')" id="sliderOnMusicVolume${scopedActiveChannel}" class="sliderOnMusicVolume" />
+            <h3 id="${scopedActiveChannel}NowPlayingText"><span style="color: var(--secondary)">Nothing Playing</span></h3>
+            <div id="channelMusicNowPlayingContent${scopedActiveChannel}" class="nowPlayingContent"></div>
+            <h3 id="channelQueueText${scopedActiveChannel}">Queue</h3>
+            <div id="channelMusicQueueContent${scopedActiveChannel}" class="channelQueueContainer"> </div>  
+          </div>
+
+          <div class="musicAdminBar" id="${scopedActiveChannel}musicAdminBar">
+            <button id="${scopedActiveChannel}musicAdminClearQueue" class="btn b-1 roundedButton"><i class="bx bx-trash-alt"></i></button>
+            <button id="${scopedActiveChannel}musicAdminFastForward" class="btn b-1 roundedButton"><i class="bx bx-fast-forward"></i></button>
+          </div>
+
+          <button id="searchResultsCloseButton${scopedActiveChannel}" onclick="closeChannelSearchResults('${scopedActiveChannel}')" class="btn b-1 closeChannelSearchButton animated faster hidden"><i class="bx bx-x"></i></button>
+          <div id="searchResults${scopedActiveChannel}" class="channelMusicSearchResults animated faster hidden"> </div>
+          <div class="searchResultsChannelForm" id="${scopedActiveChannel}searchResultsChannelForm">
+            <div class="form formLabelFix"><div>
+              <label for="${scopedActiveChannel}SongSearchInput">Add to queue:</label>
+              <input autocomplete="off" text="text" id="${scopedActiveChannel}SongSearchInput"> </input>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="channelSecondaryGrid" id="channelSecondaryGrid${scopedActiveChannel}">
+        <div class="voiceSectionHeader">
+          <h3 class="guildChannelViewTitle">Voice</h3>
+        </div>
+        <div id="${scopedActiveChannel}channelSecondaryGridContent" class="channelSecondaryGridContent">
+          <div id="${scopedActiveChannel}VoiceList" class="voiceChatList ${scopedActiveChannel}VCList"> </div>
+          <div class="voiceChatButtonsContainer">
+            <button class="btn b-1 voiceChannelJoin musicPartyJoin" id="${scopedActiveChannel}musicPartyButton"> <i class="bx bx-music"></i></button>
+            <button class="btn b-1 voiceChannelJoin" id="${scopedActiveChannel}voiceChatButton"> <i class="bx bx-phone"></i></button>
+            <button class="btn b-1 voiceChannelJoin voiceChannelJoinStopWatching hidden" id="${scopedActiveChannel}voiceChatStopWatchingButton"> <i class="bx bx-window-close"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="channelMediaContainer" id="${scopedActiveChannel}channelMediaContainer">
+        <div class="channelMediaHeader">
+          <h3 class="guildChannelViewTitle" id="mediaGuildChannelViewTitle${scopedActiveChannel}"></h3>
+        </div>
+        <div class="verticalContainerFill"></div>
+        <video controls id="${scopedActiveChannel}channelMediaVideo"></video>
+        <div class="verticalContainerFill"></div>
+        <div class="channelMediaFooter">
+          <div id="${scopedActiveChannel}WatchingUsers" class="watchingUsersContainer"></div>
+          <button class="btn b-1 voiceChannelMediaLeave" id="${scopedActiveChannel}voiceChatStopWatchingButton2"> <i class="bx bx-window-close"></i></button>
+          <div id="${scopedActiveChannel}MediaWatching" class="numWatchingText"></div>
+        </div>
+      </div>
+    `);
+  }
 
   twemoji.parse($(`#${scopedActiveChannel}guildChannelViewTitle`).get(0));
   
@@ -476,7 +671,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
   $(`.${scopedActiveChannel}Grid`).get(0).ondrop = (e) => {
     showDroplet();
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
-      processAttachment(scopedActiveChannel, [e.dataTransfer.files[i]]);
+      processAttachment(scopedActiveChannel, [e.dataTransfer.files[i]], channelType);
     }
 
     $(`#${scopedActiveChannel}DropTarget`).css('display', '');
@@ -492,7 +687,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
   }
 
   displayInputEffect();
-  addChannelListeners(guildUID, guildID, channelID, false);
+  addChannelListeners(guildUID, guildID, channelID, false, channelType);
 
   $(`#${scopedActiveChannel}ChatMessageInput`).get(0).focus();
 
@@ -507,7 +702,7 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
     if (event.keyCode === 13) { event.preventDefault(); searchInChannel(guildUID, guildID, channelID)}
   })
 
-  pingDialog(guildUID, guildID, channelID); // Ping dialog & button on enter.
+  pingDialog(guildUID, guildID, channelID, channelType); // Ping dialog & button on enter.
 
   // Permissions
   reevaluatePermissionsChannel(guildUID, guildID, channelID);
@@ -673,11 +868,11 @@ export async function unpinMessage(messageID, scopedActiveChannel, skipNotify) {
   }
 }
 
-window.loadMoreChannelMessages = async (guildUID, guildID, channelID) => {
+window.loadMoreChannelMessages = async (guildUID, guildID, channelID, channelType) => {
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
   disableButton($(`#${scopedActiveChannel}LoadMoreMessagesButton`));
 
-  const response = addChannelMessagesPagination(guildUID, guildID, channelID);
+  const response = addChannelMessagesPagination(guildUID, guildID, channelID, channelType);
   if (response == 'topOfMessages' || !LatestMessagesPagination[scopedActiveChannel]) {
     enableButton($(`#${scopedActiveChannel}LoadMoreMessagesButton`), `<i class="bx bx-chat"></i>`);
     $(`#${scopedActiveChannel}LoadMoreMessagesButton`).get(0)._tippy.setContent('No more messages.');
@@ -719,7 +914,7 @@ export function reevaluatePermissionsChannel(guildUID, guildID, channelID) {
 
 }
 
-async function addChannelMessagesPagination(guildUID, guildID, channelID) {
+async function addChannelMessagesPagination(guildUID, guildID, channelID, channelType) {
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
   if (!LatestMessagesPagination[scopedActiveChannel]) {
     disablePagination[scopedActiveChannel] = true;
@@ -750,7 +945,7 @@ async function addChannelMessagesPagination(guildUID, guildID, channelID) {
           newPagination = key;
         }
 
-        await buildMessage(guildUID, guildID, channelID, value, key, `PaginationPreview`);
+        await buildMessage(guildUID, guildID, channelID, value, key, `PaginationPreview`, channelType);
         if ($(`#messageContentOfID${key}`).length){
           twemoji.parse($(`#messageContentOfID${key}`).get(0));
         }
@@ -770,7 +965,7 @@ async function addChannelMessagesPagination(guildUID, guildID, channelID) {
   disablePagination[scopedActiveChannel] = false;
 }
 
-export async function addChannelListeners(guildUID, guildID, channelID, secondTime) {
+export async function addChannelListeners(guildUID, guildID, channelID, secondTime, channelType) {
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
 
   // Always clear
@@ -804,7 +999,7 @@ export async function addChannelListeners(guildUID, guildID, channelID, secondTi
     }
 
     if (!$(`#messageContentContainerOfID${snapshot.key}`).length) {
-      await buildMessage(guildUID, guildID, channelID, snapshot.val(), snapshot.key, 'ChatMessages');
+      await buildMessage(guildUID, guildID, channelID, snapshot.val(), snapshot.key, 'ChatMessages', channelType);
       twemoji.parse($(`#messageContentOfID${snapshot.key}`).get(0));
     }
   });
@@ -815,12 +1010,30 @@ export async function addChannelListeners(guildUID, guildID, channelID, secondTi
 
   onChildChanged(query(ref(rtdb, `${activeMessageListener}`)), (snapshot) => {
     $(`#messageContentOfID${snapshot.key}`).html(messageify(snapshot.val().content));
+    
     twemoji.parse($(`#messageContentOfID${snapshot.key}`).get(0));
     if (snapshot.val().edited) {
       $(`#messageContentOfID${snapshot.key}`).addClass('editedMessage');
       $(`#editedMessageOfID${snapshot.key}`).removeClass('hidden');
       $(`#editedMessageIconOfID${snapshot.key}`).get(0)._tippy.setContent(`Edited ${timeago.format(new Date(snapshot.val().editedDate))}`);
     }
+
+    // TODO: Check for answers.
+    if (snapshot.val().answered) {
+      $(`#${snapshot.key}AnswerArea`).removeClass('hidden');
+      $(`#${snapshot.key}AnswerArea`).html(`
+        ${snapshot.val().answer}
+        <div class="qaTextAnswerBottom">
+          Answered by <span onclick="openUserCard('${snapshot.val().answeredBy.split('.')[1]}')">${snapshot.val().answeredBy.split('.')[0].capitalize()}</span>
+        </div>
+      `);
+      $(`#messageContentOfID${snapshot.key}`).get(0).setAttribute('messageChannelQAAnswered', snapshot.val().answer)
+    }
+    else {
+      $(`#${snapshot.key}AnswerArea`).addClass('hidden');
+      $(`#messageContentOfID${snapshot.key}`).get(0).setAttribute('messageChannelQAAnswered', "")
+    }
+
     // If sent a message, its approved now.
   })
 
@@ -887,14 +1100,14 @@ export async function addChannelListeners(guildUID, guildID, channelID, secondTi
       if (scroll < 599) {
         if (completePagination[scopedActiveChannel]) { return };
         if (!disablePagination[scopedActiveChannel]) { disablePagination[scopedActiveChannel] = true; 
-          addChannelMessagesPagination(guildUID, guildID, channelID);
+          addChannelMessagesPagination(guildUID, guildID, channelID, channelType);
         }
       }
     });
   }, 1800);
 }
 
-function buildMessage(guildUID, guildID, channelID, messageItem, messageID, targetDirectoryInput) {
+function buildMessage(guildUID, guildID, channelID, messageItem, messageID, targetDirectoryInput, channelType) {
   return new Promise(async (resolve, reject) => {
     const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
     let targetDirectory = targetDirectoryInput;
@@ -911,6 +1124,11 @@ function buildMessage(guildUID, guildID, channelID, messageItem, messageID, targ
     let dividerCode2 = '';
     let availableToAdd = true;
     let availableToAddedTo = true;
+
+    if (channelType == 'qa') {
+      availableToAdd = false;
+      availableToAddedTo = false;
+    }
   
     // Message type
     if (messageContent) {
@@ -1051,9 +1269,17 @@ function buildMessage(guildUID, guildID, channelID, messageItem, messageID, targ
     let innerMessageContent = `
       <div class="relative" id="messageContentContainerOfID${messageID}">
         ${bonusContent.pings}
-        <div class="messageContentContentContainer messageContentItemForContext loneEmoji${messageContent.length} acceptLeftClick ${bonusContent.edited ? 'editedMessage' : ''} ${bonusContent.classes}" guildUID="${guildUID}" messageID="${messageID}" messageSenderName="${messageItem.author}" messageSender="${messageItem.uid}" messageType="Channel" channelID="${scopedActiveChannel}" id="messageContentOfID${messageID}">
+        <div class="messageContentContentContainer messageContentItemForContext loneEmoji${messageContent.length} acceptLeftClick ${bonusContent.edited ? 'editedMessage' : ''} ${bonusContent.classes}" guildUID="${guildUID}" guildID="${guildID}" channelType="${channelType}" messageID="${messageID}" messageSenderName="${messageItem.author}" messageSender="${messageItem.uid}" messageType="Channel" channelID="${scopedActiveChannel}" messageChannelQAAnswered="${messageItem.answer}" id="messageContentOfID${messageID}">
           ${messageContent}
         </div>
+        ${(channelType == "qa") ? `${messageItem.answered ? ` 
+        <div class="qaTextAnswerArea" id="${messageID}AnswerArea">
+          ${messageItem.answer}
+          <div class="qaTextAnswerBottom">
+            Answered by <span onclick="openUserCard('${messageItem.answeredBy.split('.')[1]}')">${messageItem.answeredBy.split('.')[0].capitalize()}</span>
+          </div>
+        </div>
+      ` : `<div class="hidden qaTextAnswerArea" id="${messageID}AnswerArea"></div>`}` : ``}
         <div id="editedMessageOfID${messageID}" class="editedMessageIcon ${bonusContent.edited ? '' : 'hidden'} animated zoomIn">
           <i id="editedMessageIconOfID${messageID}" class="bx bx-pencil"></i>
         </div>
@@ -1066,7 +1292,7 @@ function buildMessage(guildUID, guildID, channelID, messageItem, messageID, targ
     }
     else {
       containerStart = `${dividerCode}
-        <div class="topLevelMessageContentTwo"> <img userID="${messageItem.uid}" username="${messageItem.author}" guildUID="${guildUID}" guildID="${guildID}" id="profilePhotoOfMessageID${messageID}" onclick="openUserCard('${messageItem.uid}')" class="otherChatMessageImageProfile userContextItem hidden" src="" />`
+        <div class="topLevelMessageContentTwo"> <img userID="${messageItem.uid}" username="${messageItem.author}" guildUID="${guildUID}" guildID="${guildID}" guildID="${guildID}" id="profilePhotoOfMessageID${messageID}" onclick="openUserCard('${messageItem.uid}')" class="otherChatMessageImageProfile userContextItem hidden" src="" />`
       containerEnd = `</div>`
     }
 
@@ -1155,7 +1381,7 @@ window.deleteLoneImage = (channelID, messageID) => {
   deleteMessage(channelID, messageID)
 }
 
-window.sendChannelChatMessage = async (guildUID, guildID, channelID, force) => {
+window.sendChannelChatMessage = async (guildUID, guildID, channelID, force, channelType) => {
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;
   
   let message = $(`#${scopedActiveChannel}ChatMessageInput`).val();
@@ -1226,7 +1452,7 @@ window.sendChannelChatMessage = async (guildUID, guildID, channelID, force) => {
     }
   }
 
-  hideAttachmentManager(scopedActiveChannel);
+  hideAttachmentManager(scopedActiveChannel, channelType);
   if (!PendingAttachments[scopedActiveChannel]) {
     PendingAttachments[scopedActiveChannel] = [];
   }
@@ -1285,6 +1511,60 @@ window.sendChannelChatMessage = async (guildUID, guildID, channelID, force) => {
   if (perspective && perspective.attributeScores && perspective.attributeScores["SEVERE_TOXICITY"] && perspective.attributeScores["SEVERE_TOXICITY"].summaryScore.value > 0.8) {
     openModal('toxicityWarning');
   }
+}
+
+export async function answerQuestion(scopedActiveChannel, messageID, answerText) {
+  if (answerText.length < 2) {
+    snac('Invalid Answer', 'Your answer cannot be less than 2 characters.', 'danger');
+    return;
+  }
+
+  if (answerText.length > 500) {
+    snac('Invalid Answer', 'Your answer cannot be more than 500 characters.', 'danger');
+    return;
+  }
+
+  closeModal();
+
+  await update(ref(rtdb, `channels/${scopedActiveChannel}/messages/${messageID}`), {
+    answer: answerText,
+    answered: true,
+    answeredBy: `${cacheUser.username}.${user.uid}`,
+  });
+
+  snac("Answer Added", "Your answer has been posted successfully.", "success");
+}
+
+export async function removeAnswer(scopedActiveChannel, messageID) {
+  await update(ref(rtdb, `channels/${scopedActiveChannel}/messages/${messageID}`), {
+    answer: "",
+    answered: false,
+    answeredBy: ``,
+  });
+
+  snac("Answer Deleted", "The answer has been deleted successfully.", "success");
+}
+
+export async function editAnswerQuestion(scopedActiveChannel, messageID, answerText) {
+  if (answerText.length < 2) {
+    snac('Invalid Answer', 'Your answer cannot be less than 2 characters.', 'danger');
+    return;
+  }
+
+  if (answerText.length > 500) {
+    snac('Invalid Answer', 'Your answer cannot be more than 500 characters.', 'danger');
+    return;
+  }
+
+  closeModal();
+
+  await update(ref(rtdb, `channels/${scopedActiveChannel}/messages/${messageID}`), {
+    answer: answerText,
+    answered: true,
+    answeredBy: `${cacheUser.username}.${user.uid}`,
+  });
+
+  snac("Answer Edited", "The answer has been edited successfully.", "success");
 }
 
 export function markChannelAsRead(guildUID, guildID, channelID) {
@@ -1429,7 +1709,7 @@ function showAttachmentManager(scopedActiveChannel) {
   $(`#messageLabel${scopedActiveChannel}`).html('Add a caption:');
 }
 
-function hideAttachmentManager(scopedActiveChannel) {
+function hideAttachmentManager(scopedActiveChannel, channelType) {
   $(`#${scopedActiveChannel}AttachmentManager`).removeClass('ManagerShown');
   $(`#${scopedActiveChannel}AttachmentManagerContent`).removeClass('fadeIn');
   $(`#${scopedActiveChannel}AttachmentManagerContent`).addClass('fadeOut');
@@ -1437,24 +1717,28 @@ function hideAttachmentManager(scopedActiveChannel) {
   $(`#${scopedActiveChannel}ChatMessages`).css('height', '');;
   $(`#messageLabel${scopedActiveChannel}`).html('Send a message:');
 
+  if (channelType == 'qa') {
+    $(`#messageLabel${scopedActiveChannel}`).html('Ask a question:');
+  }
+
   window.setTimeout(() => {
     $(`#${scopedActiveChannel}AttachmentManager`).addClass('hidden');
     $(`#${scopedActiveChannel}AttachmentManagerContent`).addClass('hidden');
   }, 1000);
 }
 
-window.addAttachment = (scopedActiveChannel) => {
+window.addAttachment = (scopedActiveChannel, channelType) => {
   $("#standardImageInput").off();
   $("#standardImageInput").val('');
 
   $("#standardImageInput").change(async () => {
-    processAttachment(scopedActiveChannel);
+    processAttachment(scopedActiveChannel, null, channelType);
   });
 
   $('#standardImageInput').get(0).click();
 }
 
-export async function processAttachment(scopedActiveChannel, files) {
+export async function processAttachment(scopedActiveChannel, files, channelType) {
   let filesList = files;
   if (!$(`#${scopedActiveChannel}AttachmentManagerContent`).length) {
     return;
@@ -1510,7 +1794,7 @@ export async function processAttachment(scopedActiveChannel, files) {
   
     PendingAttachments[scopedActiveChannel].push(filesList[i]);
   
-    updateChannelCaptionPreview(scopedActiveChannel);
+    updateChannelCaptionPreview(scopedActiveChannel, channelType);
   }
 }
 
@@ -1537,7 +1821,7 @@ function uploadAttachmentFile(scopedActiveChannel, timeOrID, file) {
   });
 }
 
-function updateChannelCaptionPreview(scopedActiveChannel) {
+function updateChannelCaptionPreview(scopedActiveChannel, channelType) {
   $(`.PLYRON${scopedActiveChannel}`).each((index, element) => {
     channelPendingPlayers[scopedActiveChannel + index].destroy();
   });
@@ -1561,7 +1845,7 @@ function updateChannelCaptionPreview(scopedActiveChannel) {
       attachmentItem = `<div onclick="window.open('${url}')" class="PendingAttachmentFile NoMediaAttachment"><i class="bx bx-file"></i></div>`;
     }
 
-    a.innerHTML = `${attachmentItem}<button onclick="removeChannelAttachmentFromList('${scopedActiveChannel}', '${i}')" class="btn attachmentRemoveButton"><i class='bx bx-x'></i></button>`;
+    a.innerHTML = `${attachmentItem}<button onclick="removeChannelAttachmentFromList('${scopedActiveChannel}', '${i}', '${channelType}')" class="btn attachmentRemoveButton"><i class='bx bx-x'></i></button>`;
     $(`#${scopedActiveChannel}AttachmentManagerContent`).get(0).appendChild(a);
   }
 
@@ -1576,13 +1860,13 @@ function updateChannelCaptionPreview(scopedActiveChannel) {
   });
 
   if (PendingAttachments[scopedActiveChannel].length === 0) {
-    hideAttachmentManager(scopedActiveChannel);
+    hideAttachmentManager(scopedActiveChannel, channelType);
   }
 }
 
-window.removeChannelAttachmentFromList = (scopedActiveChannel, index) => {
+window.removeChannelAttachmentFromList = (scopedActiveChannel, index, channelType) => {
   PendingAttachments[scopedActiveChannel].splice(parseInt(index), 1);
-  updateChannelCaptionPreview(scopedActiveChannel);
+  updateChannelCaptionPreview(scopedActiveChannel, channelType);
 }
 
 async function deleteChannel(guildUID, guildID, channelID, channelName) {
@@ -1679,10 +1963,10 @@ async function renameLoungeConfirm(guildUID, guildID, channelID) {
 
 }
 
-function pingDialog(guildUID, guildID, channelID) {
+function pingDialog(guildUID, guildID, channelID, channelType) {
   const scopedActiveChannel = `${guildUID}${guildID}${channelID}`;  
   $(`#${scopedActiveChannel}ChatMessageInput`).get(0).addEventListener("keydown", function(event) {
-    if (event.keyCode === 13) { event.preventDefault(); sendChannelChatMessage(guildUID, guildID, channelID) };
+    if (event.keyCode === 13) { event.preventDefault(); sendChannelChatMessage(guildUID, guildID, channelID, channelType) };
 
     if (event.keyCode === 50 && event.shiftKey) {
       event.preventDefault();

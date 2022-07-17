@@ -540,7 +540,14 @@ export async function openServer(guildUID, guildID) {
 
           <div class="guildChannelTitle">
             <p class="subtitle">Lounges</p>
-            <button onclick="newGuildChannel('${guildUID}', '${guildID}')" class="btn b-3 roundedButton hidden" id="${guildUID}${guildID}guildAddChannelButton"> <i class="bx bx-plus-circle"></i> </button>
+            <div class="dropdown">
+              <button onclick="openDropdown('${guildUID}${guildID}newLoungeDropdown')" class="btn b-3 dropdownButton roundedButton hidden" id="${guildUID}${guildID}guildAddChannelButton"> <i class="bx bx-plus-circle"></i> </button>
+              <div id="${guildUID}${guildID}newLoungeDropdown" class="dropdown-content loungeCreateDropdownContent">
+                <a onclick="newGuildChannel('${guildUID}', '${guildID}')" class="btn">Lounge</a>
+                <div class="dropdownDivider"></div>
+                <a onclick="newGuildQAChannel('${guildUID}', '${guildID}')" class="btn">Q&A Lounge</a>
+              </div>
+            </div>
           </div>
 
           <div class="guildChannelList" id="${guildUID}${guildID}guildChannelList">
@@ -879,7 +886,8 @@ export async function openServer(guildUID, guildID) {
     for (let i = 0; i < channelChangeForward.length; i++) {
       const channelID = channelChangeForward[i].split('.')[0];
       const channelName = channelChangeForward[i].split('.')[1];
-      buildGuildChannel(guildUID, guildID, channelID, channelName);
+      const channelType = channelChangeForward[i].split('.')[2];
+      buildGuildChannel(guildUID, guildID, channelID, channelName, channelType);
     }
     
     for (let i = 0; i < channelChangeBackward.length; i++) {
@@ -910,11 +918,12 @@ export async function openServer(guildUID, guildID) {
     for (let i = 0; i < serverData[guildUID + guildID].channels.length; i++) {
       const channelID = serverData[guildUID + guildID].channels[i].split('.')[0];
       const channelName = serverData[guildUID + guildID].channels[i].split('.')[1];
+      const channelType = serverData[guildUID + guildID].channels[i].split('.')[2];
       
       // Sidebar list.
       $(`#${guildUID}${guildID}${channelID}channeListName`).html(`${securityConfirmTextIDs(channelName, true)}`);
       $(`#${guildUID}${guildID}${channelID}guildChannelElement`).get(0).onclick = () => {
-        openGuildChannel(guildUID, guildID, channelID, channelName);
+        openGuildChannel(guildUID, guildID, channelID, channelName, channelType);
       }
 
       twemoji.parse($(`#${guildUID}${guildID}${channelID}channeListName`).get(0));
@@ -1067,6 +1076,7 @@ export async function openServer(guildUID, guildID) {
       // TO DO: get it working.
       if ($(`.${guildUID}${guildID}guildChannelActive`).length) {
         const channelID = $(`.${guildUID}${guildID}guildChannelActive`).get(0).getAttribute('channelID');
+        const channelType = $(`.${guildUID}${guildID}guildChannelActive`).get(0).getAttribute('channelType');
         currentChannel = channelID
 
         // Mark as read.
@@ -1076,7 +1086,7 @@ export async function openServer(guildUID, guildID) {
         }
         
         // Re-engage listeners.
-        addChannelListeners(guildUID, guildID, channelID, true);
+        addChannelListeners(guildUID, guildID, channelID, true), channelType;
         manageVoiceChatDisplay(guildUID, guildID, channelID, undefined);
       }
 
@@ -1108,8 +1118,11 @@ export async function openServer(guildUID, guildID) {
   });
 }
 
-function buildGuildChannel(guildUID, guildID, channelID, channelName) { // Redone
-  let iconSnippet = `<i id="${guildUID}${guildID}${channelID}sidebarIcon" class="bx bx-hash">`;
+function buildGuildChannel(guildUID, guildID, channelID, channelName, channelType) { // Redone
+  let iconSnippet = `<i id="${guildUID}${guildID}${channelID}sidebarIcon" class="bx bx-hash"></i>`;
+  if (channelType == 'qa') {
+    iconSnippet = `<i id="${guildUID}${guildID}${channelID}sidebarIcon" class="bx bx-message-square-dots"></i>`;
+  }
   let channelNoAccess = false;
   // Staff will always be able to see all channels.
 
@@ -1119,13 +1132,14 @@ function buildGuildChannel(guildUID, guildID, channelID, channelName) { // Redon
   a.setAttribute('guildID', guildID);
   a.setAttribute('channelID', channelID);
   a.setAttribute('channelName', channelName);
+  a.setAttribute('channelType', channelType);
 
   $(`#${guildUID}${guildID}${channelID}guildChannelElement`).remove();
   a.id = `${guildUID}${guildID}${channelID}guildChannelElement`;
 
-  a.onclick = () => openGuildChannel(guildUID, guildID, channelID, channelName);
+  a.onclick = () => openGuildChannel(guildUID, guildID, channelID, channelName, channelType);
   
-  a.innerHTML = `${iconSnippet}</i>
+  a.innerHTML = `${iconSnippet}
     <div class="channelNotify animated invisible" id="${guildUID}${guildID}${channelID}channelNotify"></div> 
     <div class="sidebarText" id="${guildUID}${guildID}${channelID}channeListName">${securityConfirmTextIDs(channelName, true)}</div>
   `;
@@ -1147,7 +1161,7 @@ function buildGuildChannel(guildUID, guildID, channelID, channelName) { // Redon
   checkIndicator(guildUID, guildID, channelID);
 
   if (toOpenChannelWhenReady == channelID) {
-    openGuildChannel(guildUID, guildID, channelID, channelName);
+    openGuildChannel(guildUID, guildID, channelID, channelName, channelType);
   }
 }
 

@@ -1,5 +1,5 @@
 import { addTrackToProfile, reportGroup, reportLounge, reportTrack, saveMessage, unsaveMessage, removeTrackFromProfile } from './app';
-import { deleteMessage, markChannelAsRead, markChannelAsUnread, muteChannel, pinMessage, prepareEditMessage, unmuteChannel, unpinMessage } from './channels';
+import { answerQuestion, deleteMessage, editAnswerQuestion, markChannelAsRead, markChannelAsUnread, muteChannel, pinMessage, prepareEditMessage, removeAnswer, unmuteChannel, unpinMessage } from './channels';
 import { closeModal, disableButton, messageHTMLtoText, openModal } from './app';
 import { deleteDMMessage, markDMRead, markDMUnread, openFriendsDM, pinDMMessage, prepareDMEditMessage, prepareRemoveFriend, unpinDMMessage } from './friends';
 import { addAlbumToPlaylist, addPlaylistToFolder, deletePlaylistFolder, openPlaylist, prepareDeletePlaylist, prepareRemovePlaylistFromLibrary, prepareRenameFolder, prepareRenamePlaylist, removePlaylistFromFolder, removePlaylistFromLibrary, removeTrackFromPlaylist } from './library';
@@ -574,7 +574,10 @@ function setContextMessageItems(item, element) {
   const messageSender = element.getAttribute('messageSender');
   const messageType = element.getAttribute('messageType');
   const messageGuildUID = element.getAttribute('guildUID');
+  const messageGuildID = element.getAttribute('guildID');
   const messageChannel = element.getAttribute('channelID');
+  const messageChannelType = element.getAttribute('channelType');
+  const messageChannelQAAnswered = element.getAttribute('messageChannelQAAnswered');
   const messageSenderName = element.getAttribute('messageSenderName');
 
   if (cacheUserPracticalBookmarks[messageID]) {
@@ -623,11 +626,51 @@ function setContextMessageItems(item, element) {
     }
   }
 
-  if (messageSender === user.uid) { contextItemList.eq(5).removeClass("hidden"); contextItemList.eq(6).removeClass("hidden"); contextItemList.eq(7).removeClass("hidden") } else { contextItemList.eq(5).addClass("hidden"); contextItemList.eq(6).addClass("hidden"); contextItemList.eq(7).addClass("hidden") };
+  // Q&A Channels
+  contextItemList.eq(4).addClass('hidden');
+  contextItemList.eq(5).addClass('hidden');
+  contextItemList.eq(6).addClass('hidden');
+  if (messageChannelType == 'qa' && (serverData[messageGuildUID + messageGuildID].staff.includes(user.uid) || messageGuildUID == user.uid) ) {
+    contextItemList.eq(4).removeClass('hidden');
+    contextItemList.eq(5).removeClass('hidden');
+    if (messageChannelQAAnswered) {
+      contextItemList.eq(5).html("Edit Answer")
+      contextItemList.eq(6).removeClass('hidden');
+    }
+    else {
+      contextItemList.eq(5).html("Answer")
+    }
+  }
+
+  contextItemList.eq(6).get(0).onclick = () => {
+    removeAnswer(messageChannel, messageID)
+  }
+
+  contextItemList.eq(5).get(0).onclick = () => {
+    if (messageChannelQAAnswered) {
+      openModal('answerEdit');
+      $(`#answerDraftEditTextarea`).focus();
+      $(`#answerDraftEditTextarea`).val(messageChannelQAAnswered);
+      $(`#confirmEditAnswer`).get(0).onclick = () => {
+        const answerText = $(`#answerDraftEditTextarea`).val();
+        editAnswerQuestion(messageChannel, messageID, answerText)
+      }
+    }
+    else {
+      openModal('answerDraft');
+      $(`#answerDraftTextarea`).focus();
+      $(`#confirmAnswer`).get(0).onclick = () => {
+        const answerText = $(`#answerDraftTextarea`).val();
+        answerQuestion(messageChannel, messageID, answerText)
+      }
+    }
+  }
+
+  if (messageSender === user.uid) { contextItemList.eq(8).removeClass("hidden"); contextItemList.eq(9).removeClass("hidden"); contextItemList.eq(10).removeClass("hidden") } else { contextItemList.eq(8).addClass("hidden"); contextItemList.eq(9).addClass("hidden"); contextItemList.eq(10).addClass("hidden") };
 
   // Full support for non-stndard messages.
 
-  contextItemList.eq(5).get(0).onclick = () => {
+  contextItemList.eq(8).get(0).onclick = () => {
     // Edit Message
     if (messageType == 'DM') {
       prepareDMEditMessage(messageChannel, messageID);
@@ -637,7 +680,7 @@ function setContextMessageItems(item, element) {
     }
   }
 
-  contextItemList.eq(6).get(0).onclick = () => {
+  contextItemList.eq(9).get(0).onclick = () => {
     // Delete Message
     openModal('deleteMessage');
     $(`#deleteMessageConfirm`).get(0).onclick = () => {
@@ -652,11 +695,11 @@ function setContextMessageItems(item, element) {
   }
 
   if (messageGuildUID == user.uid) {
-    contextItemList.eq(6).removeClass("hidden");
-    contextItemList.eq(7).removeClass("hidden"); // Divider
+    contextItemList.eq(9).removeClass("hidden");
+    contextItemList.eq(10).removeClass("hidden"); // Divider
   }
 
-  contextItemList.eq(8).get(0).onclick = () => {
+  contextItemList.eq(11).get(0).onclick = () => {
     copyToClipboard(messageID);
   }
 }

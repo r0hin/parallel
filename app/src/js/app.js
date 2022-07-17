@@ -1836,6 +1836,9 @@ export async function openModal(id) {
     case 'newChannel':
       $(`#newChannelName`).get(0).focus();
       break;
+    case 'newChannelQA':
+      $(`#newChannelQAName`).get(0).focus();
+      break;
     case 'reorderPlaylist':
       $(`#newPlaylistIndex`).get(0).focus();
       break;

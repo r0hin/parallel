@@ -245,6 +245,24 @@
     </center>
   </div>
 
+  <div id="modalContent_answerDraft" class="hidden">
+    <h3>Write Answer</h3>
+    <textarea wrap="hard" cols="69" id="answerDraftTextarea" rows="5"></textarea>
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1" id="confirmAnswer">Answer</button>
+    </center>
+  </div>
+
+  <div id="modalContent_answerEdit" class="hidden">
+    <h3>Write Answer</h3>
+    <textarea wrap="hard" cols="69" id="answerDraftEditTextarea" rows="5"></textarea>
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1" id="confirmEditAnswer">Answer</button>
+    </center>
+  </div>
+
   <div id="modalContent_reviewEdit" class="hidden">
     <h3>Edit Review</h3>
     <textarea wrap="hard" cols="69" id="reviewEditTextarea" rows="5"></textarea>
@@ -463,6 +481,20 @@
     <center>
       <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
       <button class="btn b-1" id="newGuildChannelCreateButton">Create</button>
+    </center>
+  </div>
+
+  <div id="modalContent_newChannelQA" class="hidden">
+    <h3>New Q&A Lounge</h3>
+    <div class="form entryform">
+      <div>
+        <label for="newChannelName">Lounge Name</label>
+        <input autocomplete="off" id="newChannelQAName" type="text"/>
+      </div>
+    </div>    
+    <center>
+      <button class="btn b-3 closeModalButtonOnclick">Cancel</button>
+      <button class="btn b-1" id="newGuildChannelQACreateButton">Create</button>
     </center>
   </div>
 
@@ -1005,6 +1037,9 @@
         <hr class="contextDivider">
         <button class="btn contextButton">Bookmark / Unbookmark</button>
         <button class="btn contextButton">Pin / Unpin</button>
+        <hr class="contextDivider">
+        <button class="btn contextButton">Answer / Edit Answer</button>
+        <button class="btn contextButton">Delete Answer</button>
         <hr class="contextDivider">
         <button class="btn contextButton">Edit</button>
         <button class="btn contextButton contextButtonDanger">Delete</button>
