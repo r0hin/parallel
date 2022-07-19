@@ -31,7 +31,7 @@ import { updateApp } from './electronApp';
 import { sendToElectron } from './electron';
 
 window.user;
-window.gitHubVersion = '2.7.4';
+window.gitHubVersion = '2.7.5';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);

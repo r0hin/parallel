@@ -574,16 +574,6 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
     placement: 'top',
   });
 
-  tippy($(`#disablePublicView${scopedActiveChannel}`).get(0), {
-    content: '',
-    placement: 'top',
-  })
-
-  tippy($(`#disablePublicEdit${scopedActiveChannel}`).get(0), {
-    content: '',
-    placement: 'top',
-  })
-
   tippy($(`#${scopedActiveChannel}voiceChatStopWatchingButton`).get(0), {
     content: 'Stop Watching',
     placement: 'top',
@@ -622,10 +612,6 @@ export async function openGuildChannel(guildUID, guildID, channelID, channelName
     renameLoungePrepare(guildUID, guildID, channelID);
   }
 
-  tippy($(`#channelDeleteButton${scopedActiveChannel}`).get(0), {
-    content: 'Delete Lounge',
-    placement: 'top',
-  });
   $(`#channelDeleteButton${scopedActiveChannel}`).get(0).onclick = () => {
     deleteLoungePrepare(guildUID, guildID, channelID, channelName);
   }

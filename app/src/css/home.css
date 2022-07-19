@@ -1097,7 +1097,7 @@ span.yourProfile {
   border-left: 2px solid transparent;
 }
 
-.messageContentItemForContext.loneEmoji2 {
+.messageContentItemForContext.loneEmoji2matchtrue, .messageContentItemForContext.loneEmoji1matchtrue {
   height: 42px;
 }
 
@@ -2628,6 +2628,10 @@ h1 * {
   margin: 0px; margin-top: 16px; margin-bottom: 12px;
 }
 
+.guildMember div:last-child {
+  z-index: 2;
+}
+
 .guildMember .bx-crown {
   color: var(--primary);
 }
@@ -3328,7 +3332,7 @@ div.pill.danger {
   border-left: 5px solid var(--bg1);
 }
 
-.friendCardList::after {
+.friendCardList:not(.incomingCard,.outgoingCard)::after {
   content: "";
   position: absolute;
   top: -5px; left: -5px;
