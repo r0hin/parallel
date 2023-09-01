@@ -2007,7 +2007,7 @@ window.openSharing = (playlistUID, playlistID) => {
   openModal('updateSharing');
 
   $(`#copyLinkPlaylistButton`).get(0).onclick = () => {
-    copyToClipboard(`https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}`);
+    copyToClipboard(`https://parallel.r0h.in/preview?playlistUID=${playlistUID}&playlistID=${playlistID}`);
   }
 
   $(`#ifEveryone`).addClass('hidden');

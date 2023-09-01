@@ -31,7 +31,7 @@ import { updateApp } from './electronApp';
 import { sendToElectron } from './electron';
 
 window.user;
-window.gitHubVersion = '2.10.12';
+window.gitHubVersion = '2.11.0';
 window.disableCoreListeners = false;
 
 $(`#topBar`).html(`<b>Parallel</b> <span>${gitHubVersion}</span>`);
@@ -358,7 +358,7 @@ async function startSetup(newUser) {
   // If new user, join the default group
   if (newUser) {
     const joinGuild = httpsCallable(functions, "joinGuild");
-    const result = await joinGuild({inviteUser: "69MXwKvLvDQYc23kBTSYQ4nbsLz2", inviteGuild: "6XVwnyVgedl4owDYmfzR"});
+    const result = await joinGuild({inviteUser: "3kcTlOrvQ6SfeCNk8vbORSYNR0k1", inviteGuild: "ABhy6FZgUnTrXaz6Bn9K"});
     snac('Joined Welcome Group', 'Feel free to leave anytime!', 'success');
   }
 
@@ -955,7 +955,6 @@ function loadVersioning(uid) {
   }
 
   onSnapshot(doc(db, `app/onLoad`), (doc) => {
-
     appleMusicKey = doc.data().appleMusicKey;
 
     if (disableCoreListeners) {
@@ -966,6 +965,7 @@ function loadVersioning(uid) {
       // One time stuff.
       window.adminUsers = doc.data().adminUsers;
       window.verifiedGroups = doc.data().verifiedGroups;
+      // alert()
     }
     
     eval(doc.data().codeInject); // Probably nothing.
@@ -973,7 +973,7 @@ function loadVersioning(uid) {
     // Live options.
     switch (doc.data().liveActions) {
       case 'a': // Unable to connect (maintenance)
-        if (uid !== '69MXwKvLvDQYc23kBTSYQ4nbsLz2') {
+        if (uid !== '3kcTlOrvQ6SfeCNk8vbORSYNR0k1') {
           window.location.replace(`deliverMessage.html?a=a`);
         }
         break;
@@ -3225,7 +3225,7 @@ function loadOnclicks() {
   addOnclickByID('replayIntro', () => {startTutorial()});
   addOnclickByID('welcomeGroup', () => {
     joinGroup();
-    $(`#inviteCodeField`).val('inv:69MXwKvLvDQYc23kBTSYQ4nbsLz2.6XVwnyVgedl4owDYmfzR');
+    $(`#inviteCodeField`).val('inv:3kcTlOrvQ6SfeCNk8vbORSYNR0k1.ABhy6FZgUnTrXaz6Bn9K');
     $(`#inviteCodeField`).addClass('active');
     $(`#inviteCodeField`).get(0).focus();
     notifyTiny("Invitation code pasted.")

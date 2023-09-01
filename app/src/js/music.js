@@ -144,7 +144,7 @@ window.makeMusicRequest = (q) => {
   if (!appleMusicKey) {
     alert("Error");
   }
-  
+
   return new Promise(async (resolve, reject) => {
     const fetched = await fetch(`https://api.music.apple.com/v1/catalog/us/${q}`, {
       method: 'GET',
@@ -1080,7 +1080,7 @@ export async function openOtherPlaylist(playlistUID, playlistID, playlistNameInp
               <a id="deletePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Remove from Library</a>
               <a id="clonePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Clone Playlist</a>
                 <div class="dropdownDivider"></div>
-                <a onclick="copyToClipboard('https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
+                <a onclick="copyToClipboard('https://parallel.r0h.in/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
                 <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
               </div>
             </div>
@@ -1091,7 +1091,7 @@ export async function openOtherPlaylist(playlistUID, playlistID, playlistNameInp
                 <a id="${playlistUID}${playlistID}AddButton" class="btn">Add to Library</a>
                 <a id="${playlistUID}${playlistID}CloneButton" class="btn">Clone Playlist</a>
                 <div class="dropdownDivider"></div>
-                <a onclick="copyToClipboard('https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
+                <a onclick="copyToClipboard('https://parallel.r0h.in/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
                 <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
               </div>
             </div>
@@ -1788,7 +1788,7 @@ window.openAlbum = async (albumIDInput, trackID) => {
                 <div id="${albumID}AlbumDropdown" class="dropdown-content">
                   <a id="${albumID}AddButton" class="btn playlistButtonContext acceptLeftClick">Add to Playlist</a>
                   <div class="dropdownDivider"></div>
-                  <a onclick="copyToClipboard('https://parallelsocial.net/preview?albumID=${albumID}')" class="btn">Copy Link</a>
+                  <a onclick="copyToClipboard('https://parallel.r0h.in/preview?albumID=${albumID}')" class="btn">Copy Link</a>
                   <a onclick="copyToClipboard('${albumID}')" class="btn">Copy ID</a>
                 </div>
               </div>
