@@ -102,13 +102,13 @@ if (navigator.platform.toLowerCase().includes('mac')) {
   try {
     document.getElementById('joinButton3').innerHTML = `<i class="bx bxl-apple"></i> Download (Intel)`;
     document.getElementById('joinButton3').onclick = () => {
-      window.open(`https://github.com/parallelsocial/parallel/releases/latest/download/Parallel-${version}.dmg`);
+      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-${version}.dmg`);
     }
     
     document.getElementById('joinButton4').classList.remove('hidden');
     document.getElementById('joinButton4').innerHTML = `<i class="bx bxl-apple"></i> Download (Apple Silicon)`;
     document.getElementById('joinButton4').onclick = () => {
-      window.open(`https://github.com/parallelsocial/parallel/releases/latest/download/Parallel-${version}-arm64.dmg`);
+      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-${version}-arm64.dmg`);
     }
   } catch (error) {
     
@@ -119,7 +119,7 @@ else if (navigator.platform.toLowerCase().includes('win')) {
   try {
     document.getElementById('joinButton3').innerHTML = `<i class="bx bxl-windows"></i> Download`;
     document.getElementById('joinButton3').onclick = () => {
-      window.open(`https://github.com/parallelsocial/parallel/releases/latest/download/Parallel-Setup-${version}.exe`);
+      window.open(`https://github.com/r0hin/parallel/releases/latest/download/Parallel-Setup-${version}.exe`);
     }
     document.getElementById('joinButton4').classList.add('hidden');
   } catch (error) {
@@ -131,7 +131,7 @@ else {
   try {
     document.getElementById('joinButton3').innerHTML = `<i class="bx bxl-github"></i> Download`;
     document.getElementById('joinButton3').onclick = () => {
-      window.open(`https://github.com/parallelsocial/parallel/releases/latest/`);
+      window.open(`https://github.com/r0hin/parallel/releases/latest/`);
     }
     document.getElementById('joinButton4').classList.add('hidden');
   } catch (error) {
