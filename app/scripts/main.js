@@ -127,10 +127,10 @@ const createWindow = () => {
   })
 
   // In development:
-  // win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
+  win.loadURL(`http://localhost:1234/app.html${URLARGUMENTS}`)
 
   // In production:
-  host.startServer(win, URLARGUMENTS); 
+  // host.startServer(win, URLARGUMENTS); 
 
   return win;
 }

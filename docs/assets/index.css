@@ -1,0 +1,421 @@
+body, html {
+  background-color: #05020D;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.animation-wrapper {
+  width: 50%;
+  padding-bottom: 50%;
+}
+
+.sphere-animation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 580px;
+  height: 580px;
+  margin: -290px 0 0 -290px;
+}
+
+.sphere path {
+  fill: url(#sphereGradient);
+  stroke-width: 1px;
+  stroke: rgba(80,80,80,.35);
+  backface-visibility: hidden;
+}
+
+@media (min-width: 500px) {
+  .sphere path {
+    stroke-width: .4px;
+  }
+}
+
+.centerContainerContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  transform: translateX(0) translateY(0);
+  transition: all 1.5s ease-in-out;
+  justify-content: center;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  align-items: center;
+}
+
+.centerContainerContainerGone {
+  left: calc(50% - 128px);
+  top: calc(-50% + 128px);
+} 
+
+.centerContainerContainerGoneLeft {
+  left: calc(-50% + 128px);
+  top: calc(-50% + 128px);
+} 
+
+.centerContainer {
+  transform: translateX(0) translateY(0);
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.splash1 {
+  position: absolute;
+  height: 100%;
+  left: -168px
+}
+
+.splash2 {
+  position: absolute;
+  height: 100%;
+  right: -168px
+}
+
+.splash3 {
+  position: absolute;
+  height: 100%;
+  left: 50%; 
+  transform: translateX(-50%);
+  opacity: 0.4;
+}
+
+.hidden {
+  display: none !important;
+}
+
+nav {
+  position: absolute;
+  width: calc(100% - 48px - 48px);
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 48px;
+}
+
+nav img {
+  height: 64px;
+  transition: all 0.3s;
+}
+
+nav img:hover {
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* small screens */
+@media (max-width: 600px) {
+  .nav-links {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+.nav-links a {
+  color: rgb(220, 220, 220);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 0px 42px;
+  transition: color 0.2s ease-in;
+}
+
+.nav-links a.active {
+  color: white;
+  pointer-events: none;
+}
+
+.nav-links a:hover {
+  color: #F25E92;
+}
+
+.textLeft {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%) scaleX(-1);
+  z-index: 5;
+  height: 100%;
+  width: 300px;
+  transition: all 1.5s;
+}
+
+.textLeftExpanded {
+  width: calc(100% - 200px) !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: all 1.5s;
+}
+
+.textRightExpanded {
+  width: calc(100% - 200px) !important;
+  overflow-y: auto;
+  overflow-x: hidden
+}
+
+
+.textRight {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  z-index: 5;
+  height: 100%;
+  width: 300px;
+  transition: all 1.5s;
+}
+
+.textRightGone {
+  right: -100%
+}
+
+.textLeftGone {
+  left: -100%
+}
+
+.textLeft h1, .textRight h1 {
+  background: -webkit-linear-gradient(#664fff, #8336ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.4;
+  font-size: 150px;
+  font-weight: 700;
+  margin: 0px;
+  transition: all 1.5s;
+}
+
+.textLeftContent {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) scaleX(-1);
+  transition: all 1.5s;
+  left: 0px;
+}
+
+.textRightContent {
+  position: absolute;
+  top: 50%;
+  right: -116px;
+  transform: translateY(-50%);
+  transition: all 1.5s;
+}
+
+.textLeftExpanded .textLeftContent {
+  left: calc(100% - 460px);
+  top: 128px;
+  transform: translateY(0) scaleX(-1);
+  transition: all 1.5s;
+}
+
+.textRightExpanded .textRightContent {
+  right: 24px;
+  top: 128px;
+  transform: translateY(0);
+}
+
+.textLeftExpanded #musicExpandButtonLeft {
+  margin-top: 0px;
+  transform: translateY(-0px) translateX(-160px);
+  transition: all 1.5s ease-in-out;
+}
+
+.textRightExpanded #socialExpandButtonRight {
+  margin-top: 0px;
+  transform: translateY(-0px) translateX(160px);
+  transition: all 1.5s ease-in-out;
+}
+
+.textLeft h1 {
+  transform: rotate(-90deg);
+}
+
+.textRight h1 {
+  transform: rotate(-90deg);
+}
+
+.textLeft .expandButton {
+  margin-top: 148px;
+  transition: all 1.5s ease-in-out;
+}
+
+.textRight .expandButton {
+  margin-top: 148px;
+  transition: all 1.5s ease-in-out;
+}
+
+.musicTextLeftExpanded {
+  transform: rotate(0deg) !important;
+}
+
+.socialTextRightExpanded {
+  transform: rotate(0deg) !important;
+}
+
+.textRight h1 {
+  background: -webkit-linear-gradient(#ff4f95, #ff36ee);
+  -webkit-background-clip: text;
+  margin-right: 18px;
+  -webkit-text-fill-color: transparent;
+}
+
+.expandButton {
+  margin-top: 42px;
+  margin-left: 18px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 28px;
+  border: 2px solid #664fff;
+  backdrop-filter: blur(10px);
+  width: 82px; height: 82px;
+  transition: all 0.2s;
+}
+
+.expandButton i {
+  color: white;
+  font-size: 32px;
+}
+
+.expandButton:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  border: 2px solid #8336ff;
+  backdrop-filter: blur(10px);
+  width: 82px; height: 82px;
+}
+
+.textRight .expandButton {
+  border: 2px solid #ff4f95;
+}
+
+.textRight .expandButton:hover {
+  border: 2px solid #ff36ee;
+}
+
+.frontText {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  z-index: 4;
+  transition: all 1.5s ease-in-out;
+}
+
+.frontTextGone {
+  top: -100px; left: calc(100% + 1000px);
+}
+
+.frontTextGoneLeft {
+  top: -100px; left: calc(-100% - 1000px);
+}
+
+.frontTextH1 {
+  transition: opacity 0.5s;
+}
+
+.frontText h1 {
+  margin-top: 0px;
+  background: #fff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-box-decoration-break: clone;
+  background-image: linear-gradient(129deg,#F25E92,#3267FF, #F25E92);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  animation: shine 3s linear infinite;
+  font-size: 5rem;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+
+.frontText p {
+  color: rgb(203, 203, 203);
+  max-width: min(500px, calc(100vw - 28px));
+  margin: 0 auto;
+  margin-top: 12px;
+  font-size: 1.3rem;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+.buttonPrimary {
+  padding: 12px 24px 12px 24px;
+  text-transform: uppercase;
+  font-size: 0.855rem; font-weight: 700;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  opacity: 1;
+  transition: all 0.3s;
+  margin-right: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 0px;
+  outline: none;
+  border: 2px solid #F25E92;
+  background-color: rgba(0, 0, 0, 0);
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: white;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.buttonPrimary:hover {
+  border: 2px solid F25E92;
+  background-color: black;
+}
+
+.buttonPrimary i {
+  padding-top: 4px;
+  padding-right: 12px;
+}
+
+#fullHeight{
+  height: 100vh;
+}
+
+#secondContent {
+  padding: 64px;
+  background-color: white;
+  position: relative;
+}
+
+#secondContent h2 {
+  margin: 0 auto;
+  max-width: 500px;
+  text-align: center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.5s;
+}
+
+#thirdContent, #fourthContent {
+  padding: 24px;
+  position: relative;
+}
+
+#thirdContent img, #fourthContent img {
+  width: 100%;
+}
+
+#fourthContent {
+  background-color: white;
+}

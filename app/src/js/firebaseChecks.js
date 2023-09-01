@@ -9,14 +9,12 @@ export function checkAppInitialized() {
   if (!window.isAppInitialized) {
     window.isAppInitialized = true;
     const fbApp = initializeApp({
-      apiKey: "AIzaSyDwSVIkiXmE5CFqOkqyew75zX5pRbpuboo",
+      apiKey: "AIzaSyB9flacN0RBNvhzJFQJ1UemZ5LlvuV9ELY",
       authDomain: "parallel-archive.firebaseapp.com",
-      databaseURL: "https://parallel-archive-default-rtdb.firebaseio.com",
       projectId: "parallel-archive",
       storageBucket: "parallel-archive.appspot.com",
-      messagingSenderId: "77839003871",
-      appId: "1:77839003871:web:b546052cf3f5a3d9b2396a",
-      measurementId: "G-WTBYX3FY97"
+      messagingSenderId: "399931651379",
+      appId: "1:399931651379:web:f1fd0094ad26f5f9d6ba46"
     });
 
     // const appCheck = initializeAppCheck(fbApp, {
