@@ -1,0 +1,165 @@
+
+.context-menu {
+  display: none;
+  position: absolute;
+  z-index: 300;
+  margin-left: 0px;
+  opacity: 1;
+}
+
+.contextMenuActive {
+  display: block;
+}
+
+.contextButton {
+  background-color: var(--bg0);
+  color: var(--fg3);
+  text-transform: none;
+  text-align: left; display: block;
+  width:calc(100% - 12px); display:block;
+  white-space: nowrap; 
+  border-radius: 4px;
+  margin: 0px 6px 0px 6px;
+  transition: all 0.15s;
+}
+
+.contextDivider {
+  width: calc(100% - 12px);
+  margin: 6px;
+  height: 3px; background-color: var(--fg4);
+  opacity: 0.15;
+}
+
+.contextButton:hover {
+  opacity: 1;
+  color: white;
+  background-color: var(--primary);
+  transition: all 0.15s;
+}
+
+.contextButtonDanger:hover {
+  background-color: red;
+  color: white;
+}
+
+.contextButtonInfo:hover {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.adminContextButton {
+  color: var(--secondary);
+}
+
+.contextButtonImportant {
+  padding-left: 32px;
+  padding-top: 7px;
+  position: relative;
+  color: var(--secondary);
+  margin-bottom: 6px;
+}
+
+.contextButtonImportant i {
+  position: absolute;
+  top: 51%; left: 12px;
+  transform: translate(0, -50%);
+}
+
+.context-menu__items {
+  background-color: var(--bg0);
+  list-style-type: none;
+  padding: 9px 3px 9px 3px; border-radius: 8px;
+  min-width: 180px;
+  box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.05);
+}
+
+#addToPlaylist_context .context-menu__items, #addToFolder_context .context-menu__items, #selectArtist_context .context-menu__items {
+  background-color: var(--bg0);
+  box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.32);
+}
+
+#addToPlaylist_context .contextButton, #addToFolder_context .contextButton, #selectArtist_context .contextButton {
+  background-color: var(--bg2);
+  border-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+#addToPlaylist_context .context-menu__items, #addToFolder_context .context-menu__items, #selectArtist_context .context-menu__items {
+  padding: 0px;
+}
+
+#addToPlaylist_context .contextButton:hover, #addToFolder_context .contextButton:hover, #selectArtist_context .contextButton:hover {
+  background-color: var(--secondary);
+  border-radius: 0px;
+}
+
+#addToPlaylist_context .contextButton:first-child, #addToFolder_context .contextButton:first-child, #selectArtist_context .contextButton:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+#addToPlaylist_context .contextButton:last-child, #addToFolder_context .contextButton:last-child, #selectArtist_context .contextButton:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.contextAnim {
+  animation: contextExpand 0.2s;
+  animation-timing-function:ease-out;
+}
+
+@keyframes contextExpand {
+  0%   {
+    opacity: 0;
+    margin-left: 20px;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    margin-left: 0px;
+    opacity: 1;
+  }
+}
+
+.contextSlider {
+  padding: 0px 12px 12px 12px;
+}
+
+.contextSlider span {
+  padding: 8px 16px 8px 4px;
+  font-size: 0.845rem;
+  font-weight: 700;
+  opacity: 1;
+  background-color: var(--bg0);
+  color: var(--fg3);
+  border-radius: 4px;
+  margin: 0px 6px 0px 6px;
+  transition: all 0.15s;  
+}
+
+.contextSlider input, .slider {
+  height: 8px; width: calc(100% - 18px);
+  padding: 0px;
+  margin: 8px 8px 0px 8px;
+  display: block;
+  -webkit-appearance: none;
+  border: 0px;
+  background-color: var(--bg2);
+}
+
+.contextSlider input::-webkit-slider-thumb, .slider::-webkit-slider-thumb {
+  background: var(--primary);
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px; 
+  cursor: pointer;
+}
+
+.slider {
+  background-color: var(--bg1);
+}

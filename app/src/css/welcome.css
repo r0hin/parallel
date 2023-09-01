@@ -1,0 +1,50 @@
+.unverifiedCard0 {
+  height: 40px;  
+}
+
+.unverifiedCard1 {
+  height: 90px;
+  transition: all 2.8s;
+}
+
+.unverifiedCard2 {
+  height: 115px;
+  transition: all 1.8s;
+}
+
+.welcomeCard0 {
+  height: 40px;
+}
+
+.welcomeCard0 .form, .welcomeCard0 .form > div {
+  margin-top: 0px;
+}
+
+.welcomeCard0 .subtitle {
+  margin-bottom: 0px;
+}
+
+.welcomeCard1 {
+  height: 90px;
+  transition: all 0.8s;
+}
+
+.welcomeCard2 {
+  height: 220px;
+  transition: all 1.8s;
+}
+
+.subtitle {
+  color: var(--fg3);
+}
+
+.welcomeCard0 .subtitle {
+  margin-left: 2px;
+  text-transform: none;
+}
+
+.form .subtitle {
+  font-size: 0.8em;
+  margin-top: -6px;  
+  margin-bottom: 16px;
+}

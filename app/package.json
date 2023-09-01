@@ -1,0 +1,64 @@
+{
+  "name": "parallel",
+  "version": "2.10.12",
+  "description": "",
+  "main": "scripts/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/parallelsocial/parallel.git"
+  },
+  "scripts": {
+    "start": "yarn parcel ./src/login.html ./src/app.html ./src/admin.html",
+    "electron": "electron .",
+    "cibuild": "node scripts/start.js",
+    "build": "node scripts/start.js && electron-builder build",
+    "pubWin": "node scripts/start.js && electron-builder -p always",
+    "pub": "node scripts/start.js && electron-builder --macos --arm64 --x64 -p always"
+  },
+  "build": {
+    "appId": "net.parallelsocial.parallel",
+    "productName": "Parallel",
+    "nodeVersion": "current",
+    "copyright": "Copyright © 2022 Parallel, Inc",
+    "win": {
+      "publish": [
+        "github"
+      ]
+    },
+    "mac": {
+      "publish": [
+        "github"
+      ],
+      "entitlements": "./build/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron/notarize": "^1.2.3",
+    "electron": "^20.0.1",
+    "electron-builder": "^23.0.3",
+    "electron-notarize": "^1.2.1",
+    "parcel-bundler": "^1.12.5"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.8",
+    "cors": "^2.8.5",
+    "croppr": "^2.3.1",
+    "discord-rpc": "^4.0.1",
+    "electron-default-menu": "^1.0.2",
+    "electron-updater": "^5.0.1",
+    "electron-window-state": "^5.0.3",
+    "emoji-picker-element": "1.10.0",
+    "express": "^4.18.1",
+    "firebase": "^9.8.4",
+    "js-confetti": "^0.10.2",
+    "request": "^2.88.2",
+    "timeago.js": "^4.0.2",
+    "ytcog": "^2.4.3"
+  },
+  "packageManager": "yarn@1.22.19"
+}

@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "source": "functions"
+  },
+  "hosting": {
+    "public": "app/output",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "cleanUrls": true
+  }
+}
