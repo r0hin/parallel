@@ -2889,6 +2889,11 @@ cors@^2.8.5:
     object-assign "^4"
     vary "^1"
 
+cosha@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/cosha/-/cosha-3.0.1.tgz"
+  integrity sha512-Hrz6oabOmAH0hiu5prJzDJlgBoRWu6WjE7fJSYQFqzqqD7b6PzM2/42IqYxGRkGnYMD52riASOfyWDKc7iNjdg==
+
 cosmiconfig@^5.0.0:
   version "5.2.1"
   resolved "https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-5.2.1.tgz"

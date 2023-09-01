@@ -78,6 +78,7 @@ exports.createAccount = functions.https.onCall(async (data, context) => {
     blockedUsers: [],
     playlistFolders: {},
     playlistFoldersSort: [],
+    subscription: "infinite",
     uid: uid,
     url: "https://firebasestorage.googleapis.com/v0/b/parallel-archive.appspot.com/o/pfp%2F" + uid + "%2Fprofile.png?alt=media"
   }, { merge: true });

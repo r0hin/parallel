@@ -1,5 +1,6 @@
 import { getFunctions, httpsCallable } from '@firebase/functions';
 import { checkAppInitialized } from './firebaseChecks';
+import cosha from "cosha";
 
 checkAppInitialized();
 const functions = getFunctions();

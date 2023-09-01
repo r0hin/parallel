@@ -5,7 +5,7 @@
   "main": "scripts/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/parallelsocial/parallel.git"
+    "url": "https://github.com/r0hin/parallel.git"
   },
   "scripts": {
     "start": "yarn parcel ./src/login.html ./src/app.html ./src/admin.html",
@@ -47,6 +47,7 @@
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "cors": "^2.8.5",
+    "cosha": "^3.0.1",
     "croppr": "^2.3.1",
     "discord-rpc": "^4.0.1",
     "electron-default-menu": "^1.0.2",

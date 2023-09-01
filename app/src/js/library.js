@@ -975,7 +975,7 @@ export function openPlaylist(playlistUID, playlistID, playlistNameInput, fromLib
               <a id="deletePlaylistButton${playlistUID}${playlistID}" class="btn btnDanger">Delete</a>
               <div class="dropdownDivider"></div>
               <a onclick="recalculateDetails('${playlistUID}', '${playlistID}')" class="btn">Reclculate Metadata</a>
-              <a onclick="copyToClipboard('https://parallelsocial.net/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
+              <a onclick="copyToClipboard('https://parallel.r0h.in/preview?playlistUID=${playlistUID}&playlistID=${playlistID}')" class="btn">Copy Link</a>
               <a onclick="copyToClipboard('${playlistID}')" class="btn">Copy ID</a>
             </div>
           </div>

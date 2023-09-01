@@ -141,11 +141,15 @@ export function musicTab(tab) {
 
 
 window.makeMusicRequest = (q) => {
+  if (!appleMusicKey) {
+    alert("Error");
+  }
+  
   return new Promise(async (resolve, reject) => {
     const fetched = await fetch(`https://api.music.apple.com/v1/catalog/us/${q}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjZGQ1o2QVVDUkcifQ.eyJpYXQiOjE2NzQzMTcwNzcsImV4cCI6MTY4OTg2OTA3NywiaXNzIjoiTEc3UjdNSzRFUCJ9.ssNcJi2qVS0selR14P6FpTOAW74qaSBqJfp5SCqo0-cm8ZWzKX1u_eKFqRC7_E92KnG6FueZG5BwqBpUn4O1Kg`,
+        'Authorization': `Bearer ${appleMusicKey}`,
       }
     });
 

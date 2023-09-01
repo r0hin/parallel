@@ -84,6 +84,8 @@ window.goToCheckout = async(priceID) => {
 }
 
 export async function manageSubscription() {
+  alert("Parallel Infinite is free for you and you only in this public archive build!")
+  return;
   notifyTiny('Requesting portal...');
   $(`#manageSubscriptionButton`).addClass('disabled');
   

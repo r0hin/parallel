@@ -43,6 +43,7 @@ window.reportedIDs = [];
 window.cachedUploadedFiles = [];
 window.cacheBadges = [];
 window.adminUser = false;
+window.appleMusicKey = "";
 window.appLoaded = false;
 window.blockUploads = false;
 window.liveActionsExercised = false;
@@ -954,6 +955,9 @@ function loadVersioning(uid) {
   }
 
   onSnapshot(doc(db, `app/onLoad`), (doc) => {
+
+    appleMusicKey = doc.data().appleMusicKey;
+
     if (disableCoreListeners) {
       return;
     }
