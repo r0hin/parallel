@@ -1,7 +1,3 @@
-# Parallel 2
-Moved to https://github.com/parallelsocial
+# Parallel -- PUBLIC ARCHIVE
 
-
-This is the project directory for Parallel.
-
-Contact support@parallelsocial.net with any questions.
+The latest version of Parallel is moved to https://github.com/parallelsocial or https://parallelsocial.net. This project serves as a public archive for personal use and portfolio showcases.
