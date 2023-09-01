@@ -3,13 +3,12 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase
 const timeago2 = new timeago();
 
 const fbApp = initializeApp({
-  apiKey: "AIzaSyDusrpo9Bxk7uvnFUCLBJjxrPT8hCb81Z8",
-  authDomain: "parallel-by-wop.firebaseapp.com",
-  databaseURL: "https://parallel-by-wop-default-rtdb.firebaseio.com",
-  projectId: "parallel-by-wop",
-  storageBucket: "parallel-by-wop.appspot.com",
-  messagingSenderId: "77839003871",
-  appId: "1:77839003871:web:6ea87ec99c5aa7c5b2396a",
+  apiKey: "AIzaSyB9flacN0RBNvhzJFQJ1UemZ5LlvuV9ELY",
+  authDomain: "parallel-archive.firebaseapp.com",
+  projectId: "parallel-archive",
+  storageBucket: "parallel-archive.appspot.com",
+  messagingSenderId: "399931651379",
+  appId: "1:399931651379:web:f1fd0094ad26f5f9d6ba46"
 });
 
 import { getPerformance } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-performance.js'
@@ -203,7 +202,7 @@ function makeMusicRequest(q) {
 
     const onLoad = await getDoc(doc(db, `app/onLoad`));
 
-    const appleMusicToken = onLoad.data().appleMusicToken;
+    const appleMusicToken = onLoad.data().appleMusicKey;
 
     const fetched = await fetch(`https://api.music.apple.com/v1/catalog/us/${q}`, {
       method: 'GET',
