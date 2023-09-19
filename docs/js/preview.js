@@ -46,7 +46,7 @@ else if (track) {
   // Track
 }
 else {
-  window.location.replace(`https://parallelsocial.net`);
+  window.location.replace(`https://parallel.rohin.red`);
 }
 
 async function getAlbum(albumID) {
